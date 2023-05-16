@@ -1,6 +1,6 @@
 devices [
     G1, G8, G9 = AND;        # Default 2 input AND gate
-    G2 = NOR(2); 		     # Can specify number of inputs but defaults to 2 if not specified
+    G2 = NOR(2);             # Can specify number of inputs but defaults to 2 if not specified
     G3, G7 = OR;		  
     G4 = NAND;
     G5 = XOR;
@@ -27,7 +27,7 @@ conns [
     G2 =  G3.2, G4.1;
     G3 =  G6.DATA;            # DATA is "D" in the diagram
     G4 =  G5.1;
-    G5 =  G6.CLEAR;			  # CLEAR is "R" in the diagram
+    G5 =  G6.CLEAR;           # CLEAR is "R" in the diagram
 
     G6.Q = G7.2;              # Need to specify which output of DTYPE since there are 2
     G6.QBAR: G8.1;
