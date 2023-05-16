@@ -1,0 +1,24 @@
+devices [
+	G1, G2 = NAND;
+	SW1, SW2 = SWITCH;
+];
+
+init [
+	G1, G2 inp 2;
+	SW1, SW2 set 0;
+]
+
+conns [
+	SW1 : G1.1;
+	SW2 : G2.2;
+
+	# Gate connections
+
+	G1: G2.1;
+	G2: G2.2;
+
+]
+
+monit [
+	G1, G2;
+]
