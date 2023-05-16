@@ -1,0 +1,36 @@
+number = digit, [digit]
+white_space = " "
+device_name = letter, {letter | digit}
+devices_type = "DTYPE" | "NAND" | "NOR" | "XOR" | "AND" | "OR" | "CLOCK" | "SWITCH"
+dtype_ports = "DATA" | "CLK" | "SET" | "CLEAR" | "Q" | "QBAR"
+port_name = number | dtype_ports
+
+connection = ":"
+definition = "="
+
+input = "inp"
+set = "set" // setting switches
+period = "period" // setting clk period
+
+device_def = (device_name, {"," , device_name} ), definition, (device_type), ";"
+
+gate_init = (device_name, {"," , device_name} ), input, number, ";" // number of inputs in gate
+switch_init = (device_name, {"," , device_name} ), set, (0 | 1), ";" // 0 low & 1 high
+clock_init = (device_name, {"," , device_name} ), period, number, ";" // set period of clock
+
+init_def = gate_init | switch_init | clock_init
+
+
+conn_def = device_name, connection, device_name, ".", port_name, ";"
+moint_def = device_name | (device_name, ".", port_name)
+
+block_start = "["
+block_end = "]"
+
+
+devices_block = "devices", white_space, block_start, device_def, {device_def} ,block_end, ";"
+init_block = "init", white_space, block_start, init_def, {init_def} ,block_end, ";"
+conns_block = "conns", white_space, block_start, conn_def, {conn_def} ,block_end, ";"
+monit_block = "monit", white_space, block_start, moint_def, {moint_def} ,block_end, ";"
+
+ebnf = devices_block, init_block, conns_block, monit_block
