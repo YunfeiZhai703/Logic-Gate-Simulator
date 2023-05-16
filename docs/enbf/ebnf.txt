@@ -1,5 +1,7 @@
 number = digit, [digit]
 white_space = " "
+newline = "\n" # NOTE: You do not explicitly need to write the newline character in your input file. It is just for reference.
+comment_delimiter = "#", {[letter | number]}, newline
 
 device_name = letter, {letter | digit}
 devices_type = "DTYPE" | "NAND" | "NOR" | "XOR" | "AND" | "OR" | "CLOCK" | "SWITCH"
@@ -23,7 +25,7 @@ device_def = gate_init | switch_init | clock_init
 
 device_io = device_name, [port]
 
-conn_def = device_io, connection, device_io ";"
+conn_def = device_io, connection, device_io, {device_io} ";"
 moint_def = device_io, {device_io}, ";"
 
 block_start = "["
