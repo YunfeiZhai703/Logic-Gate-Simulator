@@ -1,6 +1,6 @@
 devices [
-    G1, G8, G9 = AND;       # Default 2 input AND gate
-    G2 = NOR(2); 		    # Can specify number of inputs but defaults to 2 if not specified
+    G1, G8, G9 = AND;        # Default 2 input AND gate
+    G2 = NOR(2); 		     # Can specify number of inputs but defaults to 2 if not specified
     G3, G7 = OR;		  
     G4 = NAND;
     G5 = XOR;
@@ -9,7 +9,7 @@ devices [
     SW3, SW4 = SWITCH(0);    # Can be specified as 0 for "False" but defaults to 0 if not specified
 
     G6 = DTYPE;
-    CLK1 = CLOCK(5);          # Clock of period 5 (Not shown in the diagram)
+    CLK1 = CLOCK(5);         # Clock of period 5 (Not shown in the diagram)
 ]
 
 conns [
@@ -29,7 +29,7 @@ conns [
     G4 =  G5.1;
     G5 =  G6.CLEAR;			  # CLEAR is "R" in the diagram
 
-    G6.Q = G7.2; # Need to specify which output of DTYPE since there are 2
+    G6.Q = G7.2;              # Need to specify which output of DTYPE since there are 2
     G6.QBAR: G8.1;
 
     G7: G9.1;
