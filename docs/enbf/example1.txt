@@ -1,7 +1,7 @@
 devices [
 	G1, G2 = NAND;
 	SW1, SW2 = SWITCH;
-];
+]
 
 init [
 	G1, G2 inp 2;
