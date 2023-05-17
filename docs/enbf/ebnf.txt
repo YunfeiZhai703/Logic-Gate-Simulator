@@ -1,39 +1,38 @@
-number = digit, [digit]
-white_space = " "
-newline = "\n" # NOTE: You do not explicitly need to write the newline character in your input file. It is just for reference.
-comment_delimiter = "#", {[letter | number]}, newline
+number            =  digit, [digit]
+white_space       =  " "
+comment_delimiter =  "#", {[letter | number]}, newline
 
-device_name = letter, {letter | digit}
-devices_type = "DTYPE" | "NAND" | "NOR" | "XOR" | "AND" | "OR" | "CLOCK" | "SWITCH"
-dtype_ports = "DATA" | "CLK" | "SET" | "CLEAR" | "Q" | "QBAR"
-port_name = number | dtype_ports
-port = ".", port_name
+device_name  =  letter, {letter | digit}
+devices_type =  "DTYPE" | "NAND" | "NOR" | "XOR" | "AND" | "OR" | "CLOCK" | "SWITCH"
+dtype_ports  =  "DATA" | "CLK" | "SET" | "CLEAR" | "Q" | "QBAR"
+port_name    =  number | dtype_ports
+port         =  ".", port_name
 
-connection = "="
 definition = "="
+connection = "="
 
-gate_params = "(" , number , ")"
-switch_params = "(" , (0 | 1) , ")"
-clk_params = = "(" , number , ")"
-
-
-gate_def = device_name, {"," , device_name} , definition, devices_type, [gate_params], ";"
-switch_def = device_name, {"," , device_name} , definition, devices_type, [switch_params], ";"
-clock_def = device_name, {"," , device_name} , definition, devices_type, clk_params, ";" 
-
-device_def = gate_init | switch_init | clock_init
-
-device_io = device_name, [port]
-
-conn_def = device_io, connection, device_io, {device_io} ";"
-moint_def = device_io, {device_io}, ";"
-
-block_start = "["
-block_end = "]"
+gate_params   =  "(" , number , ")"
+switch_params =  "(" , (0 | 1) , ")"
+clk_params    =  "(" , number , ")"
 
 
-devices_block = "devices", white_space, block_start, device_def, {device_def} ,block_end, white_space
-conns_block = "conns", white_space, block_start, conn_def, {conn_def} ,block_end, white_space
-monit_block = "monit", white_space, block_start, moint_def, {moint_def} ,block_end, white_space
+gate_def   =  device_name, {"," , device_name} , definition, devices_type, [gate_params], ";"
+switch_def =  device_name, {"," , device_name} , definition, devices_type, [switch_params], ";"
+clock_def  =  device_name, {"," , device_name} , definition, devices_type, clk_params, ";" 
 
-ebnf = devices_block, conns_block, monit_block
+device_def =  gate_init | switch_init | clock_init
+
+device_io  =  device_name, [port]
+
+conn_def   =  device_io, connection, device_io, {device_io} ";"
+moint_def  =  device_io, {device_io}, ";"
+
+block_start =  "["
+block_end   =  "]"
+
+
+devices_block =  "devices", white_space, block_start, device_def, {device_def} ,block_end, white_space
+conns_block   =  "conns", white_space, block_start, conn_def, {conn_def} ,block_end, white_space
+monit_block   =  "monit", white_space, block_start, moint_def, {moint_def} ,block_end, white_space
+
+ebnf =  devices_block, conns_block, monit_block
