@@ -21,7 +21,7 @@ conns [
     SW4 = G2.2;
 
     # Clock to DTYPE
-    CLK1: G6.CLK;
+    CLK1 = G6.CLK;
 
     G1 =  G3.1, G6.SET, G7.1; # Can connect output to multiple inputs, SET is "S" in the diagram
     G2 =  G3.2, G4.1;
@@ -32,8 +32,8 @@ conns [
     G6.Q = G7.2;              # Need to specify which output of DTYPE since there are 2
     G6.QBAR: G8.1;
 
-    G7: G9.1;
-    G8: G9.2;
+    G7 = G9.1;
+    G8 = G9.2;
 
 ]
 
