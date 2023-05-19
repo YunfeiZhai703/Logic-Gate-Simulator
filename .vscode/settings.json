@@ -1,10 +1,11 @@
 {
   "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter"
+    "editor.defaultFormatter": "ms-python.autopep8"
   },
   "files.exclude": {
     ".pytest_cache": true,
     "__pycache__": true
   },
-  "python.formatting.provider": "none"
+  "python.formatting.provider": "none",
+  "python.linting.flake8Args": ["--ignore=E501,F401"]
 }
