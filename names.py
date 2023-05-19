@@ -92,7 +92,8 @@ class Names:
         for name_string in name_string_list:
             if name_string not in self.names:
                 self.names.append(name_string)
-                id_list.append(index(name_string))
+                id_list.append(self.names.index(name_string))
+                
         # Return the list of name IDs for each name in the name list                   
         return id_list
 
