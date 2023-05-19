@@ -1,7 +1,6 @@
 number            =  digit, [digit]
-WHITE_SPACE       =  " "
 COMMENT_SYMBOL    =  "#"
-comments          =  COMMENT_SYMBOL, {[letter | number]}
+comments          =  COMMENT_SYMBOL, {[letter | number]}, NEW_LINE
 
 device_name  =  letter, {letter | digit}
 devices_type =  "DTYPE" | "NAND" | "NOR" | "XOR" | "AND" | "OR" | "CLOCK" | "SWITCH"
@@ -17,22 +16,22 @@ switch_params =  "(" , (0 | 1) , ")"
 clk_params    =  "(" , number , ")"
 
 
-gate_def   =  device_name, {"," , device_name} , definition, devices_type, [gate_params], [comments], NEW_LINE
-switch_def =  device_name, {"," , device_name} , definition, devices_type, [switch_params], [comments], NEW_LINE
-clock_def  =  device_name, {"," , device_name} , definition, devices_type, clk_params, [comments], NEW_LINE
+gate_def   =  device_name, {"," , device_name} , definition, devices_type, [gate_params], ";", [comments]
+switch_def =  device_name, {"," , device_name} , definition, devices_type, [switch_params], ";", [comments]
+clock_def  =  device_name, {"," , device_name} , definition, devices_type, clk_params, ";", [comments]
 
-device_line =  (gate_init | switch_init | clock_init) | (comments, NEW_LINE)
+device_line =  (gate_init | switch_init | clock_init) | comments
 
 device_io  =  device_name, [port]
 
-conn_def   =  device_io, connection, device_io, {device_io} NEW_LINE
-conn_line  =  conn_def | (comments, NEW_LINE)
-moint_def  =  device_io, {device_io}, NEW_LINE
-moint_line =  moint_def | (comments, NEW_LINE)
+conn_def   =  device_io, connection, device_io, {device_io}, ";", [comments]
+conn_line  =  conn_def | comments
+moint_def  =  device_io, {device_io}, ";", [comments]
+moint_line =  moint_def | comments
 
 
-devices_block =  "[devices]", {WHITE_SPACE}, NEW_LINE, block_start, device_line, {device_line}
-conns_block   =  "[conns]", {WHITE_SPACE}, NEW_LINE, block_start, conn_line, {conn_line}
-monit_block   =  "[monit]", {WHITE_SPACE}, NEW_LINE, block_start, moint_line, {moint_line}
+devices_block =  "[devices]", device_line, {device_line}
+conns_block   =  "[conns]", conn_line, {conn_line}
+monit_block   =  "[monit]", moint_line, {moint_line}
 
 ebnf =  devices_block, conns_block, monit_block
