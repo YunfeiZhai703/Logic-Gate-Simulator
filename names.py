@@ -80,6 +80,24 @@ class Names:
         If the name string is not present in the names list, add it.
         """
 
+        # Create a list of IDs
+        id_list = []
+        name_string = str(name_string)
+
+        # First check that the name_string_list is a list, otherwise produce SyntaxError
+        if type(name_string_list) is not list:
+            raise SyntaxError("Name string list must be a list")
+         
+        # Check if the name is in the name list, and if not, add it to the list
+        for name_string in name_string_list:
+            if name_string not in self.names:
+                self.names.append(name_string)
+                id_list.append(index(name_string))
+        # Return the list of name IDs for each name in the name list                   
+        return id_list
+
+
+
     def get_name_string(self, name_id):
         """Return the corresponding name string for name_id.
 
