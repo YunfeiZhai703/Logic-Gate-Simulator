@@ -1,1 +1,41 @@
-sjidnsnfshjasdasdkahdshasd
+[devices]
+    G1, G8, G9 = AND;        # Default 2 input AND gate
+    G2 = NOR(2);             # Can specify number of inputs but defaults to 2 if not specified
+    G3, G7 = OR;		  
+    G4 = NAND;
+    G5 = XOR;
+
+    SW1, SW2 = SWITCH;       # Defaults to 0 which is "False"
+    SW3, SW4 = SWITCH(0);    # Can be specified as 0 for "False" but defaults to 0 if not specified
+
+    G6 = DTYPE;
+    CLK1 = CLOCK(5);         # Clock of period 5 (Not shown in the diagram)
+
+
+[conns]
+
+    # Switch connections
+    SW1 = G1.I1;
+    SW2 = G1.I2;
+    SW3 = G2.I1;
+    SW4 = G2.I2;
+
+    # Clock to DTYPE
+    CLK1 = G6.CLK;
+
+    G1 =  G3.I1, G6.SET, G7.I1; # Can connect output to multiple inputs, SET is "S" in the diagram
+    G2 =  G3.I2, G4.I1;
+    G3 =  G6.DATA;            # DATA is "D" in the diagram
+    G4 =  G5.I1;
+    G5 =  G6.CLEAR ;          # CLEAR is "R" in the diagram
+
+    G6.Q = G7.I2;              # Need to specify which output of DTYPE since there are 2
+    G6.QBAR: G8.I1;
+
+    G7 = G9.I1;
+    G8 = G9.I2;
+
+
+[monit]
+    G9, G8;
+    G6.DATA;

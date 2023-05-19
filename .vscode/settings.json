@@ -1,0 +1,9 @@
+{
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8"
+  },
+  "files.exclude": {
+    ".pytest_cache": true,
+    "__pycache__": true
+  }
+}
