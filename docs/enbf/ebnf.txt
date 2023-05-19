@@ -5,7 +5,7 @@ comments          =  COMMENT_SYMBOL, {[letter | number]}, NEW_LINE
 device_name  =  letter, {letter | digit}
 devices_type =  "DTYPE" | "NAND" | "NOR" | "XOR" | "AND" | "OR" | "CLOCK" | "SWITCH"
 dtype_ports  =  "DATA" | "CLK" | "SET" | "CLEAR" | "Q" | "QBAR"
-port_name    =  number | dtype_ports
+port_name    =  ("I", number) | dtype_ports
 port         =  ".", port_name
 
 definition = "="

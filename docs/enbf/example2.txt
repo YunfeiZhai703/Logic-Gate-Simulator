@@ -15,25 +15,25 @@
 [conns]
 
     # Switch connections
-    SW1 = G1.1;
-    SW2 = G1.2;
-    SW3 = G2.1;
-    SW4 = G2.2;
+    SW1 = G1.I1;
+    SW2 = G1.I2;
+    SW3 = G2.I1;
+    SW4 = G2.I2;
 
     # Clock to DTYPE
     CLK1 = G6.CLK;
 
-    G1 =  G3.1, G6.SET, G7.1; # Can connect output to multiple inputs, SET is "S" in the diagram
-    G2 =  G3.2, G4.1;
+    G1 =  G3.I1, G6.SET, G7.I1; # Can connect output to multiple inputs, SET is "S" in the diagram
+    G2 =  G3.I2, G4.I1;
     G3 =  G6.DATA;            # DATA is "D" in the diagram
-    G4 =  G5.1;
+    G4 =  G5.I1;
     G5 =  G6.CLEAR ;          # CLEAR is "R" in the diagram
 
-    G6.Q = G7.2;              # Need to specify which output of DTYPE since there are 2
-    G6.QBAR: G8.1;
+    G6.Q = G7.I2;              # Need to specify which output of DTYPE since there are 2
+    G6.QBAR: G8.I1;
 
-    G7 = G9.1;
-    G8 = G9.2;
+    G7 = G9.I1;
+    G8 = G9.I2;
 
 
 [monit]
