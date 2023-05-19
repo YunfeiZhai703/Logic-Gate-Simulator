@@ -82,7 +82,7 @@ class Names:
 
         # Create a list of IDs
         id_list = []
-        name_string = str(name_string)
+        # id_list = [self.query(name_string) for name_string in name_string_list]
 
         # First check that the name_string_list is a list, otherwise produce SyntaxError
         if type(name_string_list) is not list:
