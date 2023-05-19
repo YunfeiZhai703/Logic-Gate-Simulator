@@ -56,7 +56,23 @@ class Names:
 
         If the name string is not present in the names list, return None.
         """
+        # Need to confirm first that the string is alphanumeric or a string (not all digits) otherwise return a SyntaxError,
+        # Then return None if the string is not present
+
+        name_string = str(name_string)
+
+        if name_string.isdigit():
+            raise SyntaxError("The name must be a string")
+        if name_string.isalnum():
+            raise SyntaxError("The name must be alphanumeric")
         
+        # If the name string is present in the names list, return the index of where it is, else return None
+        if name_string in self.names:
+            return self.names.index(name_string)
+        else:
+            return None
+
+
 
     def lookup(self, name_string_list):
         """Return a list of name IDs for each name string in name_string_list.
