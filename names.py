@@ -48,8 +48,7 @@ class Names:
         if not isinstance(num_error_codes, int):
             raise TypeError("Expected num_error_codes to be an integer.")
         self.error_code_count += num_error_codes
-        return range(self.error_code_count - num_error_codes,
-                     self.error_code_count)
+        return range(self.error_code_count - num_error_codes, self.error_code_count)
 
     def query(self, name_string):
         """Return the corresponding name ID for name_string.
@@ -65,14 +64,12 @@ class Names:
             raise SyntaxError("The name must be a string")
         if name_string.isalnum():
             raise SyntaxError("The name must be alphanumeric")
-        
+
         # If the name string is present in the names list, return the index of where it is, else return None
         if name_string in self.names:
             return self.names.index(name_string)
         else:
             return None
-
-
 
     def lookup(self, name_string_list):
         """Return a list of name IDs for each name string in name_string_list.
@@ -87,17 +84,15 @@ class Names:
         # First check that the name_string_list is a list, otherwise produce SyntaxError
         if type(name_string_list) is not list:
             raise TypeError("Name string list must be a list")
-         
-        # Check if the name is in the name list, and if not, add it to the list
+
+        # Check if the name is in the name list, and if not, add it to the list and add the index to the id list too
         for name_string in name_string_list:
             if name_string not in self.names:
                 self.names.append(name_string)
                 id_list.append(self.names.index(name_string))
 
-        # Return the list of name IDs for each name in the name list                   
+        # Return the list of name IDs for each name in the name list
         return id_list
-
-
 
     def get_name_string(self, name_id):
         """Return the corresponding name string for name_id.
@@ -106,7 +101,7 @@ class Names:
         """
         # First check that name_id provided is a valid number (i.e. is positive)
         if name_id < 0:
-            raise ValueError("The name_id is not correct") 
+            raise ValueError("The name_id is not correct")
         elif name_id >= 0:
             return self.names[name_id]
         else:
