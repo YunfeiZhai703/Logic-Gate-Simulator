@@ -34,4 +34,4 @@ devices_block =  "[devices]", device_line, {device_line}
 conns_block   =  "[conns]", conn_line, {conn_line}
 monit_block   =  "[monit]", moint_line, {moint_line}
 
-ebnf =  devices_block, conns_block, monit_block
+ebnf =  devices_block, conns_block, [monit_block]
