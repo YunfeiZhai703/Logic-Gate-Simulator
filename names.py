@@ -104,10 +104,10 @@ class Names:
 
         If the name_id is not an index in the names list, return None.
         """
-        # First check that name_id is a valid number (i.e. is positive)
+        # First check that name_id provided is a valid number (i.e. is positive)
         if name_id < 0:
             raise ValueError("The name_id is not correct") 
-        elif name_id > 0:
+        elif name_id >= 0:
             return self.names[name_id]
         else:
             return None
