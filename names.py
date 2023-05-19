@@ -86,14 +86,14 @@ class Names:
 
         # First check that the name_string_list is a list, otherwise produce SyntaxError
         if type(name_string_list) is not list:
-            raise SyntaxError("Name string list must be a list")
+            raise TypeError("Name string list must be a list")
          
         # Check if the name is in the name list, and if not, add it to the list
         for name_string in name_string_list:
             if name_string not in self.names:
                 self.names.append(name_string)
                 id_list.append(self.names.index(name_string))
-                
+
         # Return the list of name IDs for each name in the name list                   
         return id_list
 
@@ -104,3 +104,10 @@ class Names:
 
         If the name_id is not an index in the names list, return None.
         """
+        # First check that name_id is a valid number (i.e. is positive)
+        if name_id < 0:
+            raise ValueError("The name_id is not correct") 
+        elif name_id > 0:
+            return self.names[name_id]
+        else:
+            return None
