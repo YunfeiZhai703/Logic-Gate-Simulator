@@ -59,7 +59,7 @@ class Gui(wx.Frame):
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         # make bg color white
-        self.SetBackgroundColour(COLORS.GRAY_900)
+        self.SetBackgroundColour(COLORS.GRAY_950)
 
         side_sizer = wx.BoxSizer(wx.VERTICAL)
         canvas_sizer = wx.BoxSizer(wx.VERTICAL)
