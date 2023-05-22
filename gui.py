@@ -18,7 +18,7 @@ from network import Network
 from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
-from components.ui.button import Button
+from components.ui import Button, Text, NumberInput, TextBox
 
 
 class MyGLCanvas(wxcanvas.GLCanvas):
@@ -232,30 +232,13 @@ class Gui(wx.Frame):
         """Initialise widgets and layout."""
         super().__init__(parent=None, title=title, size=(800, 600))
 
-        # Configure the file menu
-        fileMenu = wx.Menu()
-        menuBar = wx.MenuBar()
-        fileMenu.Append(wx.ID_ABOUT, "&About")
-        fileMenu.Append(wx.ID_EXIT, "&Exit")
-        menuBar.Append(fileMenu, "&File")
-        self.SetMenuBar(menuBar)
+        self.setup_menu()
 
-        # Canvas for drawing signals
         self.canvas = MyGLCanvas(self, devices, monitors)
-
-        # Configure the widgets
-        self.text = wx.StaticText(self, wx.ID_ANY, "Cycles")
-        self.spin = wx.SpinCtrl(self, wx.ID_ANY, "10")
-        # self.run_button = wx.Button(self, wx.ID_ANY, "Run")
-        self.run_button = Button(self, "Run", self.on_run_button)
-        self.text_box = wx.TextCtrl(self, wx.ID_ANY, "",
-                                    style=wx.TE_PROCESS_ENTER)
-
-        # Bind events to widgets
-        self.Bind(wx.EVT_MENU, self.on_menu)
-        self.spin.Bind(wx.EVT_SPINCTRL, self.on_spin)
-        # self.run_button.Bind(wx.EVT_BUTTON, self.on_run_button)
-        self.text_box.Bind(wx.EVT_TEXT_ENTER, self.on_text_box)
+        self.text = Text(self, "Cycles")
+        self.number_input = NumberInput(self, value=10, onChange=self.on_spin)
+        self.run_button = Button(self, "Run", onClick=self.on_run_button)
+        self.text_box = TextBox(self, "Enter text", onChange=self.on_text_box)
 
         # Configure sizers for layout
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -265,12 +248,21 @@ class Gui(wx.Frame):
         main_sizer.Add(side_sizer, 1, wx.ALL, 5)
 
         side_sizer.Add(self.text, 1, wx.TOP, 10)
-        side_sizer.Add(self.spin, 1, wx.ALL, 5)
+        side_sizer.Add(self.number_input, 1, wx.ALL, 5)
         side_sizer.Add(self.run_button, 1, wx.ALL, 5)
         side_sizer.Add(self.text_box, 1, wx.ALL, 5)
 
         self.SetSizeHints(600, 600)
         self.SetSizer(main_sizer)
+
+    def setup_menu(self):
+        fileMenu = wx.Menu()
+        menuBar = wx.MenuBar()
+        fileMenu.Append(wx.ID_ABOUT, "&About")
+        fileMenu.Append(wx.ID_EXIT, "&Exit")
+        menuBar.Append(fileMenu, "&File")
+        self.SetMenuBar(menuBar)
+        self.Bind(wx.EVT_MENU, self.on_menu)
 
     def on_menu(self, event):
         """Handle the event when the user selects a menu item."""
@@ -283,7 +275,7 @@ class Gui(wx.Frame):
 
     def on_spin(self, event):
         """Handle the event when the user changes the spin control value."""
-        spin_value = self.spin.GetValue()
+        spin_value = self.number_input.GetValue()
         text = "".join(["New spin control value: ", str(spin_value)])
         self.canvas.render(text)
 
