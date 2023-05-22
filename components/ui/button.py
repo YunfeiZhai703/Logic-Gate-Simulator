@@ -17,7 +17,7 @@ class Button(wx.Button):
                  hover_bg_color=COLORS.GRAY_700,
                  fg_color=COLORS.WHITE,
                  hover_fg_color=COLORS.RED_200,
-                 size: buttonSizeType = "sm"
+                 size: button_size_type = "sm"
                  ):
         """Custom button widget.
 
