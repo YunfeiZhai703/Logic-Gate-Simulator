@@ -51,7 +51,6 @@ class Gui(wx.Frame):
         self.setup_menu()
 
         self.canvas = Canvas(self, devices, monitors)
-        self.text = Text(self, "Cycles")
         self.number_input = NumberInput(self, value=10, onChange=self.on_spin)
         self.run_button = Button(self, "Run", onClick=self.on_run_button)
         self.text_box = TextBox(self, "Enter text", onChange=self.on_text_box)
@@ -63,11 +62,14 @@ class Gui(wx.Frame):
         self.SetBackgroundColour(COLORS.GRAY_900)
 
         side_sizer = wx.BoxSizer(wx.VERTICAL)
+        canvas_sizer = wx.BoxSizer(wx.VERTICAL)
+        canvas_sizer.Add(self.canvas, 2, wx.EXPAND | wx.ALL, 5)
+        canvas_sizer.Add(Text(self, "Lorem "), 1, wx.TOP, 20)
 
-        main_sizer.Add(self.canvas, 5, wx.EXPAND | wx.ALL, 5)
-        main_sizer.Add(side_sizer, 1, wx.ALL, 5)
+        main_sizer.Add(side_sizer, 2, wx.ALL, 5)
+        main_sizer.Add(canvas_sizer, 5, wx.EXPAND | wx.ALL, 5)
 
-        side_sizer.Add(self.text, 1, wx.TOP, 10)
+        side_sizer.Add(Text(self, "Logsim"), 1, wx.TOP, 10)
         side_sizer.Add(self.number_input, 1, wx.ALL, 5)
         side_sizer.Add(self.run_button, 1, wx.ALL, 5)
         side_sizer.Add(self.text_box, 1, wx.ALL, 5)
