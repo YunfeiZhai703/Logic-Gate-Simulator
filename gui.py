@@ -17,7 +17,7 @@ from network import Network
 from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
-from components.ui import Button, Text, NumberInput, TextBox
+from components.ui import Button, Text, NumberInput, TextBox, COLORS
 from components import Canvas
 
 
@@ -58,6 +58,10 @@ class Gui(wx.Frame):
 
         # Configure sizers for layout
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        # make bg color white
+        self.SetBackgroundColour(COLORS.GRAY_900)
+
         side_sizer = wx.BoxSizer(wx.VERTICAL)
 
         main_sizer.Add(self.canvas, 5, wx.EXPAND | wx.ALL, 5)
