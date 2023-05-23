@@ -10,6 +10,9 @@ class FileButton(Button):
         self._file = None
         self._path = None
 
+        bmp = wx.Bitmap("assests/upload.svg")
+        self.SetBitmap(bmp)
+
     def openFile(self, event):
         wildcard = "TXT files (*.txt)|*.txt"
         dlg = wx.FileDialog(self, "Open file...", os.getcwd(),
