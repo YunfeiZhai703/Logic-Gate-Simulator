@@ -100,10 +100,20 @@ class Scanner:
         else:  # not a valid character
             self.advance()
         return symbol
-    def get_name():
-        pass
     
+    def get_name(self):
+        pass
+
+    def get_number(self):
+        pass
+
     def skip_spaces(self):
         while self.current_character.isspace():
             self.current_character = self.advance()
+
+    def advance(self):
+        pass
+
+    def error(self):
+        pass
 
