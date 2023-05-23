@@ -146,7 +146,10 @@ class Scanner:
 
         return self.current_character
 
-    def error(self):
+    def error(self, error_type):
         self.error_count += 1
-        
+        if error_type == self.NO_NUMBER:
+            print("Expected a number")
+        if error_type == self.NO_EQUALS:
+            print("Expected a equal sign")
 
