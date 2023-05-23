@@ -51,7 +51,7 @@ class Gui(wx.Frame):
 
         self.setup_menu()
         self.SetBackgroundColour(COLORS.GRAY_950)
-        self.spin_value = 0
+        self.number_of_cycles = 10
 
         # Configure sizers for layout
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -75,20 +75,15 @@ class Gui(wx.Frame):
             right_bottom_block, dir="col", bg_color=COLORS.GRAY_800)
 
         right_bottom_left.Add(
-            Text(right_bottom_left, "Switches"), 1, wx.ALL, 5)
-
-        right_bottom_right = Box(
-            right_bottom_block, dir="col", bg_color=COLORS.GRAY_800)
-        right_bottom_right.Add(
-            Text(right_bottom_right, "Cycles"), 1, wx.ALL, 5)
-        right_bottom_right.Add(
-            Button(right_bottom_right, "Run",
-                   onClick=self.on_run_button), 1, wx.ALL, 5)
+            Text(right_bottom_left, "Switches"), 0, wx.ALL, 5)
 
         right_bottom_block.Add(right_bottom_left, 1, wx.EXPAND | wx.ALL, 5)
-        right_bottom_block.Add(right_bottom_right, 1, wx.EXPAND | wx.ALL, 5)
+        # right_bottom_block.Add(right_bottom_right, 1, wx.EXPAND | wx.ALL, 5)
 
-        right_sizer.Add(right_bottom_block, 2, wx.EXPAND, 5)
+        right_sizer.Add(right_bottom_block, 1, wx.EXPAND, 5)
+
+        ConfigurationPanel(right_bottom_block, self.canvas, self.on_run_button, self.on_number_input).Attach(
+            right_bottom_block, 1, wx.EXPAND | wx.ALL, 5)
 
         main_sizer.Add(left_sizer, 2, wx.ALL, 5)
         main_sizer.Add(right_sizer, 5, wx.EXPAND | wx.ALL, 5)
@@ -116,11 +111,16 @@ class Gui(wx.Frame):
 
     def on_run_button(self, event):
         # randomly generate a signal of 1 and 0 length 10
-        random_signal = [random.randint(0, 1) for i in range(self.spin_value)]
+        random_signal = [random.randint(0, 1)
+                         for i in range(self.number_of_cycles)]
         self.canvas.add_signal(
             random_signal, "A" + str(len(self.canvas.signals))
         )
         self.canvas.Refresh()
+
+    def on_number_input(self, event):
+        """Handle the event when the user changes the spin control value."""
+        self.number_of_cycles = event.GetInt()
 
 
 class Heading(wx.BoxSizer):
@@ -147,24 +147,10 @@ class DevicesPanel(Box):
         self.canvas = canvas
 
         self.Add(Text(self, "Devices"), 1, wx.ALL, 5)
-        self.Add(NumberInput(
-            self, value=10, onChange=self.on_spin), 1, wx.ALL, 5)
         self.Add(Button(self, "Run",
                         onClick=self.on_run_button), 1, wx.ALL, 5)
         self.Add(TextBox(self, "Enter text",
                          onChange=self.on_text_box), 1, wx.ALL, 5)
-
-    def Attach(self, parent: wx.BoxSizer, proportion, flag, border):
-        """Attach the heading to the parent."""
-        parent.Add(self, proportion, flag, border)
-
-    def on_spin(self, event):
-        """Handle the event when the user changes the spin control value."""
-        # Get the spin control value from the event object
-        spin_value = event.GetInt()
-        self.parent.spin_value = spin_value
-        text = "".join(["New spin control value: ", str(spin_value)])
-        self.canvas.render(text)
 
     def on_run_button(self, event):
         """Handle the event when the user clicks the run button."""
@@ -177,3 +163,21 @@ class DevicesPanel(Box):
         text_box_value = event.GetString()
         text = "".join(["New text box value: ", text_box_value])
         self.canvas.render(text)
+
+
+class ConfigurationPanel(Box):
+    def __init__(self, parent, canvas, on_start, on_number_input):
+        """Initialise the devices panel."""
+        super().__init__(parent, dir="col", bg_color=COLORS.GRAY_800)
+        self.parent = parent
+        self.canvas = canvas
+
+        self.Add(Text(self, "Configuration"), 0, wx.ALL, 5)
+
+        self.Add(NumberInput(
+            self, value=10, onChange=on_number_input), 0, wx.ALL, 5)
+        self.Add(Button(self, "Run",
+                        onClick=on_start,
+                        bg_color=COLORS.GREEN_800,
+                        hover_bg_color=COLORS.GREEN_700,
+                        size="md"), 0, wx.ALL, 5)
