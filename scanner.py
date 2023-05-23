@@ -52,17 +52,19 @@ class Scanner:
     def __init__(self, path, names):
         """Open specified file and initialise reserved words and IDs."""
         self.names = names
-        self.get_symbol_list = [self.HEADING, self.KEYWORD, self.NUMBER, self.NAME,
+        self.symbol_list = [self.HEADING, self.KEYWORD, self.NUMBER, self.NAME,
                                 self.EQUAL, self.DOT, self.COMMA, self.SEMICOLON,
                                 self.OPEN_SQUARE, self.CLOSE_SQUARE, self.OPEN_BRACKET, self.CLOSE_BRACKET,
                                 self.HASHTAG, self.EOF] = range(14)
         self.headings_list = ["[devices]", "[conns]", "[monit]"]
+        [self.DEVICES_ID, self.CONNS_ID, self.MONIT_ID] = self.names.lookup(self.headings_list)
         self.keywords_list = ["="]
+        self.ignore = ["#"]
         self.stopping_list = [self.SEMICOLON, self.EOF]
         self.current_character = ""
+        self.current_line = 0
     
         
-
     def get_symbol(self):
         """Translate the next sequence of characters into a symbol."""
 
@@ -72,11 +74,6 @@ class Scanner:
         if self.current_character.isalpha():
             name_string = self.get_name()
             self.name_string = name_string[0]
-
-            if self.name_string in self.ignore:
-                return None    
-
-            print(self.name_string, end=' ')
 
 
             if name_string in self.keywords_list:
@@ -104,3 +101,20 @@ class Scanner:
         else:  # not a valid character
             self.advance()
         return symbol
+    
+    def get_name(self):
+        pass
+
+    def get_number(self):
+        pass
+
+    def skip_spaces(self):
+        while self.current_character.isspace():
+            self.current_character = self.advance()
+
+    def advance(self):
+        pass
+
+    def error(self):
+        pass
+
