@@ -34,8 +34,28 @@ class Gui(wx.Frame):
                    network, monitors, parent=nb), "Main")
 
         nb.AddPage(nb.canvas, "Graphs")
+        nb.AddPage(Text(nb, "Page 3"), "Page 3")
+        self.setup_menu()
 
         self.Show()
+
+    def setup_menu(self):
+        fileMenu = wx.Menu()
+        menuBar = wx.MenuBar()
+        fileMenu.Append(wx.ID_ABOUT, "&About")
+        fileMenu.Append(wx.ID_EXIT, "&Exit")
+        menuBar.Append(fileMenu, "&File")
+        self.SetMenuBar(menuBar)
+        self.Bind(wx.EVT_MENU, self.on_menu)
+
+    def on_menu(self, event):
+        """Handle the event when the user selects a menu item."""
+        Id = event.GetId()
+        if Id == wx.ID_EXIT:
+            self.Close(True)
+        if Id == wx.ID_ABOUT:
+            wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
+                          "About Logsim", wx.ICON_INFORMATION | wx.OK)
 
 
 class FirstPage(wx.Panel):
@@ -44,7 +64,6 @@ class FirstPage(wx.Panel):
         """Initialise widgets and layout."""
         super().__init__(parent=parent)
 
-        # self.setup_menu()
         self.SetBackgroundColour(COLORS.GRAY_950)
         self.number_of_cycles = 10
 
@@ -85,24 +104,6 @@ class FirstPage(wx.Panel):
 
         self.SetSizeHints(600, 600)
         self.SetSizer(main_sizer)
-
-    def setup_menu(self):
-        fileMenu = wx.Menu()
-        menuBar = wx.MenuBar()
-        fileMenu.Append(wx.ID_ABOUT, "&About")
-        fileMenu.Append(wx.ID_EXIT, "&Exit")
-        menuBar.Append(fileMenu, "&File")
-        self.SetMenuBar(menuBar)
-        self.Bind(wx.EVT_MENU, self.on_menu)
-
-    def on_menu(self, event):
-        """Handle the event when the user selects a menu item."""
-        Id = event.GetId()
-        if Id == wx.ID_EXIT:
-            self.Close(True)
-        if Id == wx.ID_ABOUT:
-            wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
-                          "About Logsim", wx.ICON_INFORMATION | wx.OK)
 
     def on_start(self, event):
         # randomly generate a signal of 1 and 0 length 10
