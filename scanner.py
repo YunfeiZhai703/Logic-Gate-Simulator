@@ -51,6 +51,8 @@ class Scanner:
 
     def __init__(self, path, names):
         """Open specified file and initialise reserved words and IDs."""
+        self.path = path
+        fo = open(path, 'r')
         self.names = names
         self.symbol_list = [self.HEADING, self.KEYWORD, self.NUMBER, self.NAME,
                                 self.EQUAL, self.DOT, self.COMMA, self.SEMICOLON,
@@ -121,31 +123,15 @@ class Scanner:
                 number += self.current_character
             else:
                 return [number, self.current_character]
-            
 
     def skip_spaces(self):
         while self.current_character.isspace():
             self.current_character = self.advance()
 
     def advance(self):
-        if self.read_string:
-            try:
-                self.current_character = self.input_file[self.count_character]
-            except IndexError:
-                self.current_character = ""
-                return self.current_character
-            self.count_character += 1
-        else:
-            self.current_character = self.input_file.read(1)
-
-        self.character_number += 1
-
-        if self.current_character == '\n':
-            self.current_line += 1
-            self.character_number = self.word_number = 0
-
-        return self.current_character
+        pass
 
     def error(self):
-        pass
+        line_count = self.current_line
+        
 

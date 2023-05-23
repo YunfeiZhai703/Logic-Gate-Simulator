@@ -7,7 +7,7 @@ class NumberInput(wx.SpinCtrl):
         wx.SpinCtrl.__init__(self, parent, id=wx.ID_ANY,
                              value=str(value), size=size, min=min, max=max, style=wx.SP_ARROW_KEYS)
         self.SetRange(min, max)
-        self.SetIncrement(step)
+        # self.SetIncrement(step) TODO: check if this is works on Linux
         self.SetValue(value)
 
         self.SetForegroundColour(COLORS.GRAY_100)
