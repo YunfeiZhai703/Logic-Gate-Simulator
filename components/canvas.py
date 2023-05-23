@@ -4,6 +4,26 @@ import wx
 import math
 
 
+glColors = [
+    (1.0, 0.0, 0.0),  # red
+    (0.0, 1.0, 0.0),  # green
+    (0.0, 0.0, 1.0),  # blue
+    (1.0, 1.0, 0.0),  # yellow
+    (1.0, 0.0, 1.0),  # magenta
+    (0.0, 1.0, 1.0),  # cyan
+    (0.5, 0.5, 0.5),  # grey
+    (1.0, 0.5, 0.0),  # orange
+    (0.0, 0.5, 0.0),  # dark green
+    (0.5, 0.0, 0.5),  # purple
+    (0.5, 0.0, 0.0),  # dark red
+    (0.0, 0.0, 0.5),  # dark blue
+    (0.0, 0.5, 0.5),  # dark cyan
+    (0.5, 0.5, 0.0),  # dark yellow
+    (0.5, 0.0, 0.0),  # dark red
+
+]
+
+
 class Canvas(wxcanvas.GLCanvas):
     """Handle all drawing operations.
 
@@ -51,7 +71,24 @@ class Canvas(wxcanvas.GLCanvas):
         # Initialise variables for zooming
         self.zoom = 1
 
-        self.number_of_signals = 0
+        self.signals = [
+            {
+                "name": "G1",
+                "signal": [0, 1, 1, 1, 1, 1, 0, 1, 0, 1]
+            },
+            {
+                "name": "G2",
+                "signal": [0, 1, 1, 1, 1, 1, 1, 1, 0, 1]
+            },
+            {
+                "name": "G3",
+                "signal": [0, 1, 1, 0, 0, 1, 0, 1, 0, 1]
+            },
+            {
+                "name": "G4",
+                "signal": [0, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+            },
+        ]
 
         # Bind events to the canvas
         self.Bind(wx.EVT_PAINT, self.on_paint)
@@ -73,14 +110,13 @@ class Canvas(wxcanvas.GLCanvas):
         GL.glTranslated(self.pan_x, self.pan_y, 0.0)
         GL.glScaled(self.zoom, self.zoom, self.zoom)
 
-    def draw_signal_trace(self, signal: list, x_pos: int, y_pos: int, label: str):
+    def draw_signal_trace(self, signal: list, x_pos: int, y_pos: int, label: str, color: tuple = (0.0, 0.0, 1.0)):
         """Draws a signa
 
         Args:
             signal (list): A list of 1 and 0s
         """
-        self.number_of_signals += 1
-        GL.glColor3f(0.0, 0.0, 1.0)  # signal trace is blue
+        GL.glColor3f(*color)
         GL.glBegin(GL.GL_LINE_STRIP)
         for i in range(len(signal)):
             x = (i * 20) + x_pos
@@ -115,18 +151,14 @@ class Canvas(wxcanvas.GLCanvas):
         x_pos -= int(40 / 3 * len(label))
         self.render_text(label, x_pos, y_pos + 18)
 
-    def add_signal(self, signal: list, x_pos: int, y_pos: int, label: str):
-        """Adds a signal to the canvas, handles changing the size 
-        of the graphs to ensure they all fit on the canvas.
+    def add_signal(self, signal: list, label: str):
+        """Add a signal to the canvas.
 
         Args:
-            signal (list): _description_
-            x_pos (int): _description_
-            y_pos (int): _description_
-            label (str): _description_
+            signal (list): A list of 1 and 0s
+            label (str): The label of the signal
         """
-        y_pos = self.number_of_signals * 100
-        self.draw_signal_trace(signal, x_pos, y_pos, label)
+        self.signals.append({"name": label, "signal": signal})
 
     def render(self, text):
         """Handle all drawing operations."""
@@ -142,9 +174,9 @@ class Canvas(wxcanvas.GLCanvas):
         # Draw specified text at position (10, 10)
         self.render_text(text, 10, 10)
 
-        # Draw a sample signal trace
-        self.add_signal([0, 1, 1, 1, 1, 1, 0, 1, 0, 1], 50, 50, "G1")
-        self.add_signal([0, 1, 1, 1, 1, 1, 0, 1, 0, 1], 50, 150, "CLK")
+        for i, signal in enumerate(self.signals):
+            self.draw_signal_trace(
+                signal["signal"], 50, 60 * i + 50, signal["name"], glColors[i])
 
         # We have been drawing to the back buffer, flush the graphics pipeline
         # and swap the back buffer to the front
