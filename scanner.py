@@ -102,7 +102,16 @@ class Scanner:
         return symbol
     
     def get_name(self):
-        pass
+        # Want to find the name that comes next in input_file
+        # Return the name and the next character that is non-alphanumeric
+        name = self.current_character
+
+        while True:
+            self.current_character = self.advance()
+            if self.current_character.isalnum():
+                name = name + self.current_character
+            else:
+                return [name, self.current_character]
 
     def get_number(self):
         pass
@@ -112,7 +121,23 @@ class Scanner:
             self.current_character = self.advance()
 
     def advance(self):
-        pass
+        if self.read_string:
+            try:
+                self.current_character = self.input_file[self.count_character]
+            except IndexError:
+                self.current_character = ""
+                return self.current_character
+            self.count_character += 1
+        else:
+            self.current_character = self.input_file.read(1)
+
+        self.character_number += 1
+
+        if self.current_character == '\n':
+            self.current_line += 1
+            self.character_number = self.word_number = 0
+
+        return self.current_character
 
     def error(self):
         pass
