@@ -62,6 +62,7 @@ class Scanner:
         self.ignore = ["#"]
         self.stopping_list = [self.SEMICOLON, self.EOF]
         self.current_character = ""
+        self.current_line = 0
     
         
     def get_symbol(self):
