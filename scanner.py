@@ -63,7 +63,7 @@ class Scanner:
         self.stopping_list = [self.SEMICOLON, self.EOF]
         self.current_character = ""
         self.current_line = 0
-    
+        self.error_count = 0
         
     def get_symbol(self):
         """Translate the next sequence of characters into a symbol."""
@@ -147,5 +147,6 @@ class Scanner:
         return self.current_character
 
     def error(self):
-        pass
+        self.error_count += 1
+        
 
