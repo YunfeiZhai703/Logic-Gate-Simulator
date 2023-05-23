@@ -14,7 +14,7 @@ button_size_type = Union[str, Tuple[int, int]]
 class Button(wx.Button):
     """Button widget class."""
 
-    def __init__(self, parent, label, onClick, bg_color=COLORS.GRAY_800,
+    def __init__(self, parent, label, onClick=None, bg_color=COLORS.GRAY_800,
                  hover_bg_color=COLORS.GRAY_700,
                  fg_color=COLORS.WHITE,
                  hover_fg_color=COLORS.RED_200,
@@ -42,7 +42,8 @@ class Button(wx.Button):
         self.SetBackgroundColour(bg_color)
         self.SetForegroundColour(fg_color)
 
-        self.Bind(wx.EVT_BUTTON, onClick)
+        if onClick:
+            self.Bind(wx.EVT_BUTTON, onClick)
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnHover)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnUnHover)
 
