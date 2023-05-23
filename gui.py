@@ -52,13 +52,12 @@ class Gui(wx.Frame):
         self.SetBackgroundColour(COLORS.GRAY_950)
 
         self.canvas = Canvas(self, devices, monitors)
-        self.number_input = NumberInput(self, value=10, onChange=self.on_spin)
-        self.run_button = Button(self, "Run", onClick=self.on_run_button)
-        self.text_box = TextBox(self, "Enter text", onChange=self.on_text_box)
 
         # Configure sizers for layout
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
         side_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        # region Headin
 
         heading_sizer = wx.BoxSizer(wx.HORIZONTAL)
         heading_sizer.Add(
@@ -68,17 +67,52 @@ class Gui(wx.Frame):
 
         heading_sizer.Add(FileButton(self), 1, wx.ALL, 5)
 
+        # endregion
+
+        # region Devices
+
+        device_panel = wx.Panel(self)
+        device_panel.SetBackgroundColour(COLORS.RED_900)
+        device_panel.SetSizer(wx.BoxSizer(wx.VERTICAL))
+
+        device_panel.GetSizer().Add(Text(device_panel, "Devices"), 1, wx.ALL, 5)
+
+        number_input = NumberInput(
+            device_panel, value=10, onChange=self.on_spin)
+        run_button = Button(device_panel, "Run", onClick=self.on_run_button)
+        text_box = TextBox(device_panel, "Enter text",
+                           onChange=self.on_text_box)
+
+        device_panel.GetSizer().Add(number_input, 1, wx.ALL, 5)
+        device_panel.GetSizer().Add(run_button, 1, wx.ALL, 5)
+        device_panel.GetSizer().Add(text_box, 1, wx.ALL, 5)
+
+        # endregion
+
         canvas_sizer = wx.BoxSizer(wx.VERTICAL)
         canvas_sizer.Add(self.canvas, 2, wx.EXPAND | wx.ALL, 5)
-        canvas_sizer.Add(Text(self, "Lorem "), 1, wx.TOP, 20)
+
+        canvas_bottom_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        canvas_left_panel = wx.Panel(self)
+        canvas_left_panel.SetBackgroundColour(COLORS.GRAY_200)
+        canvas_left_panel.SetSizer(wx.BoxSizer(wx.VERTICAL))
+        canvas_left_panel.GetSizer().Add(Text(canvas_left_panel, "Switches"), 1, wx.TOP, 20)
+
+        canvas_right_panel = wx.Panel(self)
+        canvas_right_panel.SetBackgroundColour(COLORS.GRAY_200)
+        canvas_right_panel.SetSizer(wx.BoxSizer(wx.VERTICAL))
+        canvas_right_panel.GetSizer().Add(Text(canvas_right_panel, "Cycles"), 1, wx.TOP, 20)
+
+        canvas_bottom_sizer.Add(canvas_left_panel, 1, wx.EXPAND | wx.ALL, 5)
+        canvas_bottom_sizer.Add(canvas_right_panel, 1, wx.EXPAND | wx.ALL, 5)
+
+        canvas_sizer.Add(canvas_bottom_sizer, 1, wx.EXPAND, 20)
 
         main_sizer.Add(side_sizer, 2, wx.ALL, 5)
         main_sizer.Add(canvas_sizer, 5, wx.EXPAND | wx.ALL, 5)
 
         side_sizer.Add(heading_sizer, 1, wx.EXPAND | wx.ALL, 5)
-        side_sizer.Add(self.number_input, 1, wx.ALL, 5)
-        side_sizer.Add(self.run_button, 1, wx.ALL, 5)
-        side_sizer.Add(self.text_box, 1, wx.ALL, 5)
+        side_sizer.Add(device_panel, 3, wx.EXPAND | wx.ALL, 5)
 
         self.SetSizeHints(600, 600)
         self.SetSizer(main_sizer)
