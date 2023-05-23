@@ -91,6 +91,24 @@ class Canvas(wxcanvas.GLCanvas):
             GL.glVertex2f(x_next, y)
         GL.glEnd()
 
+        # Draw axis
+        y_pos -= 10
+        GL.glColor3f(0.0, 0.0, 0.0)  # axis is black
+        GL.glBegin(GL.GL_LINES)
+        GL.glVertex2f(x_pos, y_pos)
+        GL.glVertex2f(x_pos, y_pos + 40)
+        GL.glVertex2f(x_pos, y_pos)
+        GL.glVertex2f(x_pos + (len(signal) * 20), y_pos)
+        GL.glEnd()
+        # draw axis ticks
+        for i in range(len(signal) + 1):
+            x = (i * 20) + x_pos
+            GL.glBegin(GL.GL_LINES)
+            GL.glVertex2f(x, y_pos)
+            GL.glVertex2f(x, y_pos - 4)
+            GL.glEnd()
+            self.render_text(str(i), x - 5, y_pos - 15)
+
     def render(self, text):
         """Handle all drawing operations."""
         self.SetCurrent(self.context)
@@ -107,7 +125,7 @@ class Canvas(wxcanvas.GLCanvas):
 
         # Draw a sample signal trace
         self.draw_signal_trace([0, 1, 1, 1, 1, 1, 0, 1, 0, 1], 10, 50)
-        self.draw_signal_trace([0, 1, 1, 1, 1, 1, 0, 1, 0, 1], 10, 100)
+        self.draw_signal_trace([0, 1, 1, 1, 1, 1, 0, 1, 0, 1], 10, 150)
 
         # We have been drawing to the back buffer, flush the graphics pipeline
         # and swap the back buffer to the front
