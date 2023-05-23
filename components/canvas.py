@@ -70,6 +70,25 @@ class Canvas(wxcanvas.GLCanvas):
         GL.glTranslated(self.pan_x, self.pan_y, 0.0)
         GL.glScaled(self.zoom, self.zoom, self.zoom)
 
+    def draw_signal_trace(self, signal: list, x_pos: int, y_pos: int):
+        """Draws a signa
+
+        Args:
+            signal (list): A list of 1 and 0s
+        """
+        GL.glColor3f(0.0, 0.0, 1.0)  # signal trace is blue
+        GL.glBegin(GL.GL_LINE_STRIP)
+        for i in range(len(signal)):
+            x = (i * 20) + x_pos
+            x_next = (i * 20) + x_pos + 20
+            if signal[i] == 0:
+                y = y_pos
+            else:
+                y = y_pos + 25
+            GL.glVertex2f(x, y)
+            GL.glVertex2f(x_next, y)
+        GL.glEnd()
+
     def render(self, text):
         """Handle all drawing operations."""
         self.SetCurrent(self.context)
@@ -85,18 +104,8 @@ class Canvas(wxcanvas.GLCanvas):
         self.render_text(text, 10, 10)
 
         # Draw a sample signal trace
-        GL.glColor3f(0.0, 0.0, 1.0)  # signal trace is blue
-        GL.glBegin(GL.GL_LINE_STRIP)
-        for i in range(10):
-            x = (i * 20) + 10
-            x_next = (i * 20) + 30
-            if i % 2 == 0:
-                y = 75
-            else:
-                y = 100
-            GL.glVertex2f(x, y)
-            GL.glVertex2f(x_next, y)
-        GL.glEnd()
+        self.draw_signal_trace([0, 1, 1, 1, 1, 1, 0, 1, 0, 1], 10, 50)
+        self.draw_signal_trace([0, 1, 1, 1, 1, 1, 0, 1, 0, 1], 10, 100)
 
         # We have been drawing to the back buffer, flush the graphics pipeline
         # and swap the back buffer to the front
