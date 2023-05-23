@@ -18,7 +18,7 @@ from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
 from components.ui import Button, Text, NumberInput, TextBox, COLORS
-from components import Canvas
+from components import Canvas, FileButton
 
 
 class Gui(wx.Frame):
@@ -54,6 +54,7 @@ class Gui(wx.Frame):
         self.number_input = NumberInput(self, value=10, onChange=self.on_spin)
         self.run_button = Button(self, "Run", onClick=self.on_run_button)
         self.text_box = TextBox(self, "Enter text", onChange=self.on_text_box)
+        self.file_button = FileButton(self)
 
         # Configure sizers for layout
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -73,6 +74,7 @@ class Gui(wx.Frame):
         side_sizer.Add(self.number_input, 1, wx.ALL, 5)
         side_sizer.Add(self.run_button, 1, wx.ALL, 5)
         side_sizer.Add(self.text_box, 1, wx.ALL, 5)
+        side_sizer.Add(self.file_button, 1, wx.ALL, 5)
 
         self.SetSizeHints(600, 600)
         self.SetSizer(main_sizer)
