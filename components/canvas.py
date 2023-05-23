@@ -70,12 +70,13 @@ class Canvas(wxcanvas.GLCanvas):
         GL.glTranslated(self.pan_x, self.pan_y, 0.0)
         GL.glScaled(self.zoom, self.zoom, self.zoom)
 
-    def draw_signal_trace(self, signal: list, x_pos: int, y_pos: int):
+    def draw_signal_trace(self, signal: list, x_pos: int, y_pos: int, label: str):
         """Draws a signa
 
         Args:
             signal (list): A list of 1 and 0s
         """
+
         GL.glColor3f(0.0, 0.0, 1.0)  # signal trace is blue
         GL.glBegin(GL.GL_LINE_STRIP)
         for i in range(len(signal)):
@@ -108,6 +109,9 @@ class Canvas(wxcanvas.GLCanvas):
             GL.glEnd()
             self.render_text(str(i), x - 5, y_pos - 15)
 
+        x_pos -= int(40 / 3 * len(label))
+        self.render_text(label, x_pos, y_pos + 18)
+
     def render(self, text):
         """Handle all drawing operations."""
         self.SetCurrent(self.context)
@@ -123,8 +127,8 @@ class Canvas(wxcanvas.GLCanvas):
         self.render_text(text, 10, 10)
 
         # Draw a sample signal trace
-        self.draw_signal_trace([0, 1, 1, 1, 1, 1, 0, 1, 0, 1], 10, 50)
-        self.draw_signal_trace([0, 1, 1, 1, 1, 1, 0, 1, 0, 1], 10, 150)
+        self.draw_signal_trace([0, 1, 1, 1, 1, 1, 0, 1, 0, 1], 10, 50, "G1")
+        self.draw_signal_trace([0, 1, 1, 1, 1, 1, 0, 1, 0, 1], 10, 150, "CLK")
 
         # We have been drawing to the back buffer, flush the graphics pipeline
         # and swap the back buffer to the front
