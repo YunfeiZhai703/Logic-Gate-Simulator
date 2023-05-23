@@ -106,7 +106,6 @@ class Scanner:
         # Want to find the name that comes next in input_file
         # Return the name and the next character that is non-alphanumeric
         name = self.current_character
-
         while True:
             self.current_character = self.advance()
             if self.current_character.isalnum():
