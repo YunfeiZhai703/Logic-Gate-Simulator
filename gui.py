@@ -49,20 +49,25 @@ class Gui(wx.Frame):
         super().__init__(parent=None, title=title, size=(800, 600))
 
         self.setup_menu()
+        self.SetBackgroundColour(COLORS.GRAY_950)
 
         self.canvas = Canvas(self, devices, monitors)
         self.number_input = NumberInput(self, value=10, onChange=self.on_spin)
         self.run_button = Button(self, "Run", onClick=self.on_run_button)
         self.text_box = TextBox(self, "Enter text", onChange=self.on_text_box)
-        self.file_button = FileButton(self)
 
         # Configure sizers for layout
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
-
-        # make bg color white
-        self.SetBackgroundColour(COLORS.GRAY_950)
-
         side_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        heading_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        heading_sizer.Add(
+            Button(self, "Logic Simulator", size="md",
+                   bg_color=COLORS.RED_800, hover_bg_color=COLORS.RED_700,
+                   ), 1, wx.ALL, 5)
+
+        heading_sizer.Add(FileButton(self), 1, wx.ALL, 5)
+
         canvas_sizer = wx.BoxSizer(wx.VERTICAL)
         canvas_sizer.Add(self.canvas, 2, wx.EXPAND | wx.ALL, 5)
         canvas_sizer.Add(Text(self, "Lorem "), 1, wx.TOP, 20)
@@ -70,11 +75,10 @@ class Gui(wx.Frame):
         main_sizer.Add(side_sizer, 2, wx.ALL, 5)
         main_sizer.Add(canvas_sizer, 5, wx.EXPAND | wx.ALL, 5)
 
-        side_sizer.Add(Text(self, "Logsim"), 1, wx.TOP, 10)
+        side_sizer.Add(heading_sizer, 1, wx.EXPAND | wx.ALL, 5)
         side_sizer.Add(self.number_input, 1, wx.ALL, 5)
         side_sizer.Add(self.run_button, 1, wx.ALL, 5)
         side_sizer.Add(self.text_box, 1, wx.ALL, 5)
-        side_sizer.Add(self.file_button, 1, wx.ALL, 5)
 
         self.SetSizeHints(600, 600)
         self.SetSizer(main_sizer)
