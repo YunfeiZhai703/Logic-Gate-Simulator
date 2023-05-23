@@ -56,7 +56,7 @@ class Scanner:
                                 self.EQUAL, self.DOT, self.COMMA, self.SEMICOLON,
                                 self.OPEN_SQUARE, self.CLOSE_SQUARE, self.OPEN_BRACKET, self.CLOSE_BRACKET,
                                 self.HASHTAG, self.EOF] = range(14)
-        self.head_list = ["devices"]
+        self.head_list = ["[devices]", "[conns]", "[monit]"]
 
     def get_symbol(self):
         """Translate the next sequence of characters into a symbol."""
@@ -68,15 +68,17 @@ class Scanner:
             name_string = self.get_name()
             self.name_string = name_string[0]
 
+            if self.name_string in self.ignore:
+                return None    
+
+            print(self.name_string, end=' ')
+
+
             if name_string in self.keywords_list:
                 symbol.type = self.KEYWORD
             else:
                 symbol.type = self.NAME
             [symbol.id] = self.names.lookup([name_string])
-
-
-
-
 
 
         elif self.current_character.isdigit():
