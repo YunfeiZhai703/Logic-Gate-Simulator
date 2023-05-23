@@ -106,7 +106,14 @@ class Scanner:
         pass
 
     def get_number(self):
-        pass
+        number = self.current_character
+        while True:
+            self.current_character = self.advance()
+            if number.isdigit():
+                number += self.current_character
+            else:
+                return [number, self.current_character]
+            
 
     def skip_spaces(self):
         while self.current_character.isspace():
