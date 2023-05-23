@@ -40,7 +40,7 @@ class Canvas(wxcanvas.GLCanvas):
         GLUT.glutInit()
         self.init = False
         self.context = wxcanvas.GLContext(self)
-d
+
         # Initialise variables for panning
         self.pan_x = 0
         self.pan_y = 0
