@@ -56,7 +56,12 @@ class Scanner:
                                 self.EQUAL, self.DOT, self.COMMA, self.SEMICOLON,
                                 self.OPEN_SQUARE, self.CLOSE_SQUARE, self.OPEN_BRACKET, self.CLOSE_BRACKET,
                                 self.HASHTAG, self.EOF] = range(14)
-        self.head_list = ["devices"]
+        self.headings_list = ["[devices]", "[conns]", "[monit]"]
+        self.keywords_list = ["="]
+        self.stopping_list = [self.SEMICOLON, self.EOF]
+        self.current_character = ""
+    
+        
 
     def get_symbol(self):
         """Translate the next sequence of characters into a symbol."""
