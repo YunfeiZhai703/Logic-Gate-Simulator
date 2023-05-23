@@ -119,6 +119,11 @@ class Scanner:
             self.advance()
             print("}")
 
+        elif self.current_character == "-":
+            symbol.type = self.MINUS
+            self.advance()
+            self.error(SyntaxError, "Negative symbls not allowed")
+
         elif self.current_character == "":  # end of file
             symbol.type = self.EOF
 
