@@ -8,6 +8,7 @@ Classes:
 MyGLCanvas - handles all canvas drawing operations.
 Gui - configures the main window and all the widgets.
 """
+import random
 import wx
 
 
@@ -50,6 +51,7 @@ class Gui(wx.Frame):
 
         self.setup_menu()
         self.SetBackgroundColour(COLORS.GRAY_950)
+        self.spin_value = 0
 
         # Configure sizers for layout
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -79,6 +81,9 @@ class Gui(wx.Frame):
             right_bottom_block, dir="col", bg_color=COLORS.GRAY_800)
         right_bottom_right.Add(
             Text(right_bottom_right, "Cycles"), 1, wx.ALL, 5)
+        right_bottom_right.Add(
+            Button(right_bottom_right, "Run",
+                   onClick=self.on_run_button), 1, wx.ALL, 5)
 
         right_bottom_block.Add(right_bottom_left, 1, wx.EXPAND | wx.ALL, 5)
         right_bottom_block.Add(right_bottom_right, 1, wx.EXPAND | wx.ALL, 5)
@@ -109,6 +114,14 @@ class Gui(wx.Frame):
             wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
                           "About Logsim", wx.ICON_INFORMATION | wx.OK)
 
+    def on_run_button(self, event):
+        # randomly generate a signal of 1 and 0 length 10
+        random_signal = [random.randint(0, 1) for i in range(self.spin_value)]
+        self.canvas.add_signal(
+            random_signal, "A" + str(len(self.canvas.signals))
+        )
+        self.canvas.Refresh()
+
 
 class Heading(wx.BoxSizer):
     def __init__(self, parent):
@@ -130,7 +143,7 @@ class DevicesPanel(Box):
     def __init__(self, parent, canvas):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col")
-
+        self.parent = parent
         self.canvas = canvas
 
         self.Add(Text(self, "Devices"), 1, wx.ALL, 5)
@@ -149,6 +162,7 @@ class DevicesPanel(Box):
         """Handle the event when the user changes the spin control value."""
         # Get the spin control value from the event object
         spin_value = event.GetInt()
+        self.parent.spin_value = spin_value
         text = "".join(["New spin control value: ", str(spin_value)])
         self.canvas.render(text)
 

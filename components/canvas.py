@@ -76,18 +76,6 @@ class Canvas(wxcanvas.GLCanvas):
                 "name": "G1",
                 "signal": [0, 1, 1, 1, 1, 1, 0, 1, 0, 1]
             },
-            {
-                "name": "G2",
-                "signal": [0, 1, 1, 1, 1, 1, 1, 1, 0, 1]
-            },
-            {
-                "name": "G3",
-                "signal": [0, 1, 1, 0, 0, 1, 0, 1, 0, 1]
-            },
-            {
-                "name": "G4",
-                "signal": [0, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-            },
         ]
 
         # Bind events to the canvas
