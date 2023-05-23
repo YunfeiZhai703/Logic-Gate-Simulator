@@ -63,7 +63,7 @@ class Scanner:
         self.stopping_list = [self.SEMICOLON, self.EOF]
         self.current_character = ""
         self.current_line = 0
-    
+        self.error_count = 0
         
     def get_symbol(self):
         """Translate the next sequence of characters into a symbol."""
@@ -86,14 +86,38 @@ class Scanner:
         elif self.current_character.isdigit():
             symbol.id = self.get_number()
             symbol.type = self.NUMBER
+            print(symbol.id[0], end = '')
 
         elif self.current_character == "=":  # punctuation
             symbol.type = self.EQUALS
             self.advance()
 
         elif self.current_character == ",":
-            # etc for other punctuation
-            pass
+            symbol.type = self.COMMA
+            self.advance()
+
+        elif self.current_character == ".":
+            symbol.type = self.DOT
+            self.advance()
+
+        elif self.current_character == ";":
+            symbol.type = self.SEMICOLON
+            self.advance()
+            print(";")
+        
+        elif self.current_character == "#":
+            symbol.type = self.COMMA
+            self.advance()
+
+        elif self.current_character == "{":
+            symbol.type = self.CURLY_OPEN
+            self.advance()
+            print("{", end = '')
+
+        elif self.current_character == "}":
+            symbol.type = self.CURLY_CLOSE
+            self.advance()
+            print("}")
 
         elif self.current_character == "":  # end of file
             symbol.type = self.EOF
@@ -106,7 +130,6 @@ class Scanner:
         # Want to find the name that comes next in input_file
         # Return the name and the next character that is non-alphanumeric
         name = self.current_character
-
         while True:
             self.current_character = self.advance()
             if self.current_character.isalnum():
@@ -123,7 +146,6 @@ class Scanner:
             else:
                 return [number, self.current_character]
             
-
     def skip_spaces(self):
         while self.current_character.isspace():
             self.current_character = self.advance()
@@ -147,6 +169,10 @@ class Scanner:
 
         return self.current_character
 
-    def error(self):
-        pass
+    def error(self, error_type):
+        self.error_count += 1
+        if error_type == self.NO_NUMBER:
+            print("Expected a number")
+        if error_type == self.NO_EQUALS:
+            print("Expected a equal sign")
 
