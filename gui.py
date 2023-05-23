@@ -82,7 +82,7 @@ class Gui(wx.Frame):
 
         right_sizer.Add(right_bottom_block, 1, wx.EXPAND, 5)
 
-        ConfigurationPanel(right_bottom_block, self.canvas, self.on_run_button, self.on_number_input).Attach(
+        ConfigurationPanel(right_bottom_block, self.canvas, self.on_start, self.on_number_input).Attach(
             right_bottom_block, 1, wx.EXPAND | wx.ALL, 5)
 
         main_sizer.Add(left_sizer, 2, wx.ALL, 5)
@@ -109,7 +109,7 @@ class Gui(wx.Frame):
             wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
                           "About Logsim", wx.ICON_INFORMATION | wx.OK)
 
-    def on_run_button(self, event):
+    def on_start(self, event):
         # randomly generate a signal of 1 and 0 length 10
         random_signal = [random.randint(0, 1)
                          for i in range(self.number_of_cycles)]
@@ -176,7 +176,7 @@ class ConfigurationPanel(Box):
 
         self.Add(NumberInput(
             self, value=10, onChange=on_number_input), 0, wx.ALL, 5)
-        self.Add(Button(self, "Run",
+        self.Add(Button(self, "Start Simulation",
                         onClick=on_start,
                         bg_color=COLORS.GREEN_800,
                         hover_bg_color=COLORS.GREEN_700,
