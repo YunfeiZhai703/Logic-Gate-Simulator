@@ -101,4 +101,6 @@ class Scanner:
             self.advance()
         return symbol
     def get_name()
+    def get_number()
     def skip_spaces()
+    def advance()
