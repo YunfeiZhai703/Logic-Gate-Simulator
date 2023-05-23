@@ -59,3 +59,33 @@ class Scanner:
         self.head_list = ["devices"]
     def get_symbol(self):
         """Translate the next sequence of characters into a symbol."""
+
+        symbol = Symbol()
+        self.skip_spaces()
+
+        if self.current_character.isalpha():
+            name_string = self.get_name()
+            if name_string in self.keywords_list:
+                symbol.type = self.KEYWORD
+            else:
+                symbol.type = self.NAME
+            [symbol.id] = self.names.lookup([name_string])
+
+        elif self.current_character.isdigit():
+            symbol.id = self.get_number()
+            symbol.type = self.NUMBER
+
+        elif self.current_character == "=": # punctuation
+            symbol.type = self.EQUALS
+            self.advance()
+
+        elif self.current_character == ",":
+            # etc for other punctuation
+
+        elif self.current_character == "": # end of file
+            symbol.type = self.EOF
+        
+        else: # not a valid character
+            self.advance()
+        return symbol
+
