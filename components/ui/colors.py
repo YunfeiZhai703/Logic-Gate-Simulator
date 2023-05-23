@@ -1,5 +1,5 @@
 """
-This file contains the colors used in the UI. Taken from tailwindcss 
+This file contains the colors used in the UI. Taken from tailwindcss
 """
 
 
@@ -29,3 +29,14 @@ class COLORS:
     RED_700 = "#B91C1C"
     RED_800 = "#991B1B"
     RED_900 = "#7F1D1D"
+    """Green colors"""
+    GREEN_50 = "#ECFDF5"
+    GREEN_100 = "#D1FAE5"
+    GREEN_200 = "#A7F3D0"
+    GREEN_300 = "#6EE7B7"
+    GREEN_400 = "#34D399"
+    GREEN_500 = "#10B981"
+    GREEN_600 = "#059669"
+    GREEN_700 = "#047857"
+    GREEN_800 = "#065F46"
+    GREEN_900 = "#064E3B"
