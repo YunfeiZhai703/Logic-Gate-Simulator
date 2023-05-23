@@ -1,6 +1,7 @@
 import wx.glcanvas as wxcanvas
 from OpenGL import GL, GLUT
 import wx
+import math
 
 
 class Canvas(wxcanvas.GLCanvas):
@@ -127,8 +128,8 @@ class Canvas(wxcanvas.GLCanvas):
         self.render_text(text, 10, 10)
 
         # Draw a sample signal trace
-        self.draw_signal_trace([0, 1, 1, 1, 1, 1, 0, 1, 0, 1], 10, 50, "G1")
-        self.draw_signal_trace([0, 1, 1, 1, 1, 1, 0, 1, 0, 1], 10, 150, "CLK")
+        self.draw_signal_trace([0, 1, 1, 1, 1, 1, 0, 1, 0, 1], 50, 50, "G1")
+        self.draw_signal_trace([0, 1, 1, 1, 1, 1, 0, 1, 0, 1], 50, 150, "CLK")
 
         # We have been drawing to the back buffer, flush the graphics pipeline
         # and swap the back buffer to the front
@@ -176,6 +177,14 @@ class Canvas(wxcanvas.GLCanvas):
         if event.Dragging():
             self.pan_x += event.GetX() - self.last_mouse_x
             self.pan_y -= event.GetY() - self.last_mouse_y
+            # prevent panning outside the canvas
+            # self.pan_x = max(self.pan_x, 0)
+            # self.pan_y = max(self.pan_y, 0)
+            # size = self.GetClientSize()
+            # self.pan_x = min(self.pan_x, size.width * 0.8 - 1)
+            # self.pan_y = min(self.pan_y, size.height * 0.8 - 1)
+            # print(f"Size: {size.width} {size.height}")
+
             self.last_mouse_x = event.GetX()
             self.last_mouse_y = event.GetY()
             self.init = False
