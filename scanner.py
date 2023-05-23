@@ -81,7 +81,7 @@ class Scanner:
 
         elif self.current_character == ",":
             # etc for other punctuation
-
+            
         elif self.current_character == "": # end of file
             symbol.type = self.EOF
         
