@@ -18,7 +18,7 @@ from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
 from components.ui import Button, Text, NumberInput, TextBox, COLORS
-from components import Canvas, FileButton
+from components import Canvas, FileButton, Box
 
 
 class Gui(wx.Frame):
@@ -51,13 +51,13 @@ class Gui(wx.Frame):
         self.setup_menu()
         self.SetBackgroundColour(COLORS.GRAY_950)
 
-        self.canvas = Canvas(self, devices, monitors)
+        # self.canvas = Canvas(self, devices, monitors)
 
         # Configure sizers for layout
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        side_sizer = wx.BoxSizer(wx.VERTICAL)
+        left_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        # region Headin
+        # region Heading
 
         heading_sizer = wx.BoxSizer(wx.HORIZONTAL)
         heading_sizer.Add(
@@ -71,48 +71,49 @@ class Gui(wx.Frame):
 
         # region Devices
 
-        device_panel = wx.Panel(self)
-        device_panel.SetBackgroundColour(COLORS.RED_900)
-        device_panel.SetSizer(wx.BoxSizer(wx.VERTICAL))
+        device_panel = Box(self, dir="col")
 
-        device_panel.GetSizer().Add(Text(device_panel, "Devices"), 1, wx.ALL, 5)
+        device_panel.Add(Text(device_panel, "Devices"), 1, wx.ALL, 5)
 
-        number_input = NumberInput(
-            device_panel, value=10, onChange=self.on_spin)
-        run_button = Button(device_panel, "Run", onClick=self.on_run_button)
-        text_box = TextBox(device_panel, "Enter text",
-                           onChange=self.on_text_box)
-
-        device_panel.GetSizer().Add(number_input, 1, wx.ALL, 5)
-        device_panel.GetSizer().Add(run_button, 1, wx.ALL, 5)
-        device_panel.GetSizer().Add(text_box, 1, wx.ALL, 5)
+        device_panel.Add(NumberInput(
+            device_panel, value=10, onChange=self.on_spin), 1, wx.ALL, 5)
+        device_panel.Add(Button(device_panel, "Run",
+                         onClick=self.on_run_button), 1, wx.ALL, 5)
+        device_panel.Add(TextBox(device_panel, "Enter text",
+                                 onChange=self.on_text_box), 1, wx.ALL, 5)
 
         # endregion
 
-        canvas_sizer = wx.BoxSizer(wx.VERTICAL)
-        canvas_sizer.Add(self.canvas, 2, wx.EXPAND | wx.ALL, 5)
+        right_sizer = Box(self, dir="col")
+        self.canvas = Canvas(right_sizer, devices, monitors)
 
-        canvas_bottom_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        canvas_left_panel = wx.Panel(self)
-        canvas_left_panel.SetBackgroundColour(COLORS.GRAY_200)
-        canvas_left_panel.SetSizer(wx.BoxSizer(wx.VERTICAL))
-        canvas_left_panel.GetSizer().Add(Text(canvas_left_panel, "Switches"), 1, wx.TOP, 20)
+        right_sizer.Add(self.canvas,
+                        3, wx.EXPAND | wx.ALL, 5)
 
-        canvas_right_panel = wx.Panel(self)
-        canvas_right_panel.SetBackgroundColour(COLORS.GRAY_200)
-        canvas_right_panel.SetSizer(wx.BoxSizer(wx.VERTICAL))
-        canvas_right_panel.GetSizer().Add(Text(canvas_right_panel, "Cycles"), 1, wx.TOP, 20)
+        right_bottom_block = Box(
+            right_sizer, dir="row")
 
-        canvas_bottom_sizer.Add(canvas_left_panel, 1, wx.EXPAND | wx.ALL, 5)
-        canvas_bottom_sizer.Add(canvas_right_panel, 1, wx.EXPAND | wx.ALL, 5)
+        right_bottom_left = Box(
+            right_bottom_block, dir="col", bg_color=COLORS.GRAY_800)
 
-        canvas_sizer.Add(canvas_bottom_sizer, 1, wx.EXPAND, 20)
+        right_bottom_left.Add(
+            Text(right_bottom_left, "Switches"), 1, wx.ALL, 5)
 
-        main_sizer.Add(side_sizer, 2, wx.ALL, 5)
-        main_sizer.Add(canvas_sizer, 5, wx.EXPAND | wx.ALL, 5)
+        right_bottom_right = Box(
+            right_bottom_block, dir="col", bg_color=COLORS.GRAY_800)
+        right_bottom_right.Add(
+            Text(right_bottom_right, "Cycles"), 1, wx.ALL, 5)
 
-        side_sizer.Add(heading_sizer, 1, wx.EXPAND | wx.ALL, 5)
-        side_sizer.Add(device_panel, 3, wx.EXPAND | wx.ALL, 5)
+        right_bottom_block.Add(right_bottom_left, 1, wx.EXPAND | wx.ALL, 5)
+        right_bottom_block.Add(right_bottom_right, 1, wx.EXPAND | wx.ALL, 5)
+
+        right_sizer.Add(right_bottom_block, 2, wx.EXPAND, 5)
+
+        main_sizer.Add(left_sizer, 2, wx.ALL, 5)
+        main_sizer.Add(right_sizer, 5, wx.EXPAND | wx.ALL, 5)
+
+        left_sizer.Add(heading_sizer, 1, wx.EXPAND | wx.ALL, 5)
+        left_sizer.Add(device_panel, 3, wx.EXPAND | wx.ALL, 5)
 
         self.SetSizeHints(600, 600)
         self.SetSizer(main_sizer)
@@ -137,7 +138,8 @@ class Gui(wx.Frame):
 
     def on_spin(self, event):
         """Handle the event when the user changes the spin control value."""
-        spin_value = self.number_input.GetValue()
+        # Get the spin control value from the event object
+        spin_value = event.GetInt()
         text = "".join(["New spin control value: ", str(spin_value)])
         self.canvas.render(text)
 
@@ -148,6 +150,7 @@ class Gui(wx.Frame):
 
     def on_text_box(self, event):
         """Handle the event when the user enters text."""
-        text_box_value = self.text_box.GetValue()
+        # Get the text box value from the event object
+        text_box_value = event.GetString()
         text = "".join(["New text box value: ", text_box_value])
         self.canvas.render(text)
