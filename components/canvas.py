@@ -41,6 +41,8 @@ class Canvas(wxcanvas.GLCanvas):
         self.init = False
         self.context = wxcanvas.GLContext(self)
 
+        print(wx.GetDisplaySize())
+
         # Initialise variables for panning
         self.pan_x = 0
         self.pan_y = 0

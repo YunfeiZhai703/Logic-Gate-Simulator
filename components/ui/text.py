@@ -21,3 +21,4 @@ class Text(wx.StaticText):
         font = wx.Font(font_size, fonts[font_family],
                        wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         self.SetFont(font)
+
