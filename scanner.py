@@ -124,5 +124,6 @@ class Scanner:
         pass
 
     def error(self):
-        pass
+        line_count = self.current_line
+        
 
