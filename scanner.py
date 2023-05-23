@@ -74,11 +74,6 @@ class Scanner:
             name_string = self.get_name()
             self.name_string = name_string[0]
 
-            if self.name_string in self.ignore:
-                return None    
-
-            print(self.name_string, end=' ')
-
 
             if name_string in self.keywords_list:
                 symbol.type = self.KEYWORD
@@ -105,3 +100,4 @@ class Scanner:
         else:  # not a valid character
             self.advance()
         return symbol
+
