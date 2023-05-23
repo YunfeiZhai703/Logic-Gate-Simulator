@@ -40,9 +40,7 @@ class Canvas(wxcanvas.GLCanvas):
         GLUT.glutInit()
         self.init = False
         self.context = wxcanvas.GLContext(self)
-
-        print(wx.GetDisplaySize())
-
+d
         # Initialise variables for panning
         self.pan_x = 0
         self.pan_y = 0
@@ -62,7 +60,7 @@ class Canvas(wxcanvas.GLCanvas):
         size = self.GetClientSize()
         self.SetCurrent(self.context)
         GL.glDrawBuffer(GL.GL_BACK)
-        GL.glClearColor(1.0, 1.0, 1.0, 0.0)
+        self.set_bg_color()
         GL.glViewport(0, 0, size.width, size.height)
         GL.glMatrixMode(GL.GL_PROJECTION)
         GL.glLoadIdentity()
@@ -93,7 +91,7 @@ class Canvas(wxcanvas.GLCanvas):
 
         # Draw axis
         y_pos -= 10
-        GL.glColor3f(0.0, 0.0, 0.0)  # axis is black
+        self.set_graph_color()
         GL.glBegin(GL.GL_LINES)
         GL.glVertex2f(x_pos, y_pos)
         GL.glVertex2f(x_pos, y_pos + 40)
@@ -103,6 +101,7 @@ class Canvas(wxcanvas.GLCanvas):
         # draw axis ticks
         for i in range(len(signal) + 1):
             x = (i * 20) + x_pos
+            self.set_graph_color()
             GL.glBegin(GL.GL_LINES)
             GL.glVertex2f(x, y_pos)
             GL.glVertex2f(x, y_pos - 4)
@@ -204,7 +203,7 @@ class Canvas(wxcanvas.GLCanvas):
 
     def render_text(self, text, x_pos, y_pos):
         """Handle text drawing operations."""
-        GL.glColor3f(0.0, 0.0, 0.0)  # text is black
+        self.set_graph_color()
         GL.glRasterPos2f(x_pos, y_pos)
         font = GLUT.GLUT_BITMAP_HELVETICA_12
 
@@ -214,3 +213,9 @@ class Canvas(wxcanvas.GLCanvas):
                 GL.glRasterPos2f(x_pos, y_pos)
             else:
                 GLUT.glutBitmapCharacter(font, ord(character))
+
+    def set_bg_color(self):
+        GL.glClearColor(0.0, 0.0, 0.0, 0.0)
+
+    def set_graph_color(self):
+        GL.glColor3f(0.8, 0.8, 0.8)
