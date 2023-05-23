@@ -23,33 +23,28 @@ from components import Canvas, FileButton, Box
 
 
 class Gui(wx.Frame):
-    """Configure the main window and all the widgets.
-
-    This class provides a graphical user interface for the Logic Simulator and
-    enables the user to change the circuit properties and run simulations.
-
-    Parameters
-    ----------
-    title: title of the window.
-
-    Public methods
-    --------------
-    on_menu(self, event): Event handler for the file menu.
-
-    on_spin(self, event): Event handler for when the user changes the spin
-                           control value.
-
-    on_run_button(self, event): Event handler for when the user clicks the run
-                                button.
-
-    on_text_box(self, event): Event handler for when the user enters text.
-    """
+    # notebook
 
     def __init__(self, title, path, names, devices, network, monitors):
-        """Initialise widgets and layout."""
         super().__init__(parent=None, title=title, size=(800, 600))
 
-        self.setup_menu()
+        nb = wx.Notebook(self)
+        nb.canvas = Canvas(nb, devices, monitors)
+        nb.AddPage(FirstPage("hi", path, names, devices,
+                   network, monitors, parent=nb), "Main")
+
+        nb.AddPage(nb.canvas, "Graphs")
+
+        self.Show()
+
+
+class FirstPage(wx.Panel):
+
+    def __init__(self, title, path, names, devices, network, monitors, parent=None):
+        """Initialise widgets and layout."""
+        super().__init__(parent=parent)
+
+        # self.setup_menu()
         self.SetBackgroundColour(COLORS.GRAY_950)
         self.number_of_cycles = 10
 
@@ -59,6 +54,7 @@ class Gui(wx.Frame):
         right_sizer = Box(self, dir="col")
 
         self.canvas = Canvas(right_sizer, devices, monitors)
+        self.canvas2 = parent.canvas
 
         Heading(self).Attach(left_sizer, 0, wx.EXPAND, 5)
 
@@ -78,11 +74,10 @@ class Gui(wx.Frame):
             Text(right_bottom_left, "Switches"), 0, wx.ALL, 5)
 
         right_bottom_block.Add(right_bottom_left, 1, wx.EXPAND | wx.ALL, 5)
-        # right_bottom_block.Add(right_bottom_right, 1, wx.EXPAND | wx.ALL, 5)
 
         right_sizer.Add(right_bottom_block, 1, wx.EXPAND, 5)
 
-        ConfigurationPanel(right_bottom_block, self.canvas, self.on_start, self.on_number_input).Attach(
+        ConfigurationPanel(right_bottom_block, self.on_start, self.on_number_input).Attach(
             right_bottom_block, 1, wx.EXPAND | wx.ALL, 5)
 
         main_sizer.Add(left_sizer, 2, wx.ALL, 5)
@@ -114,6 +109,9 @@ class Gui(wx.Frame):
         random_signal = [random.randint(0, 1)
                          for i in range(self.number_of_cycles)]
         self.canvas.add_signal(
+            random_signal, "A" + str(len(self.canvas.signals))
+        )
+        self.canvas2.add_signal(
             random_signal, "A" + str(len(self.canvas.signals))
         )
         self.canvas.Refresh()
@@ -166,11 +164,10 @@ class DevicesPanel(Box):
 
 
 class ConfigurationPanel(Box):
-    def __init__(self, parent, canvas, on_start, on_number_input):
+    def __init__(self, parent, on_start, on_number_input):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col", bg_color=COLORS.GRAY_800)
         self.parent = parent
-        self.canvas = canvas
 
         self.Add(Text(self, "Configuration"), 0, wx.ALL, 5)
 
