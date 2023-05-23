@@ -51,41 +51,17 @@ class Gui(wx.Frame):
         self.setup_menu()
         self.SetBackgroundColour(COLORS.GRAY_950)
 
-        # self.canvas = Canvas(self, devices, monitors)
-
         # Configure sizers for layout
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
         left_sizer = wx.BoxSizer(wx.VERTICAL)
-
-        # region Heading
-
-        heading_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        heading_sizer.Add(
-            Button(self, "Logic Simulator", size="md",
-                   bg_color=COLORS.RED_800, hover_bg_color=COLORS.RED_700,
-                   ), 1, wx.ALL, 5)
-
-        heading_sizer.Add(FileButton(self), 1, wx.ALL, 5)
-
-        # endregion
-
-        # region Devices
-
-        device_panel = Box(self, dir="col")
-
-        device_panel.Add(Text(device_panel, "Devices"), 1, wx.ALL, 5)
-
-        device_panel.Add(NumberInput(
-            device_panel, value=10, onChange=self.on_spin), 1, wx.ALL, 5)
-        device_panel.Add(Button(device_panel, "Run",
-                         onClick=self.on_run_button), 1, wx.ALL, 5)
-        device_panel.Add(TextBox(device_panel, "Enter text",
-                                 onChange=self.on_text_box), 1, wx.ALL, 5)
-
-        # endregion
-
         right_sizer = Box(self, dir="col")
+
         self.canvas = Canvas(right_sizer, devices, monitors)
+
+        Heading(self).Attach(left_sizer, 0, wx.EXPAND, 5)
+
+        DevicesPanel(self, canvas=self.canvas).Attach(
+            left_sizer, 3, wx.EXPAND | wx.ALL, 5)
 
         right_sizer.Add(self.canvas,
                         3, wx.EXPAND | wx.ALL, 5)
@@ -112,9 +88,6 @@ class Gui(wx.Frame):
         main_sizer.Add(left_sizer, 2, wx.ALL, 5)
         main_sizer.Add(right_sizer, 5, wx.EXPAND | wx.ALL, 5)
 
-        left_sizer.Add(heading_sizer, 1, wx.EXPAND | wx.ALL, 5)
-        left_sizer.Add(device_panel, 3, wx.EXPAND | wx.ALL, 5)
-
         self.SetSizeHints(600, 600)
         self.SetSizer(main_sizer)
 
@@ -135,6 +108,42 @@ class Gui(wx.Frame):
         if Id == wx.ID_ABOUT:
             wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
                           "About Logsim", wx.ICON_INFORMATION | wx.OK)
+
+
+class Heading(wx.BoxSizer):
+    def __init__(self, parent):
+        """Initialise the heading."""
+        super().__init__(wx.HORIZONTAL)
+        self.Add(
+            Button(parent, "Logic Simulator", size="md",
+                   bg_color=COLORS.RED_800, hover_bg_color=COLORS.RED_700,
+                   ), 1, wx.ALL, 5)
+
+        self.Add(FileButton(parent), 1, wx.ALL, 5)
+
+    def Attach(self, parent: wx.BoxSizer, proportion, flag, border):
+        """Attach the heading to the parent."""
+        parent.Add(self, proportion, flag, border)
+
+
+class DevicesPanel(Box):
+    def __init__(self, parent, canvas):
+        """Initialise the devices panel."""
+        super().__init__(parent, dir="col")
+
+        self.canvas = canvas
+
+        self.Add(Text(self, "Devices"), 1, wx.ALL, 5)
+        self.Add(NumberInput(
+            self, value=10, onChange=self.on_spin), 1, wx.ALL, 5)
+        self.Add(Button(self, "Run",
+                        onClick=self.on_run_button), 1, wx.ALL, 5)
+        self.Add(TextBox(self, "Enter text",
+                         onChange=self.on_text_box), 1, wx.ALL, 5)
+
+    def Attach(self, parent: wx.BoxSizer, proportion, flag, border):
+        """Attach the heading to the parent."""
+        parent.Add(self, proportion, flag, border)
 
     def on_spin(self, event):
         """Handle the event when the user changes the spin control value."""
