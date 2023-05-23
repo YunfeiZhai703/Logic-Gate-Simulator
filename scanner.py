@@ -52,12 +52,13 @@ class Scanner:
     def __init__(self, path, names):
         """Open specified file and initialise reserved words and IDs."""
         self.names = names
-        self.get_symbol_list = [self.HEADING, self.KEYWORD, self.NUMBER, self.NAME,
+        self.symbol_list = [self.HEADING, self.KEYWORD, self.NUMBER, self.NAME,
                                 self.EQUAL, self.DOT, self.COMMA, self.SEMICOLON,
                                 self.OPEN_SQUARE, self.CLOSE_SQUARE, self.OPEN_BRACKET, self.CLOSE_BRACKET,
                                 self.HASHTAG, self.EOF] = range(14)
         self.headings_list = ["[devices]", "[conns]", "[monit]"]
         self.keywords_list = ["="]
+        self.ignore = ["#"]
         self.stopping_list = [self.SEMICOLON, self.EOF]
         self.current_character = ""
     
@@ -104,3 +105,5 @@ class Scanner:
         else:  # not a valid character
             self.advance()
         return symbol
+    def get_name()
+    def skip_spaces()
