@@ -86,14 +86,38 @@ class Scanner:
         elif self.current_character.isdigit():
             symbol.id = self.get_number()
             symbol.type = self.NUMBER
+            print(symbol.id[0], end = '')
 
         elif self.current_character == "=":  # punctuation
             symbol.type = self.EQUALS
             self.advance()
 
         elif self.current_character == ",":
-            # etc for other punctuation
-            pass
+            symbol.type = self.COMMA
+            self.advance()
+
+        elif self.current_character == ".":
+            symbol.type = self.DOT
+            self.advance()
+
+        elif self.current_character == ";":
+            symbol.type = self.SEMICOLON
+            self.advance()
+            print(";")
+        
+        elif self.current_character == "#":
+            symbol.type = self.COMMA
+            self.advance()
+
+        elif self.current_character == "{":
+            symbol.type = self.CURLY_OPEN
+            self.advance()
+            print("{", end = '')
+
+        elif self.current_character == "}":
+            symbol.type = self.CURLY_CLOSE
+            self.advance()
+            print("}")
 
         elif self.current_character == "":  # end of file
             symbol.type = self.EOF
@@ -122,7 +146,6 @@ class Scanner:
             else:
                 return [number, self.current_character]
             
-
     def skip_spaces(self):
         while self.current_character.isspace():
             self.current_character = self.advance()
