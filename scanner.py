@@ -62,6 +62,7 @@ class Scanner:
         self.ignore = ["#"]
         self.stopping_list = [self.SEMICOLON, self.EOF]
         self.current_character = ""
+        self.current_line = 0
     
         
     def get_symbol(self):
@@ -114,7 +115,14 @@ class Scanner:
                 return [name, self.current_character]
 
     def get_number(self):
-        pass
+        number = self.current_character
+        while True:
+            self.current_character = self.advance()
+            if number.isdigit():
+                number += self.current_character
+            else:
+                return [number, self.current_character]
+            
 
     def skip_spaces(self):
         while self.current_character.isspace():

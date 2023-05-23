@@ -7,13 +7,13 @@ class FileButton(Button):
     def __init__(self, parent, **kwargs):
         Button.__init__(self, parent, label="Open File",
                         onClick=self.openFile,
-                        size=(100, 40),
+                        size="md",
                         ** kwargs)
         self._file = None
         self._path = None
 
         bmp = wx.Bitmap("components/assests/upload.png")
-        self.SetBitmap(bmp, wx.LEFT)
+        self.SetBitmap(bmp)
 
     def openFile(self, event):
         wildcard = "TXT files (*.txt)|*.txt"

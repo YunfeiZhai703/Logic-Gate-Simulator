@@ -4,10 +4,11 @@ Class for button widget using wxPython
 
 import wx
 from .colors import COLORS
-from typing import Literal, Tuple, Union
+from typing import Tuple, Union
 
-button_size_type = Union[Literal["xs", "sm",
-                                 "md", "lg", "xl"], Tuple[int, int]]
+button_size_type = Union[str, Tuple[int, int]]
+
+# str: xs, sm, md, lg, xl (removed Literal due to python 3.7 compatibility)
 
 
 class Button(wx.Button):
