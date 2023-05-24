@@ -125,7 +125,6 @@ class Scanner:
 
         elif self.current_character == "":   #End of file
             symbol.type = self.EOF
-            self.advance()
 
         else:  #Not a valid character
             self.error(SyntaxError, "Character not valid")
