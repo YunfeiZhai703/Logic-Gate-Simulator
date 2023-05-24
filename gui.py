@@ -28,13 +28,17 @@ class Gui(wx.Frame):
     def __init__(self, title, path, names, devices, network, monitors):
         super().__init__(parent=None, title=title, size=(800, 600))
 
-        nb = wx.Notebook(self)
+        nb = wx.Notebook(self, style=wx.NB_FIXEDWIDTH)
+        self.nb = nb
+        nb.SetBackgroundColour(COLORS.GRAY_400)
         nb.canvas = Canvas(nb, devices, monitors)
-        nb.AddPage(FirstPage("hi", path, names, devices,
-                   network, monitors, parent=nb), "Main")
+        nb.uploaded_code = "Heelo"
+        nb.AddPage(MainPage("Logic Simulator", path, names, devices,
+                   network, monitors, notebook=nb), "Main")
 
         nb.AddPage(nb.canvas, "Graphs")
-        nb.AddPage(Text(nb, "Page 3"), "Page 3")
+        nb.AddPage(CodePage(nb), "Code")
+        nb.AddPage(Button(nb, label="Save", onClick=self.print_code), "Test")
         self.setup_menu()
 
         self.Show()
@@ -48,6 +52,9 @@ class Gui(wx.Frame):
         self.SetMenuBar(menuBar)
         self.Bind(wx.EVT_MENU, self.on_menu)
 
+    def print_code(self, event):
+        print(self.nb.uploaded_code)
+
     def on_menu(self, event):
         """Handle the event when the user selects a menu item."""
         Id = event.GetId()
@@ -58,11 +65,11 @@ class Gui(wx.Frame):
                           "About Logsim", wx.ICON_INFORMATION | wx.OK)
 
 
-class FirstPage(wx.Panel):
+class MainPage(wx.Panel):
 
-    def __init__(self, title, path, names, devices, network, monitors, parent=None):
+    def __init__(self, title, path, names, devices, network, monitors, notebook=None):
         """Initialise widgets and layout."""
-        super().__init__(parent=parent)
+        super().__init__(parent=notebook)
 
         self.SetBackgroundColour(COLORS.GRAY_950)
         self.number_of_cycles = 10
@@ -73,9 +80,9 @@ class FirstPage(wx.Panel):
         right_sizer = Box(self, dir="col")
 
         self.canvas = Canvas(right_sizer, devices, monitors)
-        self.canvas2 = parent.canvas
+        self.canvas2 = notebook.canvas
 
-        Heading(self).Attach(left_sizer, 0, wx.EXPAND, 5)
+        Heading(self, notebook).Attach(left_sizer, 0, wx.EXPAND, 5)
 
         DevicesPanel(self, canvas=self.canvas).Attach(
             left_sizer, 3, wx.EXPAND | wx.ALL, 5)
@@ -109,6 +116,7 @@ class FirstPage(wx.Panel):
         # randomly generate a signal of 1 and 0 length 10
         random_signal = [random.randint(0, 1)
                          for i in range(self.number_of_cycles)]
+        print(random_signal)
         self.canvas.add_signal(
             random_signal, "A" + str(len(self.canvas.signals))
         )
@@ -123,15 +131,16 @@ class FirstPage(wx.Panel):
 
 
 class Heading(wx.BoxSizer):
-    def __init__(self, parent):
+    def __init__(self, parent, notebook: wx.Notebook):
         """Initialise the heading."""
         super().__init__(wx.HORIZONTAL)
+
         self.Add(
             Button(parent, "Logic Simulator", size="md",
                    bg_color=COLORS.RED_800, hover_bg_color=COLORS.RED_700,
                    ), 1, wx.ALL, 5)
 
-        self.Add(FileButton(parent), 1, wx.ALL, 5)
+        self.Add(FileButton(parent, notebook), 1, wx.ALL, 5)
 
     def Attach(self, parent: wx.BoxSizer, proportion, flag, border):
         """Attach the heading to the parent."""
@@ -179,3 +188,22 @@ class ConfigurationPanel(Box):
                         bg_color=COLORS.GREEN_800,
                         hover_bg_color=COLORS.GREEN_700,
                         size="md"), 0, wx.ALL, 5)
+
+
+class CodePage(Box):
+    def __init__(self, parent: wx.Notebook):
+        super().__init__(parent, dir="col")
+        self.parent = parent
+        self.code = parent.uploaded_code
+
+        self.Add(Text(self, "Code"), 0, wx.ALL, 5)
+
+        self.Add(Text(self, self.code), 0, wx.ALL, 5)
+
+        # update the text when the parent's uploaded code changes
+        parent.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.on_page_changed)
+
+    def on_page_changed(self, event):
+        """Handle the event when the user changes the page."""
+        self.code = self.parent.uploaded_code
+        self.GetChildren()[1].SetLabel(self.code)
