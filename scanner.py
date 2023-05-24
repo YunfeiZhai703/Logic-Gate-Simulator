@@ -54,8 +54,7 @@ class Scanner:
         self.names = names
         self.symbol_list = [self.HEADING, self.KEYWORD, self.NUMBER, self.NAME,
                                 self.EQUAL, self.DOT, self.COMMA, self.SEMICOLON,
-                                self.OPEN_SQUARE, self.CLOSE_SQUARE, self.OPEN_BRACKET, self.CLOSE_BRACKET,
-                                self.HASHTAG, self.EOF] = range(14)
+                                self.OPEN_SQUARE, self.CLOSE_SQUARE, self.HASHTAG, self.EOF] = range(12)
         self.headings_list = ["[devices]", "[conns]", "[monit]"]
         [self.DEVICES_ID, self.CONNS_ID, self.MONIT_ID] = self.names.lookup(self.headings_list)
         self.keywords_list = ["="]
@@ -89,15 +88,15 @@ class Scanner:
             print(symbol.id[0], end = '')
 
         elif self.current_character == "=":  # punctuation
-            symbol.type = self.EQUALS
+            symbol.type = self.EQUAL
             self.advance()
-
-        elif self.current_character == ",":
-            symbol.type = self.COMMA
-            self.advance()
-
+            
         elif self.current_character == ".":
             symbol.type = self.DOT
+            self.advance()
+            
+        elif self.current_character == ",":
+            symbol.type = self.COMMA
             self.advance()
 
         elif self.current_character == ";":
@@ -105,19 +104,19 @@ class Scanner:
             self.advance()
             print(";")
         
+        elif self.current_character == "(":
+            symbol.type = self.OPEN_BRACKET
+            self.advance()
+            print("(")
+            
+        elif self.current_character == ")":
+            symbol.type = self.CLOSE_BRACKET
+            self.advance()
+            print(")")
+            
         elif self.current_character == "#":
             symbol.type = self.COMMA
             self.advance()
-
-        elif self.current_character == "{":
-            symbol.type = self.CURLY_OPEN
-            self.advance()
-            print("{", end = '')
-
-        elif self.current_character == "}":
-            symbol.type = self.CURLY_CLOSE
-            self.advance()
-            print("}")
 
         elif self.current_character == "":  # end of file
             symbol.type = self.EOF
@@ -175,4 +174,6 @@ class Scanner:
             print("Expected a number")
         if error_type == self.NO_EQUALS:
             print("Expected a equal sign")
+        while(self.symbol.type != self.SEMICOLON and self.symbol.type != self.EOF):
+            
 
