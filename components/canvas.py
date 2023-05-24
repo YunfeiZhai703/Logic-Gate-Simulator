@@ -1,3 +1,4 @@
+import random
 import wx.glcanvas as wxcanvas
 from OpenGL import GL, GLUT
 import wx
@@ -61,6 +62,7 @@ class Canvas(wxcanvas.GLCanvas):
         GLUT.glutInit()
         self.init = False
         self.context = wxcanvas.GLContext(self)
+        self.colors = glColors
 
         # Initialise variables for panning
         self.pan_x = 0
@@ -143,6 +145,14 @@ class Canvas(wxcanvas.GLCanvas):
         """
         self.signals.append({"name": label, "signal": signal})
 
+    def _get_color(self, index):
+        if index < len(self.colors):
+            return self.colors[index]
+        else:
+            random_color = (random.random(), random.random(), random.random())
+            self.colors.append(random_color)
+            return random_color
+
     def render(self, text):
         """Handle all drawing operations."""
         self.SetCurrent(self.context)
@@ -159,7 +169,7 @@ class Canvas(wxcanvas.GLCanvas):
 
         for i, signal in enumerate(self.signals):
             self.draw_signal_trace(
-                signal["signal"], 50, 60 * i + 50, signal["name"], glColors[i])
+                signal["signal"], 50, 60 * i + 50, signal["name"], self._get_color(i))
 
         # We have been drawing to the back buffer, flush the graphics pipeline
         # and swap the back buffer to the front
