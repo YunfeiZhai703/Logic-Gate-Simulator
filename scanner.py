@@ -65,7 +65,7 @@ class Scanner:
         self.current_line = 0
         self.error_count = 0
         
-    def get_symbol(self):
+    def get_symbol(self, query):
         """Translate the next sequence of characters into a symbol."""
 
         symbol = Symbol()
@@ -75,19 +75,33 @@ class Scanner:
             name_string = self.get_name()
             self.name_string = name_string[0]
 
-
-            if name_string in self.keywords_list:
+            #Potentially
+            if self.name_string in self.ignore:
+                return None
+            elif self.name_string.lower() in self.heading_list:
+                symbol.type = self.HEADING
+                symbol.id = self.names.query(self.name_string.lower())
+            elif self.name_string in self.keyword_list:
                 symbol.type = self.KEYWORD
+                symbol.id = self.names.query(self.name_string)
+            elif self.name_string.lower() == self.names.get_name_string(self.DEVICE):
+                symbol.type = self.KEYWORD
+                symbol.id = self.names.query(self.name_string)
             else:
                 symbol.type = self.NAME
-            [symbol.id] = self.names.lookup([name_string])
+                if query:
+                    symbol.id = self.names.query(self.name_string)
+                else:
+                    [symbol.id] = self.names.lookup([self.name_string])
 
+            print(self.name_string, end=' ')
+#
 
         elif self.current_character.isdigit():
             symbol.id = self.get_number()
             symbol.type = self.NUMBER
             print(symbol.id[0], end = '')
-
+        # not sure if below works since we have equals in ebnf
         elif self.current_character == "=":  # punctuation
             symbol.type = self.EQUALS
             self.advance()
@@ -104,10 +118,6 @@ class Scanner:
             symbol.type = self.SEMICOLON
             self.advance()
             print(";")
-        
-        elif self.current_character == "#":
-            symbol.type = self.COMMA
-            self.advance()
 
         elif self.current_character == "{":
             symbol.type = self.CURLY_OPEN
@@ -127,8 +137,20 @@ class Scanner:
         elif self.current_character == "":  # end of file
             symbol.type = self.EOF
 
-        else:  # not a valid character
+        #hmm
+        elif self.current_character == "#":
+            symbol.type = self.COMMA
             self.advance()
+
+        elif self.current_character == "/":
+            symbol.type = self.SLASH
+            self.advance()
+            #extra stuff needed here?
+
+        else:  # not a valid character
+            self.error(SyntaxError, "Character not valid")
+        
+        self.word_number += 1
         return symbol
     
     def get_name(self):
