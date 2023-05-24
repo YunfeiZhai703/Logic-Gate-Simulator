@@ -118,7 +118,7 @@ class Scanner:
             self.advance()
 
         elif self.current_character == "#":  #Comments
-            symbol.type = self.COMMA
+            symbol.type = self.HASHTAG
             self.advance()
 
         elif self.current_character == "":   #End of file

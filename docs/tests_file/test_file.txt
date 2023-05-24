@@ -1,37 +1,3 @@
-number            =  digit, [digit]
-COMMENT_SYMBOL    =  "#"
-comments          =  COMMENT_SYMBOL, {[letter | number]}, NEW_LINE
+[devices]
+    G1, G8, G9 = AND;        # Default 2 input AND gate
 
-device_name  =  letter, {letter | digit}
-devices_type =  "DTYPE" | "NAND" | "NOR" | "XOR" | "AND" | "OR" | "CLOCK" | "SWITCH"
-dtype_ports  =  "DATA" | "CLK" | "SET" | "CLEAR" | "Q" | "QBAR"
-port_name    =  ("I", number) | dtype_ports
-port         =  ".", port_name
-
-definition = "="
-connection = "="
-
-gate_params   =  "(" , number , ")"
-switch_params =  "(" , (0 | 1) , ")"
-clk_params    =  "(" , number , ")"
-
-
-gate_def   =  device_name, {"," , device_name} , definition, devices_type, [gate_params], ";", [comments]
-switch_def =  device_name, {"," , device_name} , definition, devices_type, [switch_params], ";", [comments]
-clock_def  =  device_name, {"," , device_name} , definition, devices_type, clk_params, ";", [comments]
-
-device_line =  (gate_init | switch_init | clock_init) | comments
-
-device_io  =  device_name, [port]
-
-conn_def   =  device_io, connection, device_io, {device_io}, ";", [comments]
-conn_line  =  conn_def | comments
-moint_def  =  device_io, {device_io}, ";", [comments]
-moint_line =  moint_def | comments
-
-
-devices_block =  "[devices]", device_line, {device_line}
-conns_block   =  "[conns]", conn_line, {conn_line}
-monit_block   =  "[monit]", moint_line, {moint_line}
-
-ebnf =  devices_block, conns_block, [monit_block]
