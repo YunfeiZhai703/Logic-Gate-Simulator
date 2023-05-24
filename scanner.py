@@ -57,20 +57,21 @@ class Scanner:
         except FileNotFoundError:
             raise Exception("Input file not found")
         self.names = names
-        self.symbol_list = [self.HEADING, self.KEYWORD, self.NUMBER, self.NAME,
+        self.symbol_list = [self.HEADING, self.LOGIC, self.NUMBER, self.NAME,
                             self.EQUAL, self.DOT, self.COMMA, self.SEMICOLON,
                             self.OPEN_BRACKET, self.CLOSE_BRACKET, self.HASHTAG, self.EOF] = range(12)
         self.heading_list = ["[devices]", "[conns]", "[monit]"]
-        [self.DEVICES_ID, self.CONNS_ID, self.MONIT_ID] = self.names.lookup(
-            self.heading_list)
-        self.ignore = ["#"]
-        self.stopping_list = [self.SEMICOLON, self.EOF]
+        [self.DEVICES_ID, self.CONNS_ID, self.MONIT_ID] = self.names.lookup(self.heading_list)
+        self.logic_list = ["DTYPE", "NAND", "NOR", "XOR", "AND", "OR", "CLOCK", "SWITCH"]
+        [self.DTYPE_ID, self.NAND_ID, self.NOR_ID, self.XOR_ID, 
+         self.AND_ID, self.OR_ID, self.CLOCK_ID, self.SWITCH_ID] = self.names.lookup(self.logic_list)
+        
         self.current_character = ""
         self.current_position = 0
         self.current_line = 0
         self.error_count = 0
 
-    def get_symbol(self, query):
+    def get_symbol(self):
         """Translate the next sequence of characters into a symbol."""
 
         symbol = Symbol()
@@ -79,70 +80,53 @@ class Scanner:
         if self.current_character.isalpha():  # Names
             name_string = self.get_name()
             self.name_string = name_string[0]
-
-            # Potentially
-            if self.name_string in self.ignore:  # Ignore
-                return None
-            elif self.name_string.lower() in self.headings_list:  # Headings
+            if self.name_string in self.heading_list:
                 symbol.type = self.HEADING
-                symbol.id = self.names.query(self.name_string.lower())
-            elif self.name_string in self.keywords_list:  # Keywords
-                symbol.type = self.KEYWORD
-                symbol.id = self.names.query(self.name_string)
-            elif self.name_string.lower() == self.names.get_name_string(self.DEVICE):
-                symbol.type = self.KEYWORD
-                symbol.id = self.names.query(self.name_string)
+            elif self.name_string in self.logic_list:
+                symbol.type = self.LOGIC
             else:
                 symbol.type = self.NAME
-                if query:
-                    symbol.id = self.names.query(self.name_string)
-                else:
-                    [symbol.id] = self.names.lookup([self.name_string])
 
-            print(self.name_string, end=' ')
-
-        elif self.current_character.isdigit():
+        elif self.current_character.isdigit():  #Numbers
             symbol.id = self.get_number()
             symbol.type = self.NUMBER
-            print(symbol.id[0], end='')
-        # not sure if below works since we have equals in ebnf
-        elif self.current_character == "=":  # punctuation
+            self.advance()
+            
+        elif self.current_character == "=":  #Definitions
             symbol.type = self.EQUAL
             self.advance()
 
-        elif self.current_character == ".":
+        elif self.current_character == ".":  #Connections
             symbol.type = self.DOT
             self.advance()
 
-        elif self.current_character == ",":
+        elif self.current_character == ",":  #Punctuations
             symbol.type = self.COMMA
             self.advance()
 
-        elif self.current_character == ";":
+        elif self.current_character == ";":  #Punctuations
             symbol.type = self.SEMICOLON
             self.advance()
-            print(";")
 
-        elif self.current_character == "(":
+        elif self.current_character == "(":  #Inputs No.
             symbol.type = self.OPEN_BRACKET
             self.advance()
-            print("(", end='')
 
-        elif self.current_character == ")":
+        elif self.current_character == ")":  #Inputs No.
             symbol.type = self.CLOSE_BRACKET
             self.advance()
-            print(")")
 
-        elif self.current_character == "#":
+        elif self.current_character == "#":  #Comments
             symbol.type = self.COMMA
             self.advance()
 
-        elif self.current_character == "":  # end of file
+        elif self.current_character == "":   #End of file
             symbol.type = self.EOF
+            self.advance()
 
-        else:  # not a valid character
+        else:  #Not a valid character
             self.error(SyntaxError, "Character not valid")
-
+            
         self.current_position += 1
         return symbol
 
@@ -182,4 +166,4 @@ class Scanner:
 
     def error(self, error_type):
         """Error handling method"""
-        pass
+        
