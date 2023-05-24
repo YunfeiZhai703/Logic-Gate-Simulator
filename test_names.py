@@ -17,11 +17,11 @@ def test_unique_error_codes(new_names):
     assert codes == range(0, num_error_codes)
 
 
-def test_unique_error_errors(new_empty_names):
+def test_unique_error_errors(new_names):
     with pytest.raises(TypeError):
-        new_empty_names.unique_error_codes(0.1)
+        new_names.unique_error_codes(0.1)
     with pytest.raises(TypeError):
-        new_empty_names.unique_error_codes("test")
+        new_names.unique_error_codes("test")
 
 
 def test_query(new_names):
