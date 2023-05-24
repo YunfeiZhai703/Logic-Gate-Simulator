@@ -120,6 +120,8 @@ class Scanner:
         elif self.current_character == "#":  #Comments
             symbol.type = self.HASHTAG
             self.advance()
+            while self.current_character != "\n":
+                self.advance()
 
         elif self.current_character == "":   #End of file
             symbol.type = self.EOF
