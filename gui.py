@@ -138,6 +138,7 @@ class Heading(wx.BoxSizer):
         self.Add(
             Button(parent, "Logic Simulator", size="md",
                    bg_color=COLORS.RED_800, hover_bg_color=COLORS.RED_700,
+                   onClick=self.on_click
                    ), 1, wx.ALL, 5)
 
         self.Add(FileButton(parent, notebook), 1, wx.ALL, 5)
@@ -145,6 +146,10 @@ class Heading(wx.BoxSizer):
     def Attach(self, parent: wx.BoxSizer, proportion, flag, border):
         """Attach the heading to the parent."""
         parent.Add(self, proportion, flag, border)
+
+    def on_click(self, event):
+        wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
+                      "About Logsim", wx.ICON_INFORMATION | wx.OK)
 
 
 class DevicesPanel(Box):
