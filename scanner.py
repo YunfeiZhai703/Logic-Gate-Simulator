@@ -62,7 +62,7 @@ class Scanner:
                             self.OPEN_BRACKET, self.CLOSE_BRACKET, self.HASHTAG, self.EOF] = range(12)
         self.heading_list = ["[devices]", "[conns]", "[monit]"]
         [self.DEVICES_ID, self.CONNS_ID, self.MONIT_ID] = self.names.lookup(
-            self.keywords_list)
+            self.heading_list)
         self.ignore = ["#"]
         self.stopping_list = [self.SEMICOLON, self.EOF]
         self.current_character = ""
