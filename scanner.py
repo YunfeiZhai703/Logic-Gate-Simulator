@@ -62,6 +62,7 @@ class Scanner:
         self.ignore = ["#"]
         self.stopping_list = [self.SEMICOLON, self.EOF]
         self.current_character = ""
+        self.current_position = 0
         self.current_line = 0
         self.error_count = 0
         
@@ -162,22 +163,15 @@ class Scanner:
             self.advance()
 
     def advance(self):
-        if self.read_string:
-            try:
-                self.current_character = self.input_file[self.count_character]
-            except IndexError:
-                self.current_character = ""
-                return self.current_character
-            self.count_character += 1
-        else:
-            self.current_character = self.input_file.read(1)
-
-        self.character_number += 1
-
-        if self.current_character == '\n':
+        try:
+            self.current_character = self.file.read(1)
+        except FileNotFoundError:
+            raise Exception("Input file not found")
+        if self.current_character == "\n":
             self.current_line += 1
-            self.character_number = self.word_number = 0
-
+            self.current_position = 0
+        else:
+            self.current_position += 1
         return self.current_character
 
     def error(self, error_type):
