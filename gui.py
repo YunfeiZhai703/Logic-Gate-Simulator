@@ -32,7 +32,7 @@ class Gui(wx.Frame):
         self.nb = nb
         nb.SetBackgroundColour(COLORS.GRAY_400)
         nb.canvas = Canvas(nb, devices, monitors)
-        nb.uploaded_code = "Heelo"
+        nb.uploaded_code = ""
         nb.AddPage(MainPage("Logic Simulator", path, names, devices,
                    network, monitors, notebook=nb), "Main")
 
