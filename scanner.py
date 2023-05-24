@@ -86,7 +86,8 @@ class Scanner:
                 symbol.type = self.LOGIC
             else:
                 symbol.type = self.NAME
-
+            [symbol.id] = self.names.lookup([self.name_string])
+        
         elif self.current_character.isdigit():  #Numbers
             symbol.id = self.get_number()
             symbol.type = self.NUMBER
@@ -144,7 +145,7 @@ class Scanner:
         while self.current_character.isdigit():
             number += self.current_character
             self.advance()
-        return [number, self.current_character]
+        return [int(number), self.current_character]
 
     def skip_spaces(self):
         """Skip all the spaces in the file"""
