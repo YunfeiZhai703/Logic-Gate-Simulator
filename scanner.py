@@ -159,7 +159,7 @@ class Scanner:
             
     def skip_spaces(self):
         while self.current_character.isspace():
-            self.current_character = self.advance()
+            self.advance()
 
     def advance(self):
         if self.read_string:
