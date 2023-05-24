@@ -61,10 +61,10 @@ class Scanner:
                             self.EQUAL, self.DOT, self.COMMA, self.SEMICOLON,
                             self.OPEN_BRACKET, self.CLOSE_BRACKET, self.HASHTAG, self.EOF] = range(12)
         self.heading_list = ["[devices]", "[conns]", "[monit]"]
-        #[self.DEVICES_ID, self.CONNS_ID, self.MONIT_ID] = self.names.lookup(self.heading_list)
+        [self.DEVICES_ID, self.CONNS_ID, self.MONIT_ID] = self.names.lookup(self.heading_list)
         self.logic_list = ["DTYPE", "NAND", "NOR", "XOR", "AND", "OR", "CLOCK", "SWITCH"]
-        #[self.DTYPE_ID, self.NAND_ID, self.NOR_ID, self.XOR_ID, 
-         #self.AND_ID, self.OR_ID, self.CLOCK_ID, self.SWITCH_ID] = self.names.lookup(self.logic_list)
+        [self.DTYPE_ID, self.NAND_ID, self.NOR_ID, self.XOR_ID, 
+        self.AND_ID, self.OR_ID, self.CLOCK_ID, self.SWITCH_ID] = self.names.lookup(self.logic_list)
         
         self.current_character = ""
         self.current_position = 0
