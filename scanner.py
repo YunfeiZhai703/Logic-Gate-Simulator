@@ -8,7 +8,8 @@ Classes
 Scanner - reads definition file and translates characters into symbols.
 Symbol - encapsulates a symbol and stores its properties.
 """
-
+import sys
+from names import Names
 
 class Symbol:
 
@@ -51,6 +52,10 @@ class Scanner:
 
     def __init__(self, path, names):
         """Open specified file and initialise reserved words and IDs."""
+        try:
+            self.file = open(path, "r")
+        except FileNotFoundError:
+            raise Exception("Input file not found")
         self.names = names
         self.symbol_list = [self.HEADING, self.KEYWORD, self.NUMBER, self.NAME,
                                 self.EQUAL, self.DOT, self.COMMA, self.SEMICOLON,
@@ -139,7 +144,7 @@ class Scanner:
         else:  # not a valid character
             self.error(SyntaxError, "Character not valid")
         
-        self.word_number += 1
+        self.current_position += 1
         return symbol
     
     def get_name(self):
@@ -180,4 +185,3 @@ class Scanner:
         """Error handling method"""
         pass
     
-
