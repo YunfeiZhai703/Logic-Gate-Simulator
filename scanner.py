@@ -8,6 +8,7 @@ Classes
 Scanner - reads definition file and translates characters into symbols.
 Symbol - encapsulates a symbol and stores its properties.
 """
+import sys
 
 
 class Symbol:
@@ -51,36 +52,41 @@ class Scanner:
 
     def __init__(self, path, names):
         """Open specified file and initialise reserved words and IDs."""
+        try:
+            self.file = open(path, "r")
+        except FileNotFoundError:
+            raise Exception("Input file not found")
         self.names = names
         self.symbol_list = [self.HEADING, self.KEYWORD, self.NUMBER, self.NAME,
-                                self.EQUAL, self.DOT, self.COMMA, self.SEMICOLON,
-                                self.OPEN_BRACKET, self.CLOSE_BRACKET, self.HASHTAG, self.EOF] = range(12)
-        self.headings_list = ["[devices]", "[conns]", "[monit]"]
-        [self.DEVICES_ID, self.CONNS_ID, self.MONIT_ID] = self.names.lookup(self.headings_list)
-        self.keywords_list = ["="]
+                            self.EQUAL, self.DOT, self.COMMA, self.SEMICOLON,
+                            self.OPEN_BRACKET, self.CLOSE_BRACKET, self.HASHTAG, self.EOF] = range(12)
+        self.heading_list = ["[devices]", "[conns]", "[monit]"]
+        [self.DEVICES_ID, self.CONNS_ID, self.MONIT_ID] = self.names.lookup(
+            self.keywords_list)
         self.ignore = ["#"]
         self.stopping_list = [self.SEMICOLON, self.EOF]
         self.current_character = ""
+        self.current_position = 0
         self.current_line = 0
         self.error_count = 0
-        
+
     def get_symbol(self, query):
         """Translate the next sequence of characters into a symbol."""
 
         symbol = Symbol()
-        self.skip_spaces() # current character now not whitespace
+        self.skip_spaces()  # current character now not whitespace
 
-        if self.current_character.isalpha():
+        if self.current_character.isalpha():  # Names
             name_string = self.get_name()
             self.name_string = name_string[0]
 
-            #Potentially
-            if self.name_string in self.ignore:
+            # Potentially
+            if self.name_string in self.ignore:  # Ignore
                 return None
-            elif self.name_string.lower() in self.heading_list:
+            elif self.name_string.lower() in self.headings_list:  # Headings
                 symbol.type = self.HEADING
                 symbol.id = self.names.query(self.name_string.lower())
-            elif self.name_string in self.keyword_list:
+            elif self.name_string in self.keywords_list:  # Keywords
                 symbol.type = self.KEYWORD
                 symbol.id = self.names.query(self.name_string)
             elif self.name_string.lower() == self.names.get_name_string(self.DEVICE):
@@ -94,21 +100,20 @@ class Scanner:
                     [symbol.id] = self.names.lookup([self.name_string])
 
             print(self.name_string, end=' ')
-#
 
         elif self.current_character.isdigit():
             symbol.id = self.get_number()
             symbol.type = self.NUMBER
-            print(symbol.id[0], end = '')
+            print(symbol.id[0], end='')
         # not sure if below works since we have equals in ebnf
         elif self.current_character == "=":  # punctuation
             symbol.type = self.EQUAL
             self.advance()
-            
+
         elif self.current_character == ".":
             symbol.type = self.DOT
             self.advance()
-            
+
         elif self.current_character == ",":
             symbol.type = self.COMMA
             self.advance()
@@ -121,75 +126,60 @@ class Scanner:
         elif self.current_character == "(":
             symbol.type = self.OPEN_BRACKET
             self.advance()
-            print("(", end = '')
+            print("(", end='')
 
         elif self.current_character == ")":
             symbol.type = self.CLOSE_BRACKET
             self.advance()
             print(")")
-            
+
         elif self.current_character == "#":
             symbol.type = self.COMMA
             self.advance()
-            
+
         elif self.current_character == "":  # end of file
             symbol.type = self.EOF
 
         else:  # not a valid character
             self.error(SyntaxError, "Character not valid")
-        
-        self.word_number += 1
+
+        self.current_position += 1
         return symbol
-    
+
     def get_name(self):
-        # Want to find the name that comes next in input_file
-        # Return the name and the next character that is non-alphanumeric
-        name = self.current_character
-        while True:
-            self.current_character = self.advance()
-            if self.current_character.isalnum():
-                name = name + self.current_character
-            else:
-                return [name, self.current_character]
+        """Return the name and the next character that is non-alphanumeric"""
+        name = ""
+        while self.current_character.isalnum():
+            name += self.current_character
+            self.advance()
+        return [name, self.current_character]
 
     def get_number(self):
-        number = self.current_character
-        while True:
-            self.current_character = self.advance()
-            if number.isdigit():
-                number += self.current_character
-            else:
-                return [number, self.current_character]
-            
+        """Return the numbers in the file and the next character"""
+        number = ""
+        while self.current_character.isdigit():
+            number += self.current_character
+            self.advance()
+        return [number, self.current_character]
+
     def skip_spaces(self):
+        """Skip all the spaces in the file"""
         while self.current_character.isspace():
-            self.current_character = self.advance()
+            self.advance()
 
     def advance(self):
-        if self.read_string:
-            try:
-                self.current_character = self.input_file[self.count_character]
-            except IndexError:
-                self.current_character = ""
-                return self.current_character
-            self.count_character += 1
-        else:
-            self.current_character = self.input_file.read(1)
-
-        self.character_number += 1
-
-        if self.current_character == '\n':
+        """Advance to the next character in the file"""
+        try:
+            self.current_character = self.file.read(1)
+        except FileNotFoundError:
+            raise Exception("Input file not found")
+        if self.current_character == "\n":  # End of line actions
             self.current_line += 1
-            self.character_number = self.word_number = 0
-
+            self.current_position = 0
+        else:
+            self.current_position += 1
         return self.current_character
 
     def error(self, error_type):
-        self.error_count += 1
-        if error_type == self.NO_NUMBER:
-            print("Expected a number")
-        if error_type == self.NO_EQUALS:
-            print("Expected a equal sign")
-        while(self.symbol.type != self.SEMICOLON and self.symbol.type != self.EOF):
-            
-
+        """Error handling method"""
+        pass
