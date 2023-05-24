@@ -91,7 +91,6 @@ class Scanner:
         elif self.current_character.isdigit():  #Numbers
             symbol.id = self.get_number()
             symbol.type = self.NUMBER
-            self.advance()
             
         elif self.current_character == "=":  #Definitions
             symbol.type = self.EQUAL
