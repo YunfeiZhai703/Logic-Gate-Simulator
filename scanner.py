@@ -143,15 +143,15 @@ class Scanner:
         return symbol
     
     def get_name(self):
-        # Want to find the name that comes next in input_file
-        # Return the name and the next character that is non-alphanumeric
+        """Return the name and the next character that is non-alphanumeric"""
         name = ""
-        while self.current_character.isalnum:
+        while self.current_character.isalnum():
             name += self.current_character
             self.advance()
         return [name, self.current_character]
 
     def get_number(self):
+        """Return the numbers in the file and the next character"""
         number = ""
         while self.current_character.isdigit():
             number += self.current_character
@@ -159,15 +159,17 @@ class Scanner:
         return [number, self.current_character]
             
     def skip_spaces(self):
+        """Skip all the spaces in the file"""
         while self.current_character.isspace():
             self.advance()
 
     def advance(self):
+        """Advance to the next character in the file"""
         try:
             self.current_character = self.file.read(1)
         except FileNotFoundError:
             raise Exception("Input file not found")
-        if self.current_character == "\n":
+        if self.current_character == "\n":  #End of line actions
             self.current_line += 1
             self.current_position = 0
         else:
@@ -175,11 +177,7 @@ class Scanner:
         return self.current_character
 
     def error(self, error_type):
-        self.error_count += 1
-        if error_type == self.NO_NUMBER:
-            print("Expected a number")
-        if error_type == self.NO_EQUALS:
-            print("Expected a equal sign")
-        while(self.symbol.type != self.SEMICOLON and self.symbol.type != self.EOF):
-            
+        """Error handling method"""
+        pass
+    
 
