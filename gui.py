@@ -32,7 +32,7 @@ class Gui(wx.Frame):
         self.nb = nb
         nb.SetBackgroundColour(COLORS.GRAY_400)
         nb.canvas = Canvas(nb, devices, monitors)
-        nb.uploaded_code = "No Code Uploded"
+        nb.uploaded_code = self._read_file(path)
         nb.AddPage(MainPage("Logic Simulator", path, names, devices,
                    network, monitors, notebook=nb), "Main")
 
@@ -42,6 +42,14 @@ class Gui(wx.Frame):
         self.setup_menu()
 
         self.Show()
+
+    def _read_file(self, path):
+        """Read the file specified by path."""
+        try:
+            with open(path, "r") as file:
+                return file.read()
+        except FileNotFoundError:
+            return "No Code Uploded"
 
     def setup_menu(self):
         fileMenu = wx.Menu()
