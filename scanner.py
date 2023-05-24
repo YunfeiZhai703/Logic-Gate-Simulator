@@ -54,7 +54,7 @@ class Scanner:
         self.names = names
         self.symbol_list = [self.HEADING, self.KEYWORD, self.NUMBER, self.NAME,
                                 self.EQUAL, self.DOT, self.COMMA, self.SEMICOLON,
-                                self.OPEN_SQUARE, self.CLOSE_SQUARE, self.HASHTAG, self.EOF] = range(12)
+                                self.OPEN_BRACKET, self.CLOSE_BRACKET, self.HASHTAG, self.EOF] = range(12)
         self.headings_list = ["[devices]", "[conns]", "[monit]"]
         [self.DEVICES_ID, self.CONNS_ID, self.MONIT_ID] = self.names.lookup(self.headings_list)
         self.keywords_list = ["="]
@@ -118,33 +118,22 @@ class Scanner:
             self.advance()
             print(";")
 
-        elif self.current_character == "{":
-            symbol.type = self.CURLY_OPEN
+        elif self.current_character == "(":
+            symbol.type = self.OPEN_BRACKET
             self.advance()
-            print("{", end = '')
+            print("(", end = '')
 
-        elif self.current_character == "}":
-            symbol.type = self.CURLY_CLOSE
+        elif self.current_character == ")":
+            symbol.type = self.CLOSE_BRACKET
             self.advance()
-            print("}")
-
-        elif self.current_character == "-":
-            symbol.type = self.MINUS
-            self.advance()
-            self.error(SyntaxError, "Negative symbls not allowed")
-
-        elif self.current_character == "":  # end of file
-            symbol.type = self.EOF
-
-        #hmm
+            print(")")
+            
         elif self.current_character == "#":
             symbol.type = self.COMMA
             self.advance()
-
-        elif self.current_character == "/":
-            symbol.type = self.SLASH
-            self.advance()
-            #extra stuff needed here?
+            
+        elif self.current_character == "":  # end of file
+            symbol.type = self.EOF
 
         else:  # not a valid character
             self.error(SyntaxError, "Character not valid")
