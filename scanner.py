@@ -149,7 +149,7 @@ class Scanner:
     def get_name(self):
         """Return the name and the next character that is non-alphanumeric"""
         name = ""
-        while self.current_character.isalnum():
+        while self.current_character.isalnum() or self.current_character == "[" or self.current_character == "]":
             name += self.current_character
             self.advance()
         return [name, self.current_character]
