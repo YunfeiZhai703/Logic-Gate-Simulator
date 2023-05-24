@@ -19,7 +19,7 @@ from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
 from components.ui import Button, Text, NumberInput, TextBox, COLORS
-from components import Canvas, FileButton, Box
+from components import Canvas, FileButton, Box, ScrollBox
 
 
 class Gui(wx.Frame):
@@ -190,15 +190,14 @@ class ConfigurationPanel(Box):
                         size="md"), 0, wx.ALL, 5)
 
 
-class CodePage(Box):
+class CodePage(ScrollBox):
     def __init__(self, parent: wx.Notebook):
         super().__init__(parent, dir="col")
         self.parent = parent
         self.code = parent.uploaded_code
 
-        self.Add(Text(self, "Code"), 0, wx.ALL, 5)
-
-        self.Add(Text(self, self.code), 0, wx.ALL, 5)
+        self.Add(Text(self, self.code, style=wx.ALIGN_LEFT,
+                 font_family="modern"), 0, wx.ALL, 5)
 
         # update the text when the parent's uploaded code changes
         parent.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.on_page_changed)
