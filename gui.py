@@ -46,7 +46,6 @@ class Gui(wx.Frame):
     def setup_menu(self):
         fileMenu = wx.Menu()
         menuBar = wx.MenuBar()
-        fileMenu.Append(wx.ID_ABOUT, "&About")
         fileMenu.Append(wx.ID_EXIT, "&Exit")
         menuBar.Append(fileMenu, "&File")
         self.SetMenuBar(menuBar)
@@ -60,9 +59,6 @@ class Gui(wx.Frame):
         Id = event.GetId()
         if Id == wx.ID_EXIT:
             self.Close(True)
-        if Id == wx.ID_ABOUT:
-            wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
-                          "About Logsim", wx.ICON_INFORMATION | wx.OK)
 
 
 class MainPage(wx.Panel):
@@ -148,7 +144,7 @@ class Heading(wx.BoxSizer):
         parent.Add(self, proportion, flag, border)
 
     def on_click(self, event):
-        wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
+        wx.MessageBox("Logic Simulator\nTeam 19 - Lakee, Dhillon, Yunfei\n2023",
                       "About Logsim", wx.ICON_INFORMATION | wx.OK)
 
 
