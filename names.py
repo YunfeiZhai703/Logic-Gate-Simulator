@@ -9,6 +9,9 @@ Names - maps variable names and string names to unique integers.
 """
 
 
+from typing import List
+
+
 class Names:
 
     """Map variable names and string names to unique integers.
@@ -58,11 +61,13 @@ class Names:
         # Need to confirm first that the string is alphanumeric or a string (not all digits) otherwise return a SyntaxError,
         # Then return None if the string is not present
 
-        name_string = str(name_string)
+        # First check if it is string
+        if type(name_string) is not str:
+            raise TypeError("The name must be a string")
 
         if name_string.isdigit():
             raise SyntaxError("The name must be a string")
-        if name_string.isalnum():
+        if not name_string.isalnum():
             raise SyntaxError("The name must be alphanumeric")
 
         # If the name string is present in the names list, return the index of where it is, else return None
@@ -71,7 +76,7 @@ class Names:
         else:
             return None
 
-    def lookup(self, name_string_list):
+    def lookup(self, name_string_list: List[str]):
         """Return a list of name IDs for each name string in name_string_list.
 
         If the name string is not present in the names list, add it.
@@ -85,11 +90,17 @@ class Names:
         if type(name_string_list) is not list:
             raise TypeError("Name string list must be a list")
 
+        # Then check that each element in the list is a string, otherwise produce TypeError
+
+        for name_string in name_string_list:
+            if type(name_string) is not str:
+                raise TypeError("The name must be a string")
+
         # Check if the name is in the name list, and if not, add it to the list and add the index to the id list too
         for name_string in name_string_list:
             if name_string not in self.names:
                 self.names.append(name_string)
-                id_list.append(self.names.index(name_string))
+            id_list.append(self.names.index(name_string))
 
         # Return the list of name IDs for each name in the name list
         return id_list
@@ -102,7 +113,7 @@ class Names:
         # First check that name_id provided is a valid number (i.e. is positive)
         if name_id < 0:
             raise ValueError("The name_id is not correct")
-        elif name_id >= 0:
+        elif name_id < len(self.names):
             return self.names[name_id]
         else:
             return None

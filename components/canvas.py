@@ -1,6 +1,28 @@
+import random
 import wx.glcanvas as wxcanvas
 from OpenGL import GL, GLUT
 import wx
+import math
+
+
+glColors = [
+    (1.0, 0.0, 0.0),  # red
+    (0.0, 1.0, 0.0),  # green
+    (0.0, 0.0, 1.0),  # blue
+    (1.0, 1.0, 0.0),  # yellow
+    (1.0, 0.0, 1.0),  # magenta
+    (0.0, 1.0, 1.0),  # cyan
+    (0.5, 0.5, 0.5),  # grey
+    (1.0, 0.5, 0.0),  # orange
+    (0.0, 0.5, 0.0),  # dark green
+    (0.5, 0.0, 0.5),  # purple
+    (0.5, 0.0, 0.0),  # dark red
+    (0.0, 0.0, 0.5),  # dark blue
+    (0.0, 0.5, 0.5),  # dark cyan
+    (0.5, 0.5, 0.0),  # dark yellow
+    (0.5, 0.0, 0.0),  # dark red
+
+]
 
 
 class Canvas(wxcanvas.GLCanvas):
@@ -40,6 +62,7 @@ class Canvas(wxcanvas.GLCanvas):
         GLUT.glutInit()
         self.init = False
         self.context = wxcanvas.GLContext(self)
+        self.colors = glColors
 
         # Initialise variables for panning
         self.pan_x = 0
@@ -49,6 +72,8 @@ class Canvas(wxcanvas.GLCanvas):
 
         # Initialise variables for zooming
         self.zoom = 1
+
+        self.signals = []
 
         # Bind events to the canvas
         self.Bind(wx.EVT_PAINT, self.on_paint)
@@ -60,7 +85,7 @@ class Canvas(wxcanvas.GLCanvas):
         size = self.GetClientSize()
         self.SetCurrent(self.context)
         GL.glDrawBuffer(GL.GL_BACK)
-        GL.glClearColor(1.0, 1.0, 1.0, 0.0)
+        self.set_bg_color()
         GL.glViewport(0, 0, size.width, size.height)
         GL.glMatrixMode(GL.GL_PROJECTION)
         GL.glLoadIdentity()
@@ -69,6 +94,64 @@ class Canvas(wxcanvas.GLCanvas):
         GL.glLoadIdentity()
         GL.glTranslated(self.pan_x, self.pan_y, 0.0)
         GL.glScaled(self.zoom, self.zoom, self.zoom)
+
+    def draw_signal_trace(self, signal: list, x_pos: int, y_pos: int, label: str, color: tuple = (0.0, 0.0, 1.0)):
+        """Draws a signa
+
+        Args:
+            signal (list): A list of 1 and 0s
+        """
+        GL.glColor3f(*color)
+        GL.glBegin(GL.GL_LINE_STRIP)
+        for i in range(len(signal)):
+            x = (i * 20) + x_pos
+            x_next = (i * 20) + x_pos + 20
+            if signal[i] == 0:
+                y = y_pos
+            else:
+                y = y_pos + 25
+            GL.glVertex2f(x, y)
+            GL.glVertex2f(x_next, y)
+        GL.glEnd()
+
+        # Draw axis
+        y_pos -= 10
+        self.set_graph_color()
+        GL.glBegin(GL.GL_LINES)
+        GL.glVertex2f(x_pos, y_pos)
+        GL.glVertex2f(x_pos, y_pos + 40)
+        GL.glVertex2f(x_pos, y_pos)
+        GL.glVertex2f(x_pos + (len(signal) * 20), y_pos)
+        GL.glEnd()
+        # draw axis ticks
+        for i in range(len(signal) + 1):
+            x = (i * 20) + x_pos
+            self.set_graph_color()
+            GL.glBegin(GL.GL_LINES)
+            GL.glVertex2f(x, y_pos)
+            GL.glVertex2f(x, y_pos - 4)
+            GL.glEnd()
+            self.render_text(str(i), x - 5, y_pos - 15)
+
+        x_pos -= int(40 / 3 * len(label))
+        self.render_text(label, x_pos, y_pos + 18)
+
+    def add_signal(self, signal: list, label: str):
+        """Add a signal to the canvas.
+
+        Args:
+            signal (list): A list of 1 and 0s
+            label (str): The label of the signal
+        """
+        self.signals.append({"name": label, "signal": signal})
+
+    def _get_color(self, index):
+        if index < len(self.colors):
+            return self.colors[index]
+        else:
+            random_color = (random.random(), random.random(), random.random())
+            self.colors.append(random_color)
+            return random_color
 
     def render(self, text):
         """Handle all drawing operations."""
@@ -84,19 +167,9 @@ class Canvas(wxcanvas.GLCanvas):
         # Draw specified text at position (10, 10)
         self.render_text(text, 10, 10)
 
-        # Draw a sample signal trace
-        GL.glColor3f(0.0, 0.0, 1.0)  # signal trace is blue
-        GL.glBegin(GL.GL_LINE_STRIP)
-        for i in range(10):
-            x = (i * 20) + 10
-            x_next = (i * 20) + 30
-            if i % 2 == 0:
-                y = 75
-            else:
-                y = 100
-            GL.glVertex2f(x, y)
-            GL.glVertex2f(x_next, y)
-        GL.glEnd()
+        for i, signal in enumerate(self.signals):
+            self.draw_signal_trace(
+                signal["signal"], 50, 60 * i + 50, signal["name"], self._get_color(i))
 
         # We have been drawing to the back buffer, flush the graphics pipeline
         # and swap the back buffer to the front
@@ -144,6 +217,14 @@ class Canvas(wxcanvas.GLCanvas):
         if event.Dragging():
             self.pan_x += event.GetX() - self.last_mouse_x
             self.pan_y -= event.GetY() - self.last_mouse_y
+            # prevent panning outside the canvas
+            # self.pan_x = max(self.pan_x, 0)
+            # self.pan_y = max(self.pan_y, 0)
+            # size = self.GetClientSize()
+            # self.pan_x = min(self.pan_x, size.width * 0.8 - 1)
+            # self.pan_y = min(self.pan_y, size.height * 0.8 - 1)
+            # print(f"Size: {size.width} {size.height}")
+
             self.last_mouse_x = event.GetX()
             self.last_mouse_y = event.GetY()
             self.init = False
@@ -175,7 +256,7 @@ class Canvas(wxcanvas.GLCanvas):
 
     def render_text(self, text, x_pos, y_pos):
         """Handle text drawing operations."""
-        GL.glColor3f(0.0, 0.0, 0.0)  # text is black
+        self.set_graph_color()
         GL.glRasterPos2f(x_pos, y_pos)
         font = GLUT.GLUT_BITMAP_HELVETICA_12
 
@@ -185,3 +266,9 @@ class Canvas(wxcanvas.GLCanvas):
                 GL.glRasterPos2f(x_pos, y_pos)
             else:
                 GLUT.glutBitmapCharacter(font, ord(character))
+
+    def set_bg_color(self):
+        GL.glClearColor(0.0, 0.0, 0.0, 0.0)
+
+    def set_graph_color(self):
+        GL.glColor3f(0.8, 0.8, 0.8)

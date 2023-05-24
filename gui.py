@@ -8,6 +8,7 @@ Classes:
 MyGLCanvas - handles all canvas drawing operations.
 Gui - configures the main window and all the widgets.
 """
+import random
 import wx
 
 
@@ -18,98 +19,190 @@ from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
 from components.ui import Button, Text, NumberInput, TextBox, COLORS
-from components import Canvas, FileButton
+from components import Canvas, FileButton, Box, ScrollBox
 
 
 class Gui(wx.Frame):
-    """Configure the main window and all the widgets.
-
-    This class provides a graphical user interface for the Logic Simulator and
-    enables the user to change the circuit properties and run simulations.
-
-    Parameters
-    ----------
-    title: title of the window.
-
-    Public methods
-    --------------
-    on_menu(self, event): Event handler for the file menu.
-
-    on_spin(self, event): Event handler for when the user changes the spin
-                           control value.
-
-    on_run_button(self, event): Event handler for when the user clicks the run
-                                button.
-
-    on_text_box(self, event): Event handler for when the user enters text.
-    """
+    # notebook
 
     def __init__(self, title, path, names, devices, network, monitors):
-        """Initialise widgets and layout."""
         super().__init__(parent=None, title=title, size=(800, 600))
 
+        nb = wx.Notebook(self, style=wx.NB_FIXEDWIDTH)
+        self.nb = nb
+        nb.SetBackgroundColour(COLORS.GRAY_400)
+        nb.canvas = Canvas(nb, devices, monitors)
+        nb.uploaded_code = self._read_file(path)
+        nb.AddPage(MainPage("Logic Simulator", path, names, devices,
+                   network, monitors, notebook=nb), "Main")
+
+        nb.AddPage(nb.canvas, "Graphs")
+        nb.AddPage(CodePage(nb), "Code")
+        nb.AddPage(Button(nb, label="Save", onClick=self.print_code), "Test")
         self.setup_menu()
 
-        self.canvas = Canvas(self, devices, monitors)
-        self.number_input = NumberInput(self, value=10, onChange=self.on_spin)
-        self.run_button = Button(self, "Run", onClick=self.on_run_button)
-        self.text_box = TextBox(self, "Enter text", onChange=self.on_text_box)
-        self.file_button = FileButton(self)
+        self.Show()
 
-        # Configure sizers for layout
-        main_sizer = wx.BoxSizer(wx.HORIZONTAL)
-
-        # make bg color white
-        self.SetBackgroundColour(COLORS.GRAY_950)
-
-        side_sizer = wx.BoxSizer(wx.VERTICAL)
-        canvas_sizer = wx.BoxSizer(wx.VERTICAL)
-        canvas_sizer.Add(self.canvas, 2, wx.EXPAND | wx.ALL, 5)
-        canvas_sizer.Add(Text(self, "Lorem "), 1, wx.TOP, 20)
-
-        main_sizer.Add(side_sizer, 2, wx.ALL, 5)
-        main_sizer.Add(canvas_sizer, 5, wx.EXPAND | wx.ALL, 5)
-
-        side_sizer.Add(Text(self, "Logsim"), 1, wx.TOP, 10)
-        side_sizer.Add(self.number_input, 1, wx.ALL, 5)
-        side_sizer.Add(self.run_button, 1, wx.ALL, 5)
-        side_sizer.Add(self.text_box, 1, wx.ALL, 5)
-        side_sizer.Add(self.file_button, 1, wx.ALL, 5)
-
-        self.SetSizeHints(600, 600)
-        self.SetSizer(main_sizer)
+    def _read_file(self, path):
+        """Read the file specified by path."""
+        try:
+            with open(path, "r") as file:
+                return file.read()
+        except FileNotFoundError:
+            return "No Code Uploded"
 
     def setup_menu(self):
         fileMenu = wx.Menu()
         menuBar = wx.MenuBar()
-        fileMenu.Append(wx.ID_ABOUT, "&About")
         fileMenu.Append(wx.ID_EXIT, "&Exit")
         menuBar.Append(fileMenu, "&File")
         self.SetMenuBar(menuBar)
         self.Bind(wx.EVT_MENU, self.on_menu)
+
+    def print_code(self, event):
+        print(self.nb.uploaded_code)
 
     def on_menu(self, event):
         """Handle the event when the user selects a menu item."""
         Id = event.GetId()
         if Id == wx.ID_EXIT:
             self.Close(True)
-        if Id == wx.ID_ABOUT:
-            wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
-                          "About Logsim", wx.ICON_INFORMATION | wx.OK)
 
-    def on_spin(self, event):
+
+class MainPage(wx.Panel):
+
+    def __init__(self, title, path, names, devices, network, monitors, notebook=None):
+        """Initialise widgets and layout."""
+        super().__init__(parent=notebook)
+
+        self.SetBackgroundColour(COLORS.GRAY_950)
+        self.number_of_cycles = 10
+
+        # Configure sizers for layout
+        main_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        left_sizer = wx.BoxSizer(wx.VERTICAL)
+        right_sizer = Box(self, dir="col")
+
+        self.canvas = Canvas(right_sizer, devices, monitors)
+        self.canvas2 = notebook.canvas
+
+        Heading(self, notebook).Attach(left_sizer, 0, wx.EXPAND, 5)
+
+        DevicesPanel(self, canvas=self.canvas).Attach(
+            left_sizer, 3, wx.EXPAND | wx.ALL, 5)
+
+        right_sizer.Add(self.canvas,
+                        3, wx.EXPAND | wx.ALL, 5)
+
+        right_bottom_block = Box(
+            right_sizer, dir="row")
+
+        right_bottom_left = Box(
+            right_bottom_block, dir="col", bg_color=COLORS.GRAY_800)
+
+        right_bottom_left.Add(
+            Text(right_bottom_left, "Switches"), 0, wx.ALL, 5)
+
+        right_bottom_block.Add(right_bottom_left, 1, wx.EXPAND | wx.ALL, 5)
+
+        right_sizer.Add(right_bottom_block, 1, wx.EXPAND, 5)
+
+        ConfigurationPanel(right_bottom_block, self.on_start, self.on_number_input).Attach(
+            right_bottom_block, 1, wx.EXPAND | wx.ALL, 5)
+
+        main_sizer.Add(left_sizer, 2, wx.ALL, 5)
+        main_sizer.Add(right_sizer, 5, wx.EXPAND | wx.ALL, 5)
+
+        self.SetSizeHints(600, 600)
+        self.SetSizer(main_sizer)
+
+    def on_start(self, event):
+        # randomly generate a signal of 1 and 0 length 10
+        random_signal = [random.randint(0, 1)
+                         for i in range(self.number_of_cycles)]
+        print(random_signal)
+        self.canvas.add_signal(
+            random_signal, "A" + str(len(self.canvas.signals))
+        )
+        self.canvas2.add_signal(
+            random_signal, "A" + str(len(self.canvas.signals))
+        )
+        self.canvas.Refresh()
+
+    def on_number_input(self, event):
         """Handle the event when the user changes the spin control value."""
-        spin_value = self.number_input.GetValue()
-        text = "".join(["New spin control value: ", str(spin_value)])
-        self.canvas.render(text)
+        self.number_of_cycles = event.GetInt()
 
-    def on_run_button(self, event):
-        """Handle the event when the user clicks the run button."""
-        text = "Run button pressed."
-        self.canvas.render(text)
 
-    def on_text_box(self, event):
-        """Handle the event when the user enters text."""
-        text_box_value = self.text_box.GetValue()
-        text = "".join(["New text box value: ", text_box_value])
-        self.canvas.render(text)
+class Heading(wx.BoxSizer):
+    def __init__(self, parent, notebook: wx.Notebook):
+        """Initialise the heading."""
+        super().__init__(wx.HORIZONTAL)
+
+        self.Add(
+            Button(parent, "Logic Simulator", size="md",
+                   bg_color=COLORS.RED_800, hover_bg_color=COLORS.RED_700,
+                   onClick=self.on_click
+                   ), 1, wx.ALL, 5)
+
+        self.Add(FileButton(parent, notebook), 1, wx.ALL, 5)
+
+    def Attach(self, parent: wx.BoxSizer, proportion, flag, border):
+        """Attach the heading to the parent."""
+        parent.Add(self, proportion, flag, border)
+
+    def on_click(self, event):
+        wx.MessageBox("Logic Simulator\nTeam 19 - Lakee, Dhillon, Yunfei\n2023",
+                      "About Logsim", wx.ICON_INFORMATION | wx.OK)
+
+
+class DevicesPanel(Box):
+    def __init__(self, parent, canvas):
+        """Initialise the devices panel."""
+        super().__init__(parent, dir="col")
+        self.parent = parent
+        self.canvas = canvas
+
+        self.Add(Text(self, "Devices"), 1, wx.ALL, 5)
+
+
+class ConfigurationPanel(Box):
+    def __init__(self, parent, on_start, on_number_input):
+        """Initialise the devices panel."""
+        super().__init__(parent, dir="col", bg_color=COLORS.GRAY_800)
+        self.parent = parent
+
+        self.Add(Text(self, "Configuration"), 0, wx.ALL, 5)
+
+        cycles_input = Box(self, dir="row")
+        cycles_input.Add(Text(cycles_input, "Number of Cycles",
+                         style=wx.ALIGN_LEFT), 2, wx.ALL, 8)
+
+        cycles_input.Add(NumberInput(
+            cycles_input, value=10, onChange=on_number_input), 2, wx.ALL, 5)
+
+        self.Add(cycles_input, 0, wx.CENTER, 10)
+
+        self.Add(Button(self, "Start Simulation",
+                        onClick=on_start,
+                        bg_color=COLORS.GREEN_800,
+                        hover_bg_color=COLORS.GREEN_700,
+                        size="md"), 0, wx.ALL, 20)
+
+
+class CodePage(ScrollBox):
+    def __init__(self, parent: wx.Notebook):
+        super().__init__(parent, dir="col")
+        self.parent = parent
+        self.code = parent.uploaded_code
+
+        self.Add(Text(self, self.code, style=wx.ALIGN_LEFT,
+                 font_family="modern"), 0, wx.ALL, 5)
+
+        # update the text when the parent's uploaded code changes
+        parent.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.on_page_changed)
+
+    def on_page_changed(self, event):
+        """Handle the event when the user changes the page."""
+        self.code = self.parent.uploaded_code
+        self.GetChildren()[0].SetLabel(self.code)
