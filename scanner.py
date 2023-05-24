@@ -9,7 +9,6 @@ Scanner - reads definition file and translates characters into symbols.
 Symbol - encapsulates a symbol and stores its properties.
 """
 import sys
-from names import Names
 
 class Symbol:
 
@@ -60,10 +59,8 @@ class Scanner:
         self.symbol_list = [self.HEADING, self.KEYWORD, self.NUMBER, self.NAME,
                                 self.EQUAL, self.DOT, self.COMMA, self.SEMICOLON,
                                 self.OPEN_BRACKET, self.CLOSE_BRACKET, self.HASHTAG, self.EOF] = range(12)
-        self.headings_list = ["[devices]", "[conns]", "[monit]"]
-        [self.DEVICES_ID, self.CONNS_ID, self.MONIT_ID] = self.names.lookup(self.headings_list)
-        
-        self.keywords_list = ["="]
+        self.heading_list = ["[devices]", "[conns]", "[monit]"]
+        [self.DEVICES_ID, self.CONNS_ID, self.MONIT_ID] = self.names.lookup(self.keywords_list)
         self.ignore = ["#"]
         self.stopping_list = [self.SEMICOLON, self.EOF]
         self.current_character = ""
@@ -77,20 +74,20 @@ class Scanner:
         symbol = Symbol()
         self.skip_spaces() # current character now not whitespace
 
-        if self.current_character.isalpha():
+        if self.current_character.isalpha():  #Names
             name_string = self.get_name()
             self.name_string = name_string[0]
 
             #Potentially
-            if self.name_string in self.ignore:
+            if self.name_string in self.ignore:  #Ignore 
                 return None
-            elif self.name_string.lower() in self.headings_list:
+            elif self.name_string.lower() in self.headings_list:  #Headings
                 symbol.type = self.HEADING
                 symbol.id = self.names.query(self.name_string.lower())
-            elif self.name_string in self.keywords_list:
+            elif self.name_string in self.keywords_list:  #Keywords
                 symbol.type = self.KEYWORD
                 symbol.id = self.names.query(self.name_string)
-            elif self.name_string.lower() == self.names.get_name_string(self.DEVICE):
+            elif self.name_string.lower() == self.names.get_name_string(self.DEVICE): 
                 symbol.type = self.KEYWORD
                 symbol.id = self.names.query(self.name_string)
             else:
