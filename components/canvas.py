@@ -71,12 +71,7 @@ class Canvas(wxcanvas.GLCanvas):
         # Initialise variables for zooming
         self.zoom = 1
 
-        self.signals = [
-            {
-                "name": "G1",
-                "signal": [0, 1, 1, 1, 1, 1, 0, 1, 0, 1]
-            },
-        ]
+        self.signals = []
 
         # Bind events to the canvas
         self.Bind(wx.EVT_PAINT, self.on_paint)
