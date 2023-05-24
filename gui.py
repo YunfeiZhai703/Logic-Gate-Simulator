@@ -32,7 +32,7 @@ class Gui(wx.Frame):
         self.nb = nb
         nb.SetBackgroundColour(COLORS.GRAY_400)
         nb.canvas = Canvas(nb, devices, monitors)
-        nb.uploaded_code = ""
+        nb.uploaded_code = "No Code Uploded"
         nb.AddPage(MainPage("Logic Simulator", path, names, devices,
                    network, monitors, notebook=nb), "Main")
 
@@ -156,22 +156,6 @@ class DevicesPanel(Box):
         self.canvas = canvas
 
         self.Add(Text(self, "Devices"), 1, wx.ALL, 5)
-        self.Add(Button(self, "Run",
-                        onClick=self.on_run_button), 1, wx.ALL, 5)
-        self.Add(TextBox(self, "Enter text",
-                         onChange=self.on_text_box), 1, wx.ALL, 5)
-
-    def on_run_button(self, event):
-        """Handle the event when the user clicks the run button."""
-        text = "Run button pressed."
-        self.canvas.render(text)
-
-    def on_text_box(self, event):
-        """Handle the event when the user enters text."""
-        # Get the text box value from the event object
-        text_box_value = event.GetString()
-        text = "".join(["New text box value: ", text_box_value])
-        self.canvas.render(text)
 
 
 class ConfigurationPanel(Box):
@@ -182,13 +166,20 @@ class ConfigurationPanel(Box):
 
         self.Add(Text(self, "Configuration"), 0, wx.ALL, 5)
 
-        self.Add(NumberInput(
-            self, value=10, onChange=on_number_input), 0, wx.ALL, 5)
+        cycles_input = Box(self, dir="row")
+        cycles_input.Add(Text(cycles_input, "Number of Cycles",
+                         style=wx.ALIGN_LEFT), 2, wx.ALL, 8)
+
+        cycles_input.Add(NumberInput(
+            cycles_input, value=10, onChange=on_number_input), 2, wx.ALL, 5)
+
+        self.Add(cycles_input, 0, wx.CENTER, 10)
+
         self.Add(Button(self, "Start Simulation",
                         onClick=on_start,
                         bg_color=COLORS.GREEN_800,
                         hover_bg_color=COLORS.GREEN_700,
-                        size="md"), 0, wx.ALL, 5)
+                        size="md"), 0, wx.ALL, 20)
 
 
 class CodePage(ScrollBox):
@@ -206,4 +197,4 @@ class CodePage(ScrollBox):
     def on_page_changed(self, event):
         """Handle the event when the user changes the page."""
         self.code = self.parent.uploaded_code
-        self.GetChildren()[1].SetLabel(self.code)
+        self.GetChildren()[0].SetLabel(self.code)
