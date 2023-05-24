@@ -57,6 +57,7 @@ class Scanner:
                                 self.OPEN_BRACKET, self.CLOSE_BRACKET, self.HASHTAG, self.EOF] = range(12)
         self.headings_list = ["[devices]", "[conns]", "[monit]"]
         [self.DEVICES_ID, self.CONNS_ID, self.MONIT_ID] = self.names.lookup(self.headings_list)
+        
         self.keywords_list = ["="]
         self.ignore = ["#"]
         self.stopping_list = [self.SEMICOLON, self.EOF]
@@ -77,10 +78,10 @@ class Scanner:
             #Potentially
             if self.name_string in self.ignore:
                 return None
-            elif self.name_string.lower() in self.heading_list:
+            elif self.name_string.lower() in self.headings_list:
                 symbol.type = self.HEADING
                 symbol.id = self.names.query(self.name_string.lower())
-            elif self.name_string in self.keyword_list:
+            elif self.name_string in self.keywords_list:
                 symbol.type = self.KEYWORD
                 symbol.id = self.names.query(self.name_string)
             elif self.name_string.lower() == self.names.get_name_string(self.DEVICE):
@@ -94,7 +95,6 @@ class Scanner:
                     [symbol.id] = self.names.lookup([self.name_string])
 
             print(self.name_string, end=' ')
-#
 
         elif self.current_character.isdigit():
             symbol.id = self.get_number()
@@ -144,22 +144,18 @@ class Scanner:
     def get_name(self):
         # Want to find the name that comes next in input_file
         # Return the name and the next character that is non-alphanumeric
-        name = self.current_character
-        while True:
-            self.current_character = self.advance()
-            if self.current_character.isalnum():
-                name = name + self.current_character
-            else:
-                return [name, self.current_character]
+        name = ""
+        while self.current_character.isalnum:
+            name += self.current_character
+            self.advance()
+        return [name, self.current_character]
 
     def get_number(self):
-        number = self.current_character
-        while True:
-            self.current_character = self.advance()
-            if number.isdigit():
-                number += self.current_character
-            else:
-                return [number, self.current_character]
+        number = ""
+        while self.current_character.isdigit():
+            number += self.current_character
+            self.advance()
+        return [number, self.current_character]
             
     def skip_spaces(self):
         while self.current_character.isspace():
