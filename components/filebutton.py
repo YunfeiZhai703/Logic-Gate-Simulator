@@ -15,8 +15,12 @@ class FileButton(Button):
 
     def openFile(self, event, notebook):
         wildcard = "TXT files (*.txt)|*.txt"
-        dlg = wx.FileDialog(self, "Open file...", os.getcwd(),
-                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST, wildcard=wildcard)
+        dlg = wx.FileDialog(
+            self,
+            "Open file...",
+            os.getcwd(),
+            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
+            wildcard=wildcard)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             # read file contents

@@ -8,7 +8,6 @@ Classes
 Scanner - reads definition file and translates characters into symbols.
 Symbol - encapsulates a symbol and stores its properties.
 """
-import sys
 from typing import List
 
 
@@ -60,13 +59,10 @@ class ErrorCodes:
     INVALID_NUMBER = "InvalidNumber"
 
     description = {
-        INVALID_CHARACTER: "This character is not allowed in the definition file.",
-        INVALID_NAME: """
+        INVALID_CHARACTER: "This character is not allowed in the definition file.", INVALID_NAME: """
         The name used is either a reserved word or is not a valid name for a device.
         Names must start with a letter and can only contain letters, numbers. Logic gates symbols must be in upper case.
-        """,
-        INVALID_NUMBER: "Invalid number",
-    }
+        """, INVALID_NUMBER: "Invalid number", }
 
 
 class ScannerError(SyntaxError):
@@ -79,7 +75,13 @@ class ScannerError(SyntaxError):
         explanation of the error
     """
 
-    def __init__(self, line_number, line_content, char_number, error_code, message):
+    def __init__(
+            self,
+            line_number,
+            line_content,
+            char_number,
+            error_code,
+            message):
         """Initialise ScannerError with the message."""
         self.error_code = error_code
         self.message = message
@@ -242,8 +244,12 @@ class Scanner(SymbolList):
             symbol.type = self.EOF
 
         else:  # Not a valid character
-            error = ScannerError(self.current_line, self.current_character,
-                                 self.current_position, ErrorCodes.INVALID_CHARACTER, "Invalid character")
+            error = ScannerError(
+                self.current_line,
+                self.current_character,
+                self.current_position,
+                ErrorCodes.INVALID_CHARACTER,
+                "Invalid character")
             print(error)
             self.errors.append(error)
             self.error_count += 1

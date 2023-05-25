@@ -19,7 +19,8 @@ class Box(wx.Panel):
     def Add(self, item, proportion=0, flag=wx.ALL, border=0):
         self.sizer.Add(item, proportion, flag, border)
 
-    def Attach(self, parent: Union[wx.BoxSizer, wx.Panel], proportion, flag, border):
+    def Attach(self, parent: Union[wx.BoxSizer,
+               wx.Panel], proportion, flag, border):
         """Attach the heading to the parent."""
         parent.Add(self, proportion, flag, border)
 
@@ -37,6 +38,7 @@ class ScrollBox(wx.ScrolledWindow):
     def Add(self, item, proportion=0, flag=wx.ALL, border=0):
         self.sizer.Add(item, proportion, flag, border)
 
-    def Attach(self, parent: Union[wx.BoxSizer, wx.Panel], proportion, flag, border):
+    def Attach(self, parent: Union[wx.BoxSizer,
+               wx.Panel], proportion, flag, border):
         """Attach the heading to the parent."""
         parent.Add(self, proportion, flag, border)

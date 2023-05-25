@@ -95,7 +95,16 @@ class Canvas(wxcanvas.GLCanvas):
         GL.glTranslated(self.pan_x, self.pan_y, 0.0)
         GL.glScaled(self.zoom, self.zoom, self.zoom)
 
-    def draw_signal_trace(self, signal: list, x_pos: int, y_pos: int, label: str, color: tuple = (0.0, 0.0, 1.0)):
+    def draw_signal_trace(
+        self,
+        signal: list,
+        x_pos: int,
+        y_pos: int,
+        label: str,
+        color: tuple = (
+            0.0,
+            0.0,
+            1.0)):
         """Draws a signa
 
         Args:
@@ -169,7 +178,11 @@ class Canvas(wxcanvas.GLCanvas):
 
         for i, signal in enumerate(self.signals):
             self.draw_signal_trace(
-                signal["signal"], 50, 60 * i + 50, signal["name"], self._get_color(i))
+                signal["signal"],
+                50,
+                60 * i + 50,
+                signal["name"],
+                self._get_color(i))
 
         # We have been drawing to the back buffer, flush the graphics pipeline
         # and swap the back buffer to the front

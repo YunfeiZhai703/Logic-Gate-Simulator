@@ -51,18 +51,18 @@ class Names:
         if not isinstance(num_error_codes, int):
             raise TypeError("Expected num_error_codes to be an integer.")
         self.error_code_count += num_error_codes
-        return range(self.error_code_count - num_error_codes, self.error_code_count)
+        return range(
+            self.error_code_count - num_error_codes,
+            self.error_code_count)
 
     def query(self, name_string):
         """Return the corresponding name ID for name_string.
 
         If the name string is not present in the names list, return None.
         """
-        # Need to confirm first that the string is alphanumeric or a string (not all digits) otherwise return a SyntaxError,
-        # Then return None if the string is not present
 
         # First check if it is string
-        if type(name_string) is not str:
+        if not isinstance(name_string, str):
             raise TypeError("The name must be a string")
 
         if name_string.isdigit():
@@ -70,7 +70,8 @@ class Names:
         if not name_string.isalnum():
             raise SyntaxError("The name must be alphanumeric")
 
-        # If the name string is present in the names list, return the index of where it is, else return None
+        # If the name string is present in the names list, return the index of
+        # where it is, else return None
         if name_string in self.names:
             return self.names.index(name_string)
         else:
@@ -84,19 +85,21 @@ class Names:
 
         # Create a list of IDs
         id_list = []
-        # id_list = [self.query(name_string) for name_string in name_string_list]
 
-        # First check that the name_string_list is a list, otherwise produce SyntaxError
-        if type(name_string_list) is not list:
+        # First check that the name_string_list is a list, otherwise produce
+        # SyntaxError
+        if not isinstance(name_string_list, list):
             raise TypeError("Name string list must be a list")
 
-        # Then check that each element in the list is a string, otherwise produce TypeError
+        # Then check that each element in the list is a string, otherwise
+        # produce TypeError
 
         for name_string in name_string_list:
-            if type(name_string) is not str:
+            if not isinstance(name_string, str):
                 raise TypeError("The name must be a string")
 
-        # Check if the name is in the name list, and if not, add it to the list and add the index to the id list too
+        # Check if the name is in the name list, and if not, add it to the list
+        # and add the index to the id list too
         for name_string in name_string_list:
             if name_string not in self.names:
                 self.names.append(name_string)
@@ -110,7 +113,8 @@ class Names:
 
         If the name_id is not an index in the names list, return None.
         """
-        # First check that name_id provided is a valid number (i.e. is positive)
+        # First check that name_id provided is a valid number (i.e. is
+        # positive)
         if name_id < 0:
             raise ValueError("The name_id is not correct")
         elif name_id < len(self.names):

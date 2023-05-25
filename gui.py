@@ -71,7 +71,15 @@ class Gui(wx.Frame):
 
 class MainPage(wx.Panel):
 
-    def __init__(self, title, path, names, devices, network, monitors, notebook=None):
+    def __init__(
+            self,
+            title,
+            path,
+            names,
+            devices,
+            network,
+            monitors,
+            notebook=None):
         """Initialise widgets and layout."""
         super().__init__(parent=notebook)
 
@@ -107,8 +115,14 @@ class MainPage(wx.Panel):
 
         right_sizer.Add(right_bottom_block, 1, wx.EXPAND, 5)
 
-        ConfigurationPanel(right_bottom_block, self.on_start, self.on_number_input).Attach(
-            right_bottom_block, 1, wx.EXPAND | wx.ALL, 5)
+        ConfigurationPanel(
+            right_bottom_block,
+            self.on_start,
+            self.on_number_input).Attach(
+            right_bottom_block,
+            1,
+            wx.EXPAND | wx.ALL,
+            5)
 
         main_sizer.Add(left_sizer, 2, wx.ALL, 5)
         main_sizer.Add(right_sizer, 5, wx.EXPAND | wx.ALL, 5)
@@ -152,8 +166,10 @@ class Heading(wx.BoxSizer):
         parent.Add(self, proportion, flag, border)
 
     def on_click(self, event):
-        wx.MessageBox("Logic Simulator\nTeam 19 - Lakee, Dhillon, Yunfei\n2023",
-                      "About Logsim", wx.ICON_INFORMATION | wx.OK)
+        wx.MessageBox(
+            "Logic Simulator\nTeam 19 - Lakee, Dhillon, Yunfei\n2023",
+            "About Logsim",
+            wx.ICON_INFORMATION | wx.OK)
 
 
 class DevicesPanel(Box):
