@@ -30,7 +30,7 @@
     G5 =  G6.CLEAR ;          # CLEAR is "R" in the diagram
 
     G6.Q = G7.I2;              # Need to specify which output of DTYPE since there are 2
-    G6.QBAR: G8.I1;
+    G6.QBAR= G8.I1;
 
     G7 = G9.I1;
     G8 = G9.I2;
