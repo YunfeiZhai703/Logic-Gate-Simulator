@@ -63,3 +63,15 @@ def test_keywords_error(test_names):
 
     for e in errors:
         assert e.error_code == ErrorCodes.INVALID_NAME
+
+
+def test_invalid_char_error(test_names):
+    """Test that keywords are not allowed as names"""
+    test_scan = Scanner("tests/scanner/error_2.txt", test_names)
+    test_scan.get_all_symbols()
+    errors = test_scan.errors
+
+    for e in errors:
+        assert e.error_code == ErrorCodes.INVALID_CHARACTER
+        assert e.line_number == 32
+        assert e.char_number == 12
