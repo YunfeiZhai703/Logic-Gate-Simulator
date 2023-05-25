@@ -253,6 +253,7 @@ class Scanner(SymbolList):
             print(error)
             self.errors.append(error)
             self.error_count += 1
+            self.advance()
 
         return symbol
 
