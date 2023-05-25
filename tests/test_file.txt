@@ -1,0 +1,3 @@
+[devices]G1, G8, G9 = AND;        # Default 2 input AND gate
+[conns] G1 = G8.I1, G9.I1;        # Connect G1 to G8 and G9
+
