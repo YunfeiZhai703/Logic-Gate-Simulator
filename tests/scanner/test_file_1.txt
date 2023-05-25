@@ -1,3 +1,2 @@
 [devices]G1, G8, G9 = AND;        # Default 2 input AND gate
-hi
 

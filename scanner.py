@@ -122,7 +122,8 @@ class Scanner(SymbolList):
             [symbol.id] = self.names.lookup([self.name_string])
 
         elif self.current_character.isdigit():  # Numbers
-            symbol.id = self.get_number()
+            symbol.id = None
+            symbol.name = self.get_number()[0]
             symbol.type = self.NUMBER
 
         elif self.current_character == "=":  # Definitions
