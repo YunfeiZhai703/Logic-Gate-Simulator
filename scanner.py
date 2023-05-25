@@ -9,6 +9,7 @@ Scanner - reads definition file and translates characters into symbols.
 Symbol - encapsulates a symbol and stores its properties.
 """
 import sys
+from typing import List
 
 
 class Symbol:
@@ -33,8 +34,6 @@ class Symbol:
     def __repr__(self) -> str:
         return f"Symbol(type={self.type}, id={self.id}, name={self.name})"
 
-# enum of symbol types
-
 
 class SymbolList:
     def __init__(self):
@@ -53,6 +52,50 @@ class SymbolList:
         self.OPEN_SQUARE_BRACKET = "OPEN_SQUARE_BRACKET"
         self.CLOSE_SQUARE_BRACKET = "CLOSE_SQUARE_BRACKET"
         self.EOF = "EOF"
+
+
+class ErrorCodes:
+    INVALID_CHARACTER = "InvalidCharacter"
+    INVALID_NAME = "InvalidName"
+    INVALID_NUMBER = "InvalidNumber"
+
+    description = {
+        INVALID_CHARACTER: "This character is not allowed in the definition file.",
+        INVALID_NAME: """
+        The name used is either a reserved word or is not a valid name for a device.
+        Names must start with a letter and can only contain letters, numbers. Logic gates symbols must be in upper case.
+        """,
+        INVALID_NUMBER: "Invalid number",
+    }
+
+
+class ScannerError(SyntaxError):
+
+    """Exception raised for errors in the input.
+
+    Attributes
+    ----------
+    message : str
+        explanation of the error
+    """
+
+    def __init__(self, line_number, line_content, char_number, error_code, message):
+        """Initialise ScannerError with the message."""
+        self.error_code = error_code
+        self.message = message
+        self.line_number = line_number
+        self.line_content = line_content
+        self.char_number = char_number
+        self.error_message = f"Error - {error_code}: {message}" + "\n" + \
+            f"Line {self.line_number}: {self.line_content}" + "\n" + \
+            " " * (self.char_number + 6) + "^" + "\n" + \
+            "Description: " + ErrorCodes.description[error_code] + "\n"
+
+    def __str__(self):
+        return self.error_message
+
+    def __repr__(self):
+        return self.error_message
 
 
 class Scanner(SymbolList):
@@ -83,23 +126,33 @@ class Scanner(SymbolList):
 
         except FileNotFoundError:
             raise Exception("Input file not found")
+
         self.names = names
+        self.errors: List[ScannerError] = []
 
         self.heading_list = ["devices", "conns", "monit"]
-
-        # [self.DEVICES_ID, self.CONNS_ID,
-        #     self.MONIT_ID] = self.names.lookup(self.heading_list)
 
         self.logic_list = ["DTYPE", "NAND", "NOR",
                            "XOR", "AND", "OR", "CLOCK", "SWITCH"]
 
-        [self.DTYPE_ID, self.NAND_ID, self.NOR_ID, self.XOR_ID,
-         self.AND_ID, self.OR_ID, self.CLOCK_ID, self.SWITCH_ID] = self.names.lookup(self.logic_list)
+        # contact heading_list and logic_list all in lower case
+        self.keywords = self.heading_list + self.logic_list
+        self.keywords = [keyword.lower() for keyword in self.keywords]
 
         self.current_character = " "
         self.current_position = 0
         self.current_line = 0
         self.error_count = 0
+
+    def get_all_symbols(self):
+        """Return all symbols in the file."""
+        symbols = []
+        while True:
+            symbol = self.get_symbol()
+            symbols.append(symbol)
+            if symbol.type == self.EOF:
+                break
+        return symbols
 
     def get_symbol(self):
         """Translate the next sequence of characters into a symbol."""
@@ -118,13 +171,26 @@ class Scanner(SymbolList):
             name_string = self.get_name()
             self.name_string = name_string[0]
             symbol.name = self.name_string
+
             if self.name_string in self.heading_list:
                 symbol.type = self.HEADING
             elif self.name_string in self.logic_list:
                 symbol.type = self.LOGIC
+                [symbol.id] = self.names.lookup([self.name_string])
             else:
                 symbol.type = self.NAME
-            [symbol.id] = self.names.lookup([self.name_string])
+                [symbol.id] = self.names.lookup([self.name_string])
+
+                if symbol.name.lower() in self.keywords:
+                    self.error_count += 1
+
+                    error = ScannerError(
+                        self.current_line, self.get_current_line(),
+                        self.current_position - len(symbol.name),
+                        ErrorCodes.INVALID_NAME,
+                        f"Invalid name: {symbol.name}")
+
+                    self.errors.append(error)
 
         elif self.current_character.isdigit():  # Numbers
             symbol.id = None
@@ -175,7 +241,11 @@ class Scanner(SymbolList):
             symbol.type = self.EOF
 
         else:  # Not a valid character
-            self.error(SyntaxError, "Character not valid")
+            error = ScannerError(self.current_line, self.current_character,
+                                 self.current_position, ErrorCodes.INVALID_CHARACTER, "Invalid character")
+            print(error)
+            self.errors.append(error)
+            self.error_count += 1
 
         self.current_position += 1
         return symbol
@@ -225,11 +295,3 @@ class Scanner(SymbolList):
             line = self.file.readline()
         self.file.seek(current_position)
         return line
-
-    def error(self, error_type, message):
-        """Error handling method"""
-        self.error_count += 1
-        print(f"Error {self.error_count} - {error_type.__name__}: {message}")
-        print(f"Line {self.current_line}: {self.get_current_line()}")
-        # Marker to indicate the error position
-        print(" " * (self.current_position + 6) + "^")
