@@ -42,7 +42,7 @@ class Parser:
         self.network = network
         self.monitors = monitors
         self.symbol = self.scanner.get_symbol()
-        self.ports_list = [self.DATA, self.CLK, self.SET, self.CLEAR, self.Q, self.QBAR] = range(6)
+        self.ports_list = [self.DATA, self.CLK, self.SET, self.CLEAR, self.Q, self.QBAR] = range(6)  #delete if not needed
 
     def parse_network(self):
         """Parse the circuit definition file."""
