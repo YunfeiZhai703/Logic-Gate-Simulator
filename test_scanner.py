@@ -1,5 +1,5 @@
 import pytest
-from scanner import Scanner, Symbol
+from scanner import Scanner, Symbol, ErrorCodes
 from names import Names
 
 
@@ -53,3 +53,13 @@ def test_get_symbol(test_names, test_path):
             assert symbol.type == test_scan.NAME
         if symbol.type == test_scan.EOF:
             break
+
+
+def test_keywords_error(test_names):
+    """Test that keywords are not allowed as names"""
+    test_scan = Scanner("tests/scanner/error_1.txt", test_names)
+    test_scan.get_all_symbols()
+    errors = test_scan.errors
+
+    for e in errors:
+        assert e.error_code == ErrorCodes.INVALID_NAME

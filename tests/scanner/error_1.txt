@@ -1,1 +1,1 @@
-[devices ] G1 = and(1);
+[devices ] and = AND(1); G2 = OR; G3 = xor;
