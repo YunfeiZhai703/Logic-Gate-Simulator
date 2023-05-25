@@ -37,9 +37,7 @@ def test_get_symbol(test_names, test_path):
         "G9",
         "=",
         "AND",
-        ";",
-        "#"
-    ]
+        ";"]
 
     for symbol in test_string:
         assert symbol == test_scan.get_symbol().name

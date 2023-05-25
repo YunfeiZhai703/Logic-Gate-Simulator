@@ -52,7 +52,6 @@ class SymbolList:
         self.CLOSE_BRACKET = "CLOSE_BRACKET"
         self.OPEN_SQUARE_BRACKET = "OPEN_SQUARE_BRACKET"
         self.CLOSE_SQUARE_BRACKET = "CLOSE_SQUARE_BRACKET"
-        self.HASHTAG = "HASHTAG"
         self.EOF = "EOF"
 
 
