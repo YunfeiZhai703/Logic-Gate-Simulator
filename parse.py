@@ -11,6 +11,7 @@ Parser - parses the definition file and builds the logic network.
 import sys
 from scanner import *
 
+
 class Parser:
 
     """Parse the definition file and build the logic network.
@@ -42,19 +43,16 @@ class Parser:
         self.network = network
         self.monitors = monitors
         self.symbol = self.scanner.get_symbol()
-        self.ports_list = [self.DATA, self.CLK, self.SET, self.CLEAR, self.Q, self.QBAR] = range(6)  #delete if not needed
+        self.ports_list = [self.DATA, self.CLK, self.SET, self.CLEAR,
+                           self.Q, self.QBAR] = range(6)  # delete if not needed
 
     def parse_network(self):
         """Parse the circuit definition file."""
-        
-        
-        
-        
-        
-        
+
         # For now just return True, so that userint and gui can run in the
         # skeleton code. When complete, should return False when there are
         # errors in the circuit definition file.
         return True
+
     def connections(self):
         pass
