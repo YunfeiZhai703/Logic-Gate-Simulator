@@ -108,6 +108,13 @@ class Scanner(SymbolList):
 
         symbol = Symbol()
 
+        if self.current_character == "#":  # Skip comments
+            self.advance()
+            while self.current_character != "\n":
+                self.advance()
+
+        self.skip_spaces()
+
         if self.current_character.isalpha():
             name_string = self.get_name()
             self.name_string = name_string[0]
@@ -163,13 +170,6 @@ class Scanner(SymbolList):
             symbol.type = self.CLOSE_SQUARE_BRACKET
             symbol.name = "]"
             self.advance()
-
-        elif self.current_character == "#":  # Comments
-            symbol.type = self.HASHTAG
-            symbol.name = "#"
-            self.advance()
-            while self.current_character != "\n":
-                self.advance()
 
         elif self.current_character == "":  # End of file
             symbol.name = "EOF"
