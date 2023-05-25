@@ -50,6 +50,8 @@ class SymbolList:
         self.SEMICOLON = "SEMICOLON"
         self.OPEN_BRACKET = "OPEN_BRACKET"
         self.CLOSE_BRACKET = "CLOSE_BRACKET"
+        self.OPEN_SQUARE_BRACKET = "OPEN_SQUARE_BRACKET"
+        self.CLOSE_SQUARE_BRACKET = "CLOSE_SQUARE_BRACKET"
         self.HASHTAG = "HASHTAG"
         self.EOF = "EOF"
 
@@ -79,11 +81,12 @@ class Scanner(SymbolList):
         SymbolList.__init__(self)
         try:
             self.file = open(path, "r")
+
         except FileNotFoundError:
             raise Exception("Input file not found")
         self.names = names
 
-        self.heading_list = ["[devices]", "[conns]", "[monit]"]
+        self.heading_list = ["devices", "conns", "monit"]
 
         # [self.DEVICES_ID, self.CONNS_ID,
         #     self.MONIT_ID] = self.names.lookup(self.heading_list)
@@ -101,11 +104,11 @@ class Scanner(SymbolList):
 
     def get_symbol(self):
         """Translate the next sequence of characters into a symbol."""
-
-        symbol = Symbol()
         self.skip_spaces()  # current character now not whitespace
 
-        if self.current_character.isalpha() or self.current_character == "[":
+        symbol = Symbol()
+
+        if self.current_character.isalpha():
             name_string = self.get_name()
             self.name_string = name_string[0]
             symbol.name = self.name_string
@@ -114,10 +117,6 @@ class Scanner(SymbolList):
             elif self.name_string in self.logic_list:
                 symbol.type = self.LOGIC
             else:
-                if symbol.name[-1] == "]" or name_string[1] == "[":
-                    # raise error
-                    self.error(SyntaxError, "Heading not valid")
-
                 symbol.type = self.NAME
             [symbol.id] = self.names.lookup([self.name_string])
 
@@ -156,6 +155,15 @@ class Scanner(SymbolList):
             symbol.name = ")"
             self.advance()
 
+        elif self.current_character == "[":  # Inputs No.
+            symbol.type = self.OPEN_SQUARE_BRACKET
+            symbol.name = "["
+            self.advance()
+        elif self.current_character == "]":  # Inputs No.
+            symbol.type = self.CLOSE_SQUARE_BRACKET
+            symbol.name = "]"
+            self.advance()
+
         elif self.current_character == "#":  # Comments
             symbol.type = self.HASHTAG
             symbol.name = "#"
@@ -178,11 +186,9 @@ class Scanner(SymbolList):
         # self.advance()
         name = ""
         self.skip_spaces()
-        while self.current_character.isalnum() or self.current_character == "[" or self.current_character == "]":
+        while self.current_character.isalnum():
             name += self.current_character
             self.advance()
-            if name[-1] == "]":
-                break
         return [name, self.current_character]
 
     def get_number(self):

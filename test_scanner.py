@@ -27,7 +27,9 @@ def test_get_symbol(test_names, test_path):
     test_scan = Scanner(test_path, test_names)
 
     test_string = [
-        "[devices]",
+        "[",
+        "devices",
+        "]",
         "G1",
         ",",
         "G8",
@@ -42,7 +44,7 @@ def test_get_symbol(test_names, test_path):
     for symbol in test_string:
         assert symbol == test_scan.get_symbol().name
 
-    headings = "[devices]"
+    headings = "devices"
 
     # scan until heading is found
     while True:
