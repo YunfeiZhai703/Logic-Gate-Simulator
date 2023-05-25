@@ -86,9 +86,10 @@ class ScannerError(SyntaxError):
         self.line_number = line_number
         self.line_content = line_content
         self.char_number = char_number
+
         self.error_message = f"Error - {error_code}: {message}" + "\n" + \
-            f"Line {self.line_number}: {self.line_content}" + "\n" + \
-            " " * (self.char_number + 6) + "^" + "\n" + \
+            f"Line {self.line_number} Char {self.char_number}:\n{self.line_content}" + "\n" + \
+            " " * (self.char_number) + "^" + "\n" + \
             "Description: " + ErrorCodes.description[error_code] + "\n"
 
     def __str__(self):
@@ -247,7 +248,6 @@ class Scanner(SymbolList):
             self.errors.append(error)
             self.error_count += 1
 
-        self.current_position += 1
         return symbol
 
     def get_name(self):
