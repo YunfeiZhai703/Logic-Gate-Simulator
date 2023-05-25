@@ -3,6 +3,7 @@ Class for button widget using wxPython
 """
 
 import wx
+from wx.lib.agw.gradientbutton import GradientButton
 from .colors import COLORS
 from typing import Tuple, Union
 
@@ -11,13 +12,10 @@ button_size_type = Union[str, Tuple[int, int]]
 # str: xs, sm, md, lg, xl (removed Literal due to python 3.7 compatibility)
 
 
-class Button(wx.Button):
+class Button(GradientButton):
     """Button widget class."""
 
-    def __init__(self, parent, label, onClick=None, bg_color=COLORS.GRAY_800,
-                 hover_bg_color=COLORS.GRAY_700,
-                 fg_color=COLORS.WHITE,
-                 hover_fg_color=COLORS.RED_200,
+    def __init__(self, parent, label, onClick=None, color=wx.BLACK,
                  size: button_size_type = "sm"
                  ):
         """Custom button widget.
@@ -34,18 +32,10 @@ class Button(wx.Button):
         """
 
         super().__init__(parent, label=label, style=wx.BORDER_NONE)
-        self.bg_color = bg_color
-        self.fg_color = fg_color
-        self.hover_bg_color = hover_bg_color
-        self.hover_fg_color = hover_fg_color
-
-        self.SetBackgroundColour(bg_color)
-        self.SetForegroundColour(fg_color)
+        self.SetBaseColours(color, wx.WHITE)
 
         if onClick:
             self.Bind(wx.EVT_BUTTON, onClick)
-        self.Bind(wx.EVT_ENTER_WINDOW, self.OnHover)
-        self.Bind(wx.EVT_LEAVE_WINDOW, self.OnUnHover)
 
         self.SetSize(size)
 
@@ -65,14 +55,14 @@ class Button(wx.Button):
         elif isinstance(size, tuple):
             self.SetMinSize(size)
 
-    def OnHover(self, event):
-        self.SetBackgroundColour(self.hover_bg_color)
-        self.SetForegroundColour(self.hover_fg_color)
-        self.Refresh()  # Refresh the button to apply changes
-        event.Skip()
+    # def OnHover(self, event):
+    #     self.SetBackgroundColour(self.hover_bg_color)
+    #     self.SetForegroundColour(self.hover_fg_color)
+    #     self.Refresh()  # Refresh the button to apply changes
+    #     event.Skip()
 
-    def OnUnHover(self, event):
-        self.SetBackgroundColour(self.bg_color)
-        self.SetForegroundColour(self.fg_color)
-        self.Refresh()  # Refresh the button to apply changes
-        event.Skip()
+    # def OnUnHover(self, event):
+    #     self.SetBackgroundColour(self.bg_color)
+    #     self.SetForegroundColour(self.fg_color)
+    #     self.Refresh()  # Refresh the button to apply changes
+    #     event.Skip()

@@ -1,11 +1,17 @@
 """
 This file contains the colors used in the UI. Taken from tailwindcss
 """
+import wx
 
 
 class COLORS:
-    WHITE = "#FFFFFF"
-    BLACK = "#000000"
+    WHITE = wx.WHITE
+    BLACK = wx.BLACK
+    RED = wx.RED
+    GREEN = wx.GREEN
+    BLUE = wx.BLUE
+    YELLOW = wx.YELLOW
+
     """Gray colors"""
     GRAY_50 = "#F9FAFB"
     GRAY_100 = "#F3F4F6"

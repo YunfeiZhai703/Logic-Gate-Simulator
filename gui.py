@@ -155,7 +155,7 @@ class Heading(wx.BoxSizer):
 
         self.Add(
             Button(parent, "Logic Simulator", size="md",
-                   bg_color=COLORS.RED_800, hover_bg_color=COLORS.RED_700,
+                   color=wx.RED,
                    onClick=self.on_click
                    ), 1, wx.ALL, 5)
 
@@ -201,8 +201,7 @@ class ConfigurationPanel(Box):
 
         self.Add(Button(self, "Start Simulation",
                         onClick=on_start,
-                        bg_color=COLORS.GREEN_800,
-                        hover_bg_color=COLORS.GREEN_700,
+                        color=wx.GREEN,
                         size="md"), 0, wx.ALL, 20)
 
 
