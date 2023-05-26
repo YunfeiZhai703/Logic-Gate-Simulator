@@ -8,5 +8,5 @@
     "**/__pycache__": true
   },
   "python.formatting.provider": "none",
-  "python.linting.flake8Args": ["--ignore=E501,F401"]
+  "python.linting.flake8Args": ["--ignore=E501,F401,F841,W504"]
 }

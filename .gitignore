@@ -1,5 +1,5 @@
 __pycache__
 .pytest_cache
 logsim
-local_testing.py
+# local_testing.py
 .DS_Store

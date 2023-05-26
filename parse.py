@@ -13,6 +13,9 @@ from typing import List
 from scanner import Scanner, Symbol, SymbolList
 from errors import Error, ErrorCodes
 from names import Names
+from devices import Devices
+from network import Network
+from monitors import Monitors
 
 
 class Parser:
@@ -42,9 +45,9 @@ class Parser:
         """Initialise constants."""
         self.names: Names = names
         self.scanner: Scanner = scanner
-        self.devices = devices
-        self.network = network
-        self.monitors = monitors
+        self.devices: Devices = devices
+        self.network: Network = network
+        self.monitors: Monitors = monitors
         self.symbol = self.scanner.get_symbol()
         self.errors: List[Error] = []
 
@@ -621,4 +624,7 @@ class Parser:
             self.parse_conns_line()
 
     def parse_conns_line(self):
-        pass
+        print("Conns line current symbol: " + self.symbol.name)
+        output = self.symbol.name
+        # TODO: Handle DTYPE Name as it has two outputs (check for "." and then
+        # check for "Q" or "QBAR")
