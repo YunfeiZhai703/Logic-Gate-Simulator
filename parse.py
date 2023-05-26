@@ -620,4 +620,7 @@ class Parser:
             self.parse_conns_line()
 
     def parse_conns_line(self):
-        pass
+        print("Conns line current symbol: " + self.symbol.name)
+        output = self.symbol.name
+        # TODO: Handle DTYPE Name as it has two outputs (check for "." and then
+        # check for "Q" or "QBAR")
