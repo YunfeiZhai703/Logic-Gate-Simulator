@@ -118,6 +118,13 @@ class Parser:
 
     def parse_devices(self):
         while (self.symbol.type != self.scanner.OPEN_SQUARE_BRACKET):
+            if (self.symbol.type != self.scanner.SEMICOLON):
+                self.add_error(
+                    ErrorCodes.SYNTAX_ERROR,
+                    "Expected ';' or Expected [conns] block")
+                self.advance()
+                break
+
             self.parse_device_line()
 
     def parse_device_line(self):
