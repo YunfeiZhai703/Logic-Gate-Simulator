@@ -120,12 +120,10 @@ class Parser:
         i = 0
         while (self.symbol.type != self.scanner.OPEN_SQUARE_BRACKET):
             i += 1
-            print("HHHHHH", self.symbol)
-            if (self.symbol.type != self.scanner.HEADING):
+            if (self.symbol.type == self.scanner.HEADING):
                 self.add_error(
                     ErrorCodes.SYNTAX_ERROR,
                     "Expected [conns] block")
-                # self.advance()
                 break
             if (i > 500):
                 self.add_error(
