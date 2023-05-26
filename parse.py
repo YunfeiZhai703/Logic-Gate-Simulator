@@ -628,3 +628,116 @@ class Parser:
         output = self.symbol.name
         # TODO: Handle DTYPE Name as it has two outputs (check for "." and then
         # check for "Q" or "QBAR")
+
+        print("Conns line symbol:" + str(self.symbol))
+        conns_list = []
+
+        if (self.validate_device_name(conns_list)):
+            conns_list.append(self.symbol.name)
+            conns_are_valid = True
+            self.advance()
+
+            while (
+                self.symbol.type == self.scanner.EQUAL and conns_are_valid
+            ):
+                self.advance()
+
+                if (self.validate_conns_name(conns_list)):
+                    conns_list.append(self.symbol.name)
+                    self.advance()
+                else:
+                    conns_are_valid = False
+
+            if (conns_are_valid):
+                if (self.symbol.type == self.scanner.EQUAL):
+                    self.advance()
+
+                    if (self.symbol.type == self.scanner.LOGIC):
+                        gate = self.symbol.name
+                        self.advance()
+                        self.parse_logic_gate(gate, conns_list)
+                        self.advance()
+                        print(conns_list)
+                    else:
+                        self.add_error(
+                            ErrorCodes.INVALID_LOGIC_GATE,
+                            "Expected logic gate")
+
+                else:
+                    self.add_error(
+                        ErrorCodes.SYNTAX_ERROR,
+                        "Expected '='")
+
+    def parse_monit_block(self):
+        if (self.symbol.type == self.scanner.OPEN_SQUARE_BRACKET):
+            self.advance()
+
+            if (self.symbol.type ==
+                    self.scanner.HEADING and self.symbol.name == "monit"):
+                self.advance()
+
+                if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
+                    self.advance()
+
+                    self.parse_monit()
+
+                else:
+                    self.add_error(
+                        ErrorCodes.INVALID_HEADER, "Expected ']'")
+
+            else:
+                self.add_error(ErrorCodes.INVALID_HEADER, "Expected 'monit'")
+
+        else:
+            self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
+
+    def parse_monit(self):
+        i = 0
+        while (self.symbol.type != self.scanner.OPEN_SQUARE_BRACKET):
+            i += 1
+            if (self.symbol.type == self.scanner.HEADING):
+                self.add_error(
+                    # TODO: Do we need a way to identify the end of the text file
+                    # or can we go back to start to see "[devices]"?
+                    ErrorCodes.SYNTAX_ERROR,
+                    "Expected [devices] block")
+                break
+            if (i > 500):
+                self.add_error(
+                    ErrorCodes.OVERFLOW_ERROR,
+                    "Overflow error: Looping too many times in devices, please check that you have a [conns] block")
+                break
+
+            self.parse_monit_line()
+
+    def parse_monit_line(self):
+        print("Monit line symbol:" + str(self.symbol))
+        monit_list = []
+
+        if (self.validate_monit_name(monit_list)):
+            monit_list.append(self.symbol.name)
+            monit_are_valid = True
+            self.advance()
+
+            while (
+                self.symbol.type == self.scanner.COMMA and monit_are_valid
+            ):
+                self.advance()
+
+                if (self.symbol.type == self.scanner.SEMICOLON):
+                    break
+
+                if (self.validate_monit_name(monit_list)):
+                    monit_list.append(self.symbol.name)
+                    self.advance()
+                else:
+                    monit_are_valid = False
+
+            if (monit_are_valid):
+                if (self.symbol.type == self.scanner.SEMICOLON):
+                    self.advance()
+
+                else:
+                    self.add_error(
+                        ErrorCodes.SYNTAX_ERROR,
+                        "Expected ';'")
