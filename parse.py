@@ -447,88 +447,90 @@ class Parser:
                         "Expected '('")
 
             pass
+
         if (gate == "DTYPE"):
-            pass
-        if (gate == "CLOCK"):
             if (self.symbol.type == self.scanner.SEMICOLON):
                 device_ids = self.names.lookup(
                     device_list
                 )
                 for device_id in device_ids:
-                    self.devices.make_gate(
-                        device_id,
-                        self.devices.CLK,
-                        0,
+                    self.devices.make_d_type(
+                        device_id
                     )
             else:
-                number_inps = None
-                if (self.symbol.type == self.scanner.OPEN_BRACKET):
+                self.add_error(
+                    ErrorCodes.SYNTAX_ERROR,
+                    "Expected ';'")
+            pass
+
+        if (gate == "CLOCK"):
+            clock_period = None
+            if (self.symbol.type == self.scanner.OPEN_BRACKET):
+                self.advance()
+
+                if (self.symbol.type == self.scanner.NUMBER):
+                    clock_period = int(self.symbol.name)
+
+                    if (clock_period < 1):
+                        self.add_error(
+                            ErrorCodes.INVALID_NUMBER,
+                            "Clock period must be greater than 0")
+
                     self.advance()
 
-                    if (self.symbol.type == self.scanner.NUMBER):
-                        number_inps = int(self.symbol.name)
-
-                        if (number_inps < 1 or number_inps > 16):
-                            self.add_error(
-                                ErrorCodes.INVALID_NUMBER,
-                                "Number of inputs must be between 1 and 16")
-
+                    if (self.symbol.type == self.scanner.CLOSE_BRACKET):
                         self.advance()
 
-                        if (self.symbol.type == self.scanner.CLOSE_BRACKET):
-                            self.advance()
-
-                            if (self.symbol.type == self.scanner.SEMICOLON):
-                                device_ids = self.names.lookup(
-                                    device_list
+                        if (self.symbol.type == self.scanner.SEMICOLON):
+                            device_ids = self.names.lookup(
+                                device_list
+                            )
+                            for device_id in device_ids:
+                                self.devices.make_clock(
+                                    device_id,
+                                    clock_period
                                 )
-                                for device_id in device_ids:
-                                    self.devices.make_gate(
-                                        device_id,
-                                        self.devices.NOR,
-                                        number_inps,
-                                    )
-                            else:
-                                self.add_error(
-                                    ErrorCodes.SYNTAX_ERROR,
-                                    "Expected ';'")
                         else:
                             self.add_error(
                                 ErrorCodes.SYNTAX_ERROR,
-                                "Expected ')'")
+                                "Expected ';'")
                     else:
                         self.add_error(
                             ErrorCodes.SYNTAX_ERROR,
-                            "Expected number")
+                            "Expected ')'")
                 else:
                     self.add_error(
                         ErrorCodes.SYNTAX_ERROR,
-                        "Expected '('")
+                        "Expected number")
+            else:
+                self.add_error(
+                    ErrorCodes.SYNTAX_ERROR,
+                    "Expected '('")
 
             pass
+
         if (gate == "SWITCH"):
             if (self.symbol.type == self.scanner.SEMICOLON):
                 device_ids = self.names.lookup(
                     device_list
                 )
                 for device_id in device_ids:
-                    self.devices.make_gate(
+                    self.devices.make_switch(
                         device_id,
-                        self.devices.NOR,
-                        2,
+                        0,
                     )
             else:
-                number_inps = None
+                switch_output = None
                 if (self.symbol.type == self.scanner.OPEN_BRACKET):
                     self.advance()
 
                     if (self.symbol.type == self.scanner.NUMBER):
-                        number_inps = int(self.symbol.name)
+                        switch_output = int(self.symbol.name)
 
-                        if (number_inps < 1 or number_inps > 16):
+                        if (switch_output < 0 or switch_output > 1):
                             self.add_error(
                                 ErrorCodes.INVALID_NUMBER,
-                                "Number of inputs must be between 1 and 16")
+                                "Output must be between 0 or 1")
 
                         self.advance()
 
@@ -540,10 +542,9 @@ class Parser:
                                     device_list
                                 )
                                 for device_id in device_ids:
-                                    self.devices.make_gate(
+                                    self.devices.make_switch(
                                         device_id,
-                                        self.devices.NOR,
-                                        number_inps,
+                                        switch_output,
                                     )
                             else:
                                 self.add_error(
