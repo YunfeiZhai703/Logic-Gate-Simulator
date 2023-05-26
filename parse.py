@@ -103,13 +103,12 @@ class Parser:
     def validate_device_name(self):
         if (self.symbol.type == self.scanner.NAME):
             if (self.names.query(self.symbol.name) is None):
-                self.names.insert(self.symbol.name)
+                return True
             else:
                 self.add_error(
                     ErrorCodes.NAME_DEFINED,
                     f"Name '{self.symbol.name}' already defined")
-
-            self.advance()
+                return False
 
         else:
             self.add_error(ErrorCodes.INVALID_NAME, "Expected name")
@@ -118,7 +117,9 @@ class Parser:
         pass
 
     def parse_device_line(self):
+        device_list = []
         if (self.validate_device_name()):
+            device_list.append(self.symbol.name)
             devices_are_valid = True
             self.advance()
 
@@ -130,6 +131,7 @@ class Parser:
                 self.advance()
 
                 if (self.validate_device_name()):
+                    device_list.append(self.symbol.name)
                     self.advance()
                 else:
                     devices_are_valid = False
