@@ -9,6 +9,7 @@ Scanner - reads definition file and translates characters into symbols.
 Symbol - encapsulates a symbol and stores its properties.
 """
 from typing import List
+from errors import Error, ErrorCodes
 
 
 class Symbol:
@@ -53,54 +54,6 @@ class SymbolList:
         self.EOF = "EOF"
 
 
-class ErrorCodes:
-    INVALID_CHARACTER = "InvalidCharacter"
-    INVALID_NAME = "InvalidName"
-    INVALID_NUMBER = "InvalidNumber"
-
-    description = {
-        INVALID_CHARACTER: "This character is not allowed in the definition file.", INVALID_NAME: """
-        The name used is either a reserved word or is not a valid name for a device.
-        Names must start with a letter and can only contain letters, numbers. Logic gates symbols must be in upper case.
-        """, INVALID_NUMBER: "Invalid number", }
-
-
-class ScannerError(SyntaxError):
-
-    """Exception raised for errors in the input.
-
-    Attributes
-    ----------
-    message : str
-        explanation of the error
-    """
-
-    def __init__(
-            self,
-            line_number,
-            line_content,
-            char_number,
-            error_code,
-            message):
-        """Initialise ScannerError with the message."""
-        self.error_code = error_code
-        self.message = message
-        self.line_number = line_number
-        self.line_content = line_content
-        self.char_number = char_number
-
-        self.error_message = f"Error - {error_code}: {message}" + "\n" + \
-            f"Line {self.line_number} Char {self.char_number}:\n{self.line_content}" + "\n" + \
-            " " * (self.char_number) + "^" + "\n" + \
-            "Description: " + ErrorCodes.description[error_code] + "\n"
-
-    def __str__(self):
-        return self.error_message
-
-    def __repr__(self):
-        return self.error_message
-
-
 class Scanner(SymbolList):
 
     """Read circuit definition file and translate the characters into symbols.
@@ -131,7 +84,7 @@ class Scanner(SymbolList):
             raise Exception("Input file not found")
 
         self.names = names
-        self.errors: List[ScannerError] = []
+        self.errors: List[Error] = []
 
         self.heading_list = ["devices", "conns", "monit"]
 
@@ -187,7 +140,7 @@ class Scanner(SymbolList):
                 if symbol.name.lower() in self.keywords:
                     self.error_count += 1
 
-                    error = ScannerError(
+                    error = Error(
                         self.current_line, self.get_current_line(),
                         self.current_position - len(symbol.name),
                         ErrorCodes.INVALID_NAME,
@@ -244,7 +197,7 @@ class Scanner(SymbolList):
             symbol.type = self.EOF
 
         else:  # Not a valid character
-            error = ScannerError(
+            error = Error(
                 self.current_line,
                 self.current_character,
                 self.current_position,
