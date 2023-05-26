@@ -115,9 +115,11 @@ class Parser:
             self.add_error(ErrorCodes.INVALID_NAME, "Expected name")
 
     def parse_devices(self):
-        pass
+        while (self.symbol.type != self.scanner.OPEN_SQUARE_BRACKET):
+            self.parse_device_line()
 
     def parse_device_line(self):
+        print("Device line symbol:" + str(self.symbol))
         device_list = []
 
         if (self.validate_device_name(device_list)):
@@ -147,6 +149,7 @@ class Parser:
                         gate = self.symbol.name
                         self.advance()
                         self.parse_logic_gate(gate, device_list)
+                        self.advance()
                         print(device_list)
                     else:
                         self.add_error(

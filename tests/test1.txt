@@ -1,1 +1,4 @@
-G1, G8, G9 = AND(4);        # Default 2 input AND gate
+G1, G8, G9 = AND(4);    
+G7 = AND(2);
+
+[conns]
