@@ -72,13 +72,15 @@ class Parser:
         # skeleton code. When complete, should return False when there are
         # errors in the circuit definition file.
 
+        self.parse_devices_block()  # parsing devices block
+
         return True
 
     def advance(self):
         self.symbol = self.scanner.get_symbol()
         print(self.symbol)
 
-    def parse_devices_header(self):
+    def parse_devices_block(self):
         if (self.symbol.type == self.scanner.OPEN_SQUARE_BRACKET):
             self.advance()
 
@@ -115,7 +117,20 @@ class Parser:
             self.add_error(ErrorCodes.INVALID_NAME, "Expected name")
 
     def parse_devices(self):
+        i = 0
         while (self.symbol.type != self.scanner.OPEN_SQUARE_BRACKET):
+            i += 1
+            if (self.symbol.type == self.scanner.HEADING):
+                self.add_error(
+                    ErrorCodes.SYNTAX_ERROR,
+                    "Expected [conns] block")
+                break
+            if (i > 500):
+                self.add_error(
+                    ErrorCodes.OVERFLOW_ERROR,
+                    "Overflow error: Looping too many times in devices, please check that you have a [conns] block")
+                break
+
             self.parse_device_line()
 
     def parse_device_line(self):
@@ -564,3 +579,46 @@ class Parser:
                         "Expected '('")
 
             pass
+
+    def parse_conns_block(self):
+        if (self.symbol.type == self.scanner.OPEN_SQUARE_BRACKET):
+            self.advance()
+
+            if (self.symbol.type ==
+                    self.scanner.HEADING and self.symbol.name == "conns"):
+                self.advance()
+
+                if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
+                    self.advance()
+
+                    self.parse_conns()
+
+                else:
+                    self.add_error(
+                        ErrorCodes.INVALID_HEADER, "Expected ']'")
+
+            else:
+                self.add_error(ErrorCodes.INVALID_HEADER, "Expected 'conns'")
+
+        else:
+            self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
+
+    def parse_conns(self):
+        i = 0
+        while (self.symbol.type != self.scanner.OPEN_SQUARE_BRACKET):
+            i += 1
+            if (self.symbol.type == self.scanner.HEADING):
+                self.add_error(
+                    ErrorCodes.SYNTAX_ERROR,
+                    "Expected [conns] block")
+                break
+            if (i > 500):
+                self.add_error(
+                    ErrorCodes.OVERFLOW_ERROR,
+                    "Overflow error: Looping too many times in devices, please check that you have a [conns] block")
+                break
+
+            self.parse_conns_line()
+
+    def parse_conns_line(self):
+        pass

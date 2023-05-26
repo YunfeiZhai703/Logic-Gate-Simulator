@@ -7,6 +7,7 @@ class ErrorCodes:
     NAME_DEFINED = "NameDefined"
     SYNTAX_ERROR = "SyntaxError"
     INVALID_LOGIC_GATE = "InvalidLogicGate"
+    OVERFLOW_ERROR = "OverflowError"
 
     description = {
         INVALID_CHARACTER: "This character is not allowed in the definition file.",

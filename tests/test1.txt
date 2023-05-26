@@ -1,4 +1,10 @@
+[devices]
 G1, G8, G9 = AND(4);    
-G7 = AND(2);
+G7 = OR(2);
+G6 = OR(2);
+G2 = NOR(2);
 
 [conns]
+
+G1 = G8.I1, G9.I1;
+
