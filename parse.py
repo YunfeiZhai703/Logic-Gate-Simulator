@@ -216,7 +216,7 @@ class Parser:
                         "Expected '('")
 
             pass
-        if (self.symbol.name == "NAND"):
+        if (gate == "NAND"):
             if (self.symbol.type == self.scanner.SEMICOLON):
                 # TODO: handle device with 2 inputs
                 pass
@@ -252,7 +252,7 @@ class Parser:
                         ErrorCodes.SYNTAX_ERROR,
                         "Expected '('")
             pass
-        if (self.symbol.name == "OR"):
+        if (gate == "OR"):
             if (self.symbol.type == self.scanner.SEMICOLON):
                 # TODO: handle device with 2 inputs
                 pass
@@ -288,7 +288,7 @@ class Parser:
                         ErrorCodes.SYNTAX_ERROR,
                         "Expected '('")
             pass
-        if (self.symbol.name == "NOR"):
+        if (gate == "NOR"):
             if (self.symbol.type == self.scanner.SEMICOLON):
                 # TODO: handle device with 2 inputs
                 pass
@@ -324,7 +324,7 @@ class Parser:
                         ErrorCodes.SYNTAX_ERROR,
                         "Expected '('")
             pass
-        if (self.symbol.name == "XOR"):
+        if (gate == "XOR"):
             if (self.symbol.type == self.scanner.SEMICOLON):
                 # TODO: handle device with 2 inputs
                 pass
@@ -360,7 +360,7 @@ class Parser:
                         ErrorCodes.SYNTAX_ERROR,
                         "Expected '('")
             pass
-        if (self.symbol.name == "DTYPE"):
+        if (gate == "DTYPE"):
             pass
-        if (self.symbol.name == "CLOCK"):
+        if (gate == "CLOCK"):
             pass
