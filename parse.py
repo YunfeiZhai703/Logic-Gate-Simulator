@@ -606,6 +606,9 @@ class Parser:
         else:
             self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
 
+    def validate_conns_name(self):
+        pass
+
     def parse_conns(self):
         i = 0
         while (self.symbol.type != self.scanner.OPEN_SQUARE_BRACKET):
