@@ -144,9 +144,10 @@ class Parser:
                     self.advance()
 
                     if (self.symbol.type == self.scanner.LOGIC):
+                        gate = self.symbol.name
                         self.advance()
+                        self.parse_logic_gate(gate, device_list)
                         print(device_list)
-                        self.parse_logic_gate(device_list)
                     else:
                         self.add_error(
                             ErrorCodes.INVALID_LOGIC_GATE,
@@ -157,8 +158,8 @@ class Parser:
                         ErrorCodes.SYNTAX_ERROR,
                         "Expected '='")
 
-    def parse_logic_gate(self, device_list):
-        if (self.symbol.name == "AND"):
+    def parse_logic_gate(self, gate, device_list):
+        if (gate == "AND"):
             if (self.symbol.type == self.scanner.SEMICOLON):
                 device_ids = self.names.lookup(
                     device_list
