@@ -130,6 +130,9 @@ class Parser:
             ):
                 self.advance()
 
+                if (self.symbol.type == self.scanner.EQUAL):
+                    break
+
                 if (self.validate_device_name()):
                     device_list.append(self.symbol.name)
                     self.advance()
