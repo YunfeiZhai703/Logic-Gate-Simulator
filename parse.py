@@ -722,6 +722,7 @@ class Parser:
             while (
                 self.symbol.type == self.scanner.COMMA and monit_are_valid
             ):
+                # Need to add if its followed by a dot and DATA, CLEAR, SET, Q OR QBAR as condition
                 self.advance()
 
                 if (self.symbol.type == self.scanner.SEMICOLON):
