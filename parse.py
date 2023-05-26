@@ -139,6 +139,7 @@ class Parser:
                     self.advance()
 
                     if (self.symbol.type == self.scanner.LOGIC):
+                        self.advance()
                         self.parse_logic_gate()
                     else:
                         self.add_error(
@@ -150,13 +151,48 @@ class Parser:
                         ErrorCodes.SYNTAX_ERROR,
                         "Expected '='")
 
-        if self.symbol.type == self.scanner.SEMICOLON:
-            self.advance()
-        else:
-            self.add_error(ErrorCodes.SYNTAX_ERROR, "Expected ';'")
+        # if self.symbol.type == self.scanner.SEMICOLON:
+        #     self.advance()
+        # else:
+        #     self.add_error(ErrorCodes.SYNTAX_ERROR, "Expected ';'")
 
     def parse_logic_gate(self):
         if (self.symbol.name == "AND"):
+            if (self.symbol.type == self.scanner.SEMICOLON):
+                # TODO: handle device with 2 inputs
+                pass
+            else:
+                number_inps = None
+                if (self.symbol.type == self.scanner.OPEN_BRACKET):
+                    self.advance()
+
+                    if (self.symbol.type == self.scanner.NUMBER):
+                        number_inps = int(self.symbol.name)
+                        self.advance()
+
+                        if (self.symbol.type == self.scanner.CLOSE_BRACKET):
+                            self.advance()
+
+                            if (self.symbol.type == self.scanner.SEMICOLON):
+                                # TODO: handle device with n inputs
+                                pass
+                            else:
+                                self.add_error(
+                                    ErrorCodes.SYNTAX_ERROR,
+                                    "Expected ';'")
+                        else:
+                            self.add_error(
+                                ErrorCodes.SYNTAX_ERROR,
+                                "Expected ')'")
+                    else:
+                        self.add_error(
+                            ErrorCodes.SYNTAX_ERROR,
+                            "Expected number")
+                else:
+                    self.add_error(
+                        ErrorCodes.SYNTAX_ERROR,
+                        "Expected '('")
+
             pass
         if (self.symbol.name == "NAND"):
             pass
