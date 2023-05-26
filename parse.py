@@ -176,6 +176,12 @@ class Parser:
 
                     if (self.symbol.type == self.scanner.NUMBER):
                         number_inps = int(self.symbol.name)
+
+                        if (number_inps < 0 or number_inps > 16):
+                            self.add_error(
+                                ErrorCodes.INVALID_NUMBER,
+                                "Number of inputs must be between 0 and 16")
+
                         self.advance()
 
                         if (self.symbol.type == self.scanner.CLOSE_BRACKET):
