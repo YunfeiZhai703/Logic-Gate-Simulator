@@ -78,7 +78,7 @@ class Parser:
         self.symbol = self.scanner.get_symbol()
         print(self.symbol)
 
-    def parse_devices_header(self):
+    def parse_devices_block(self):
         if (self.symbol.type == self.scanner.OPEN_SQUARE_BRACKET):
             self.advance()
 
