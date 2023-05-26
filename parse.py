@@ -100,9 +100,10 @@ class Parser:
         else:
             self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
 
-    def validate_device_name(self):
+    def validate_device_name(self, device_list):
         if (self.symbol.type == self.scanner.NAME):
-            if (self.names.query(self.symbol.name) is None):
+            if (self.names.query(self.symbol.name)
+                    is None and self.symbol.name not in device_list):
                 return True
             else:
                 self.add_error(
@@ -118,7 +119,7 @@ class Parser:
 
     def parse_device_line(self):
         device_list = []
-        if (self.validate_device_name()):
+        if (self.validate_device_name(device_list)):
             device_list.append(self.symbol.name)
             devices_are_valid = True
             self.advance()
@@ -133,7 +134,7 @@ class Parser:
                 if (self.symbol.type == self.scanner.EQUAL):
                     break
 
-                if (self.validate_device_name()):
+                if (self.validate_device_name(device_list)):
                     device_list.append(self.symbol.name)
                     self.advance()
                 else:
