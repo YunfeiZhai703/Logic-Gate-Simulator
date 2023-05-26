@@ -200,12 +200,148 @@ class Parser:
 
             pass
         if (self.symbol.name == "NAND"):
+            if (self.symbol.type == self.scanner.SEMICOLON):
+                # TODO: handle device with 2 inputs
+                pass
+            else:
+                number_inps = None
+                if (self.symbol.type == self.scanner.OPEN_BRACKET):
+                    self.advance()
+
+                    if (self.symbol.type == self.scanner.NUMBER):
+                        number_inps = int(self.symbol.name)
+                        self.advance()
+
+                        if (self.symbol.type == self.scanner.CLOSE_BRACKET):
+                            self.advance()
+
+                            if (self.symbol.type == self.scanner.SEMICOLON):
+                                # TODO: handle device with n inputs
+                                pass
+                            else:
+                                self.add_error(
+                                    ErrorCodes.SYNTAX_ERROR,
+                                    "Expected ';'")
+                        else:
+                            self.add_error(
+                                ErrorCodes.SYNTAX_ERROR,
+                                "Expected ')'")
+                    else:
+                        self.add_error(
+                            ErrorCodes.SYNTAX_ERROR,
+                            "Expected number")
+                else:
+                    self.add_error(
+                        ErrorCodes.SYNTAX_ERROR,
+                        "Expected '('")
             pass
         if (self.symbol.name == "OR"):
+            if (self.symbol.type == self.scanner.SEMICOLON):
+                # TODO: handle device with 2 inputs
+                pass
+            else:
+                number_inps = None
+                if (self.symbol.type == self.scanner.OPEN_BRACKET):
+                    self.advance()
+
+                    if (self.symbol.type == self.scanner.NUMBER):
+                        number_inps = int(self.symbol.name)
+                        self.advance()
+
+                        if (self.symbol.type == self.scanner.CLOSE_BRACKET):
+                            self.advance()
+
+                            if (self.symbol.type == self.scanner.SEMICOLON):
+                                # TODO: handle device with n inputs
+                                pass
+                            else:
+                                self.add_error(
+                                    ErrorCodes.SYNTAX_ERROR,
+                                    "Expected ';'")
+                        else:
+                            self.add_error(
+                                ErrorCodes.SYNTAX_ERROR,
+                                "Expected ')'")
+                    else:
+                        self.add_error(
+                            ErrorCodes.SYNTAX_ERROR,
+                            "Expected number")
+                else:
+                    self.add_error(
+                        ErrorCodes.SYNTAX_ERROR,
+                        "Expected '('")
             pass
         if (self.symbol.name == "NOR"):
+            if (self.symbol.type == self.scanner.SEMICOLON):
+                # TODO: handle device with 2 inputs
+                pass
+            else:
+                number_inps = None
+                if (self.symbol.type == self.scanner.OPEN_BRACKET):
+                    self.advance()
+
+                    if (self.symbol.type == self.scanner.NUMBER):
+                        number_inps = int(self.symbol.name)
+                        self.advance()
+
+                        if (self.symbol.type == self.scanner.CLOSE_BRACKET):
+                            self.advance()
+
+                            if (self.symbol.type == self.scanner.SEMICOLON):
+                                # TODO: handle device with n inputs
+                                pass
+                            else:
+                                self.add_error(
+                                    ErrorCodes.SYNTAX_ERROR,
+                                    "Expected ';'")
+                        else:
+                            self.add_error(
+                                ErrorCodes.SYNTAX_ERROR,
+                                "Expected ')'")
+                    else:
+                        self.add_error(
+                            ErrorCodes.SYNTAX_ERROR,
+                            "Expected number")
+                else:
+                    self.add_error(
+                        ErrorCodes.SYNTAX_ERROR,
+                        "Expected '('")
             pass
         if (self.symbol.name == "XOR"):
+            if (self.symbol.type == self.scanner.SEMICOLON):
+                # TODO: handle device with 2 inputs
+                pass
+            else:
+                number_inps = None
+                if (self.symbol.type == self.scanner.OPEN_BRACKET):
+                    self.advance()
+
+                    if (self.symbol.type == self.scanner.NUMBER):
+                        number_inps = int(self.symbol.name)
+                        self.advance()
+
+                        if (self.symbol.type == self.scanner.CLOSE_BRACKET):
+                            self.advance()
+
+                            if (self.symbol.type == self.scanner.SEMICOLON):
+                                # TODO: handle device with n inputs
+                                pass
+                            else:
+                                self.add_error(
+                                    ErrorCodes.SYNTAX_ERROR,
+                                    "Expected ';'")
+                        else:
+                            self.add_error(
+                                ErrorCodes.SYNTAX_ERROR,
+                                "Expected ')'")
+                    else:
+                        self.add_error(
+                            ErrorCodes.SYNTAX_ERROR,
+                            "Expected number")
+                else:
+                    self.add_error(
+                        ErrorCodes.SYNTAX_ERROR,
+                        "Expected '('")
             pass
         if (self.symbol.name == "DTYPE"):
             pass
