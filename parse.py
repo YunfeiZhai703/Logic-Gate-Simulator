@@ -9,7 +9,10 @@ Classes
 Parser - parses the definition file and builds the logic network.
 """
 import sys
-from scanner import *
+from typing import List
+from scanner import Scanner, Symbol, SymbolList
+from errors import Error, ErrorCodes
+from names import Names
 
 
 class Parser:
@@ -37,14 +40,30 @@ class Parser:
 
     def __init__(self, names, devices, network, monitors, scanner):
         """Initialise constants."""
-        self.names = names
-        self.scanner = scanner
+        self.names: Names = names
+        self.scanner: Scanner = scanner
         self.devices = devices
         self.network = network
         self.monitors = monitors
         self.symbol = self.scanner.get_symbol()
-        self.ports_list = [self.DATA, self.CLK, self.SET, self.CLEAR,
-                           self.Q, self.QBAR] = range(6)  # delete if not needed
+        self.errors: List[Error] = []
+
+        self.ports_list = [
+            self.DATA,
+            self.CLK,
+            self.SET,
+            self.CLEAR,
+            self.Q,
+            self.QBAR] = range(6)  # delete if not needed
+
+    def add_error(self, error_code, message):
+        """Add an error to the list of errors."""
+        self.errors.append(Error(
+            self.current_line,
+            self.current_character,
+            self.current_position,
+            error_code,
+            message))
 
     def parse_network(self):
         """Parse the circuit definition file."""
@@ -52,7 +71,86 @@ class Parser:
         # For now just return True, so that userint and gui can run in the
         # skeleton code. When complete, should return False when there are
         # errors in the circuit definition file.
+
         return True
 
-    def connections(self):
+    def advance(self):
+        self.symbol = self.scanner.get_symbol()
+
+    def parse_devices_header(self):
+        if (self.symbol.type == self.scanner.OPEN_SQUARE_BRACKET):
+            self.advance()
+
+            if (self.symbol.type ==
+                    self.scanner.HEADING and self.symbol.name == "devices"):
+                self.advance()
+
+                if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
+                    self.advance()
+
+                    self.parse_devices()
+
+                else:
+                    self.add_error(
+                        ErrorCodes.INVALID_HEADER, "Expected ']'")
+
+            else:
+                self.add_error(ErrorCodes.INVALID_HEADER, "Expected 'devices'")
+
+        else:
+            self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
+
+    def validate_device_name(self):
+        if (self.symbol.type == self.scanner.NAME):
+            if (self.names.query(self.symbol.name) is None):
+                self.names.insert(self.symbol.name)
+            else:
+                self.add_error(
+                    ErrorCodes.NAME_DEFINED,
+                    f"Name '{self.symbol.name}' already defined")
+
+            self.advance()
+
+        else:
+            self.add_error(ErrorCodes.INVALID_NAME, "Expected name")
+
+    def parse_devices(self):
         pass
+
+    def parse_device_line(self):
+        if (self.validate_device_name()):
+            devices_are_valid = True
+            self.advance()
+
+            # advance to comma
+
+            while (
+                self.symbol.type == self.scanner.COMMA and devices_are_valid
+            ):
+                self.advance()
+
+                if (self.validate_device_name()):
+                    self.advance()
+                else:
+                    devices_are_valid = False
+
+            if (devices_are_valid):
+                if (self.symbol.type == self.scanner.EQUAL):
+                    self.advance()
+
+                    if (self.symbol.type == self.scanner.LOGIC):
+                        pass  # TODO: parse logic gates
+                    else:
+                        self.add_error(
+                            ErrorCodes.INVALID_LOGIC_GATE,
+                            "Expected logic gate")
+
+                else:
+                    self.add_error(
+                        ErrorCodes.SYNTAX_ERROR,
+                        "Expected '='")
+
+        if self.symbol.type == self.scanner.SEMICOLON:
+            self.advance()
+        else:
+            self.add_error(ErrorCodes.SYNTAX_ERROR, "Expected ';'")

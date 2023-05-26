@@ -4,6 +4,9 @@ class ErrorCodes:
     INVALID_NUMBER = "InvalidNumber"
     INVALID_HEADER = "InvalidHeader"
     MISSING_HEADER = "MissingHeader"
+    NAME_DEFINED = "NameDefined"
+    SYNTAX_ERROR = "SyntaxError"
+    INVALID_LOGIC_GATE = "InvalidLogicGate"
 
     description = {
         INVALID_CHARACTER: "This character is not allowed in the definition file.",
