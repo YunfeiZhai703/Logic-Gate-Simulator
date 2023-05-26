@@ -72,6 +72,8 @@ class Parser:
         # skeleton code. When complete, should return False when there are
         # errors in the circuit definition file.
 
+        self.parse_devices_block()  # parsing devices block
+
         return True
 
     def advance(self):
