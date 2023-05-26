@@ -117,12 +117,20 @@ class Parser:
             self.add_error(ErrorCodes.INVALID_NAME, "Expected name")
 
     def parse_devices(self):
+        i = 0
         while (self.symbol.type != self.scanner.OPEN_SQUARE_BRACKET):
-            if (self.symbol.type != self.scanner.SEMICOLON):
+            i += 1
+            print("HHHHHH", self.symbol)
+            if (self.symbol.type != self.scanner.HEADING):
                 self.add_error(
                     ErrorCodes.SYNTAX_ERROR,
-                    "Expected ';' or Expected [conns] block")
-                self.advance()
+                    "Expected [conns] block")
+                # self.advance()
+                break
+            if (i > 500):
+                self.add_error(
+                    ErrorCodes.OVERFLOW_ERROR,
+                    "Overflow error: Looping too many times in devices, please check that you have a [conns] block")
                 break
 
             self.parse_device_line()
