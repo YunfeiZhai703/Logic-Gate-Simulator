@@ -606,8 +606,18 @@ class Parser:
         else:
             self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
 
-    def validate_conns_name(self):
-        pass
+    def validate_conns_name(self, conns_list):
+        if (self.symbol.type == self.scanner.NAME):
+            if (self.symbol.name not in conns_list):
+                return True
+            else:
+                self.add_error(
+                    ErrorCodes.NAME_DEFINED,
+                    f"Name '{self.symbol.name}' already defined")
+                return False
+
+        else:
+            self.add_error(ErrorCodes.INVALID_NAME, "Expected name")
 
     def parse_conns(self):
         i = 0
