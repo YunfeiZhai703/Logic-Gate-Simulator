@@ -610,7 +610,7 @@ class Parser:
             if (self.symbol.type == self.scanner.HEADING):
                 self.add_error(
                     ErrorCodes.SYNTAX_ERROR,
-                    "Expected [conns] block")
+                    "Expected [monitor] block")
                 break
             if (i > 500):
                 self.add_error(
