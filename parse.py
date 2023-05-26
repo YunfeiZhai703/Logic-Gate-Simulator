@@ -694,6 +694,9 @@ class Parser:
         else:
             self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
 
+    def monit_validate_monit_name(self):
+        pass
+
     def parse_monit(self):
         i = 0
         while (self.symbol.type != self.scanner.OPEN_SQUARE_BRACKET):
