@@ -59,9 +59,9 @@ class Parser:
     def add_error(self, error_code, message):
         """Add an error to the list of errors."""
         self.errors.append(Error(
-            self.current_line,
-            self.current_character,
-            self.current_position,
+            self.scanner.current_line,
+            self.scanner.current_character,
+            self.scanner.current_position,
             error_code,
             message))
 
@@ -76,6 +76,7 @@ class Parser:
 
     def advance(self):
         self.symbol = self.scanner.get_symbol()
+        print(self.symbol)
 
     def parse_devices_header(self):
         if (self.symbol.type == self.scanner.OPEN_SQUARE_BRACKET):
@@ -100,9 +101,9 @@ class Parser:
         else:
             self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
 
-    def validate_device_name(self):
+    def validate_device_name(self, device_list):
         if (self.symbol.type == self.scanner.NAME):
-            if (self.names.query(self.symbol.name) is None):
+            if (self.symbol.name not in device_list):
                 return True
             else:
                 self.add_error(
@@ -118,12 +119,11 @@ class Parser:
 
     def parse_device_line(self):
         device_list = []
-        if (self.validate_device_name()):
+
+        if (self.validate_device_name(device_list)):
             device_list.append(self.symbol.name)
             devices_are_valid = True
             self.advance()
-
-            # advance to comma
 
             while (
                 self.symbol.type == self.scanner.COMMA and devices_are_valid
@@ -133,7 +133,7 @@ class Parser:
                 if (self.symbol.type == self.scanner.EQUAL):
                     break
 
-                if (self.validate_device_name()):
+                if (self.validate_device_name(device_list)):
                     device_list.append(self.symbol.name)
                     self.advance()
                 else:
@@ -145,7 +145,8 @@ class Parser:
 
                     if (self.symbol.type == self.scanner.LOGIC):
                         self.advance()
-                        self.parse_logic_gate()
+                        print(device_list)
+                        self.parse_logic_gate(device_list)
                     else:
                         self.add_error(
                             ErrorCodes.INVALID_LOGIC_GATE,
@@ -156,16 +157,18 @@ class Parser:
                         ErrorCodes.SYNTAX_ERROR,
                         "Expected '='")
 
-        # if self.symbol.type == self.scanner.SEMICOLON:
-        #     self.advance()
-        # else:
-        #     self.add_error(ErrorCodes.SYNTAX_ERROR, "Expected ';'")
-
-    def parse_logic_gate(self):
+    def parse_logic_gate(self, device_list):
         if (self.symbol.name == "AND"):
             if (self.symbol.type == self.scanner.SEMICOLON):
-                # TODO: handle device with 2 inputs
-                pass
+                device_ids = self.names.lookup(
+                    device_list
+                )
+                for device_id in device_ids:
+                    self.devices.make_gate(
+                        device_id,
+                        self.devices.AND,
+                        2,
+                    )
             else:
                 number_inps = None
                 if (self.symbol.type == self.scanner.OPEN_BRACKET):
@@ -179,8 +182,15 @@ class Parser:
                             self.advance()
 
                             if (self.symbol.type == self.scanner.SEMICOLON):
-                                # TODO: handle device with n inputs
-                                pass
+                                device_ids = self.names.lookup(
+                                    device_list
+                                )
+                                for device_id in device_ids:
+                                    self.devices.make_gate(
+                                        device_id,
+                                        self.devices.AND,
+                                        number_inps,
+                                    )
                             else:
                                 self.add_error(
                                     ErrorCodes.SYNTAX_ERROR,
