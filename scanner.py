@@ -30,6 +30,8 @@ class Symbol:
         self.type = None
         self.id = None
         self.name = ""
+        self.line_number = None
+        self.char_number = None
 
     def __repr__(self) -> str:
         return f"Symbol(type={self.type}, id={self.id}, name={self.name})"
@@ -207,6 +209,8 @@ class Scanner(SymbolList):
             self.errors.append(error)
             self.error_count += 1
             self.advance()
+        symbol.line_number = self.current_line
+        symbol.char_number = self.current_position
 
         return symbol
 
