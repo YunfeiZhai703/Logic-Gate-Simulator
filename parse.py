@@ -178,10 +178,10 @@ class Parser:
                     if (self.symbol.type == self.scanner.NUMBER):
                         number_inps = int(self.symbol.name)
 
-                        if (number_inps < 0 or number_inps > 16):
+                        if (number_inps < 1 or number_inps > 16):
                             self.add_error(
                                 ErrorCodes.INVALID_NUMBER,
-                                "Number of inputs must be between 0 and 16")
+                                "Number of inputs must be between 1 and 16")
 
                         self.advance()
 
