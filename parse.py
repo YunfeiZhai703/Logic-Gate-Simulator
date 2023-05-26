@@ -139,7 +139,7 @@ class Parser:
                     self.advance()
 
                     if (self.symbol.type == self.scanner.LOGIC):
-                        pass  # TODO: parse logic gates
+                        self.parse_logic_gate()
                     else:
                         self.add_error(
                             ErrorCodes.INVALID_LOGIC_GATE,
@@ -154,3 +154,19 @@ class Parser:
             self.advance()
         else:
             self.add_error(ErrorCodes.SYNTAX_ERROR, "Expected ';'")
+
+    def parse_logic_gate(self):
+        if (self.symbol.name == "AND"):
+            pass
+        if (self.symbol.name == "NAND"):
+            pass
+        if (self.symbol.name == "OR"):
+            pass
+        if (self.symbol.name == "NOR"):
+            pass
+        if (self.symbol.name == "XOR"):
+            pass
+        if (self.symbol.name == "DTYPE"):
+            pass
+        if (self.symbol.name == "CLOCK"):
+            pass
