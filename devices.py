@@ -42,6 +42,10 @@ class Device:
         self.switch_state = None
         self.dtype_memory = None
 
+    def __repr__(self):
+        """Return device ID and device kind."""
+        return f"Device({self.device_id}, {self.device_kind}, inps: {self.inputs}, outs: {self.outputs})"
+
 
 class Devices:
 
