@@ -1,1 +1,1 @@
-G1, G8, G9 = AND;        # Default 2 input AND gate
+G1, G8, G9 = AND(4);        # Default 2 input AND gate
