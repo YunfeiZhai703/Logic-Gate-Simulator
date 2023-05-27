@@ -625,14 +625,13 @@ class Parser:
 
         print("Conns line device symbol:" + str(self.symbol))
         device_list = []
+        ports_list = []
         conns_list = []
 
         if (self.validate_device_name(device_list)):
             device_list.append(self.symbol.name)
             devices_are_valid = True
-
-            first_device_id = self.names.query(device_list)
-            first_port_id = self.names.query(device_list)
+            first_device_id = self.names.query(device_list[0])
             self.advance()
 
             if (devices_are_valid):
@@ -642,7 +641,7 @@ class Parser:
                     if (self.validate_device_name(device_list)):
                         device_list.append(self.symbol.name)
                         devices_are_valid = True
-                        second_device_id = self.symbol.id
+                        second_device_id = self.names.query(device_list[1])
                         self.advance()
                         if (self.symbol.type == self.scanner.DOT):
                             self.advance()
