@@ -607,8 +607,18 @@ class Parser:
         else:
             self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
 
-    def validate_conns_name(self):
-        pass
+    def validate_inputs_name(self, conns_list):
+        if (self.symbol.type == self.scanner.NAME):
+            if (self.symbol.name not in conns_list):
+                return True
+            else:
+                self.add_error(
+                    ErrorCodes.CONNS_DEFINED,
+                    f"Name '{self.symbol.name}' already defined")
+                return False
+
+        else:
+            self.add_error(ErrorCodes.INVALID_NAME, "Expected name")
 
     def parse_conns(self):
         i = 0
@@ -696,8 +706,9 @@ class Parser:
 
         print("Conns line symbol:" + str(self.symbol))
         conns_list = []
+        device_list = []
 
-        if (self.validate_device_name(conns_list)):
+        if (self.validate_device_name(conns_list, device_list)):
             conns_list.append(self.symbol.name)
             conns_are_valid = True
             self.advance()
@@ -755,6 +766,9 @@ class Parser:
 
         else:
             self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
+
+    def monit_validate_monit_name(self):
+        pass
 
     def parse_monit(self):
         i = 0
