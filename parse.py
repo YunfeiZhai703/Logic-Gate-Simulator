@@ -586,7 +586,6 @@ class Parser:
                 if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
                     self.advance()
 
-                    print("hello")
                     self.parse_conns()
 
                 else:
@@ -632,6 +631,7 @@ class Parser:
         if (self.validate_device_name(device_list)):
             device_list.append(self.symbol.name)
             devices_are_valid = True
+            # first_device =
             self.advance()
 
             if (devices_are_valid):
@@ -650,20 +650,41 @@ class Parser:
                                 if (self.symbol.type == self.scanner.INPUT):
                                     # TODO: now we know the device connected to and the port, so make connection
                                     # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
-                                    pass
+                                    self.advance()
+                                    if (self.symbol.type == self.scanner.COMMA):
+                                        self.advance()
+                                        if (self.symbol.type == "I"):
+                                            self.advance()
+                                            if (self.symbol.type == self.scanner.INPUT):
+                                                # TODO: now we know the device connected to and the port, so make connection
+                                                # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
+                                                pass
+                                    else:
+                                        pass
                                 else:
                                     self.add_error(
                                         ErrorCodes.MISSING_PORT,
                                         "Expected port number after I")
+
                             elif (self.symbol.type == self.scanner.DATA):
+                                # TODO: now we know the device connected to and the port, so make connection
+                                # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
                                 self.advance()
                             elif (self.symbol.type == self.scanner.CLEAR):
+                                # TODO: now we know the device connected to and the port, so make connection
+                                # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
                                 self.advance()
                             elif (self.symbol.type == self.scanner.CLK):
+                                # TODO: now we know the device connected to and the port, so make connection
+                                # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
                                 self.advance()
                             elif (self.symbol.type == self.scanner.Q):
+                                # TODO: now we know the device connected to and the port, so make connection
+                                # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
                                 self.advance()
                             elif (self.symbol.type == self.scanner.QBAR):
+                                # TODO: now we know the device connected to and the port, so make connection
+                                # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
                                 self.advance()
 
                             else:
