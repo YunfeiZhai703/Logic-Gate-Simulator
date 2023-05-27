@@ -7,7 +7,7 @@ from monitors import Monitors
 
 
 name = Names()
-scan = Scanner("./tests/test1.txt", name)
+scan = Scanner("./tests/test2.txt", name)
 devices = Devices(name)
 networks = Network(name, devices)
 monitors = Monitors(name, devices, networks)
