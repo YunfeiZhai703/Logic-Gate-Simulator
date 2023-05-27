@@ -710,21 +710,50 @@ class Parser:
                                         self.advance()
 
                     output_device_id = self.names.query(device_list[0])
+                    output_device = self.devices.get_device(output_device_id)
+
                     input_device_ids = self.names.lookup(device_list[1:])
 
-                    ports_list.insert(0, "Q")
+                    input_devices = [
+                        self.devices.get_device(
+                            device_id) for device_id in input_device_ids]
 
-                    conns_list = [device_list[i] + "." + ports_list[i]
-                                  for i in range(len(device_list))]
+                    print("Output device: ", output_device)
 
-                    pin_ids = self.pin_names.lookup(conns_list)
-                    output_device_pin_id = pin_ids[0]
-                    input_device_pin_ids = pin_ids[1:]
+                    if len(ports_list) == len(device_list):
+                        # WE GOT DTYPE
+                        print("==========WE GOT DTYPE==========")
+                        dtype_mapping = {
+                            "Q": self.devices.Q_ID,
+                            "QBAR": self.devices.QBAR_ID
+                        }
+                        output_device_pin_id = dtype_mapping[ports_list[0]]
+                        # remove first element from ports list
+                        ports_list.pop(0)
+                    else:
+                        output_device_pin_id = None  # TODO: DTYPE has two outputs
 
-                    for i, device_id in enumerate(input_device_ids):
+                    for i, input_dev in enumerate(input_devices):
+                        port_name = ports_list[i]
+                        # remove the first letter "I" from the port name and
+                        # convert to int
+                        input_device_pin_index = int(port_name[1:]) - 1
+                        input_dict = input_dev.inputs
+                        # get keys of input dict in a list
+                        input_keys = list(input_dict.keys())
+                        input_id = input_keys[input_device_pin_index]
+
+                        print(
+                            "Input dev: ",
+                            input_dev,
+                            "Input id: ",
+                            input_id,
+                            "Input dev id",
+                            input_device_ids[i])
+
                         error = self.network.make_connection(
-                            output_device_id, output_device_pin_id, device_id, "I1")
-                        if error:
+                            output_device_id, output_device_pin_id, input_device_ids[i], input_id)
+                        if error != self.network.NO_ERROR:
                             print(
                                 "---------------------!ERROR in make_connection: ",
                                 error,
