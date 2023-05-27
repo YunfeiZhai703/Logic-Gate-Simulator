@@ -632,6 +632,7 @@ class Parser:
             device_list.append(self.symbol.name)
             devices_are_valid = True
             first_device_id = self.names.query(device_list[0])
+            # first_port_id = self.symbol.id
             self.advance()
 
             if (devices_are_valid):
@@ -648,7 +649,7 @@ class Parser:
                             if (self.symbol.name == "I"):
                                 self.advance()
                                 if (self.symbol.type == self.scanner.PORT):
-                                    second_port_id = self.symbol.id
+                                    # second_port_id = self.symbol.id
                                     # TODO: now we know the device connected to and the port, so make connection
                                     self.network.make_connection(
                                         first_device_id, first_port_id, second_device_id, second_port_id)
