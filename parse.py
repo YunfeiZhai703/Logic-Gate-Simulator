@@ -642,7 +642,6 @@ class Parser:
                         self.advance()
                         if (self.symbol.type == self.scanner.DOT):
                             self.advance()
-                            # Or do we need to define self.scanner.I?
                             if (self.symbol.name == "I"):
                                 self.advance()
                                 if (self.symbol.type == self.scanner.NUMBER):
