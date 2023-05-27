@@ -662,8 +662,8 @@ class Parser:
                         self.advance()
                         if (self.symbol.type == self.scanner.dot):
                             self.advance()
-                            # Need to define self.scanner.I
-                            if (self.symbol.type == self.scanner.I):
+                            # Or do we need to define self.scanner.I?
+                            if (self.symbol.type == "I"):
                                 self.advance()
                                 if (self.symbol.type == self.scanner.NUMBER):
                                     # TODO: now we know the device connected to and the port, so make connection
