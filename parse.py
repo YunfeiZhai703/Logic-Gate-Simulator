@@ -51,6 +51,7 @@ class Parser:
         self.monitors: Monitors = monitors
         self.symbol = self.scanner.get_symbol()
         self.errors: List[Error] = []
+        self.stored_device_list: List[str] = []
 
     def add_error(self, error_code, message):
         """Add an error to the list of errors."""
@@ -101,7 +102,7 @@ class Parser:
 
     def validate_device_name(self, device_list):
         if (self.symbol.type == self.scanner.NAME):
-            if (self.symbol.name not in device_list):
+            if (self.symbol.name not in device_list and self.symbol.name not in self.stored_device_list):
                 return True
             else:
                 self.add_error(
@@ -155,6 +156,7 @@ class Parser:
 
                 if (self.validate_device_name(device_list)):
                     device_list.append(self.symbol.name)
+                    self.stored_device_list.append(self.symbol.name)
                     self.advance()
                 else:
                     devices_are_valid = False
@@ -636,14 +638,20 @@ class Parser:
         dtype_pins = ["CLK", "DATA", "Q", "QBAR"]
         if re.match(pattern, string) or string in dtype_pins:
             input_valid = True
-            print("String starts with 'I' and ends with a number from 1 to 16.")
         else:
-            print("String does not match the pattern.")
             self.add_error(
                 ErrorCodes.INVALID_NAME,
                 "Invalid name for device input")
 
         return input_valid
+
+    def validate_device_name_for_conns(self, device_list):
+        return True  # TODO: Implement this later
+        if self.names.query(self.symbol.name) is None:
+            self.add_error(
+                ErrorCodes.INVALID_NAME,
+                "Invalid device name")
+            return False
 
     def parse_conns_line(self):
         # TODO: Handle DTYPE Name as it has two outputs (check for "." and then
@@ -657,84 +665,104 @@ class Parser:
         ports_list = []
         conns_list = []
 
-        if (self.validate_device_name(device_list)):
+        if (self.validate_device_name_for_conns(device_list)):
             device_list.append(self.symbol.name)
             devices_are_valid = True
             first_device_id = self.names.query(device_list[0])
             # first_port_id = self.symbol.id
+            # TODO: confirm that this is an output
             self.advance()
 
             if (devices_are_valid):
                 if (self.symbol.type == self.scanner.EQUAL):
                     self.advance()
+                    print("------Symbol after equl:--------- " + str(self.symbol))
                     while (self.symbol.type != self.scanner.SEMICOLON):
-                        if (self.validate_device_name(device_list)):
+                        if (self.validate_device_name_for_conns(device_list)):
                             device_list.append(self.symbol.name)
+                            print("Dev: ", device_list)
                             devices_are_valid = True
                             second_device_id = self.names.query(device_list[1])
                             self.advance()
+
                             if (self.symbol.type == self.scanner.DOT):
                                 self.advance()
-                                if (check_inputs_name(self.symbol.name)):
+                                if (self.check_inputs_name(self.symbol.name)):
                                     self.advance()
-                                    if (self.symbol.type == self.scanner.PORT):
-                                        # second_port_id = self.symbol.id
-                                        # TODO: now we know the device
-                                        # connected to and the port, so make
-                                        # connection
-                                        self.network.make_connection(
-                                            first_device_id, first_port_id, second_device_id, second_port_id)
+
+                                    if (self.symbol.type ==
+                                            self.scanner.SEMICOLON):
+                                        self.add_error(
+                                            ErrorCodes.SYNTAX_ERROR,
+                                            "Expected ','")
+
+                                        break
+                                    elif (self.symbol.type == self.scanner.COMMA):
                                         self.advance()
-                                        if (self.symbol.type ==
-                                                self.scanner.COMMA):
-                                            self.advance()
-                                            if (self.symbol.type == "I"):
-                                                self.advance()
-                                                if (self.symbol.type ==
-                                                        self.scanner.INPUT):
-                                                    # TODO: now we know the device connected to and the port, so make connection
-                                                    # self.network.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
-                                                    pass
-                                        else:
-                                            pass
                                     else:
                                         self.add_error(
-                                            ErrorCodes.MISSING_PORT,
-                                            "Expected port number after I")
+                                            ErrorCodes.SYNTAX_ERROR,
+                                            "Expected ','")
+                                        break
 
-                                elif (self.symbol.name == 'DATA'):
-                                    second_port_id = self.symbol.id
-                                    # TODO: now we know the device connected to
-                                    # and the port, so make connection
-                                    self.network.make_connection(
-                                        first_device_id, first_port_id, second_device_id, second_port_id)
-                                    self.advance()
-                                elif (self.symbol.name == 'CLK'):
-                                    second_port_id = self.symbol.id
-                                    # TODO: now we know the device connected to
-                                    # and the port, so make connection
-                                    self.network.make_connection(
-                                        first_device_id, first_port_id, second_device_id, second_port_id)
-                                    self.advance()
-                                elif (self.symbol.name == 'SET'):
-                                    second_port_id = self.symbol.id
-                                    # TODO: now we know the device connected to
-                                    # and the port, so make connection
-                                    self.network.make_connection(
-                                        first_device_id, first_port_id, second_device_id, second_port_id)
-                                    self.advance()
-                                elif (self.symbol.name == 'CLEAR'):
-                                    second_port_id = self.symbol.id
-                                    # TODO: now we know the device connected to
-                                    # and the port, so make connection
-                                    self.network.make_connection(
-                                        first_device_id, first_port_id, second_device_id, second_port_id)
-                                    self.advance()
+                                    # second_port_id = self.symbol.id
+                                    # TODO: now we know the device
+                                    # connected to and the port, so make
+                                    # connection
 
-                                else:
-                                    self.add_error(
-                                        ErrorCodes.MISSING_I,
-                                        "Expected I or DTYPE port after dot")
+                                    # self.network.make_connection(
+                                    #     first_device_id, first_port_id, second_device_id, second_port_id)
+                                    # self.advance()
+                                    # if (self.symbol.type ==
+                                    #         self.scanner.COMMA):
+                                    #     self.advance()
+                                    #     if (self.symbol.type == "I"):
+                                    #         self.advance()
+                                    #         if (self.symbol.type ==
+                                    #                 self.scanner.INPUT):
+                                    #             # TODO: now we know the device connected to and the port, so make connection
+                                    #             # self.network.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
+                                    #             pass
+                                    # else:
+                                    #     pass
+                                    # else:
+                                    #     self.add_error(
+                                    #         ErrorCodes.MISSING_PORT,
+                                    #         "Expected port number after I")
+
+                                # elif (self.symbol.name == 'DATA'):
+                                #     second_port_id = self.symbol.id
+                                #     # TODO: now we know the device connected to
+                                #     # and the port, so make connection
+                                #     self.network.make_connection(
+                                #         first_device_id, first_port_id, second_device_id, second_port_id)
+                                #     self.advance()
+                                # elif (self.symbol.name == 'CLK'):
+                                #     second_port_id = self.symbol.id
+                                #     # TODO: now we know the device connected to
+                                #     # and the port, so make connection
+                                #     self.network.make_connection(
+                                #         first_device_id, first_port_id, second_device_id, second_port_id)
+                                #     self.advance()
+                                # elif (self.symbol.name == 'SET'):
+                                #     second_port_id = self.symbol.id
+                                #     # TODO: now we know the device connected to
+                                #     # and the port, so make connection
+                                #     self.network.make_connection(
+                                #         first_device_id, first_port_id, second_device_id, second_port_id)
+                                #     self.advance()
+                                # elif (self.symbol.name == 'CLEAR'):
+                                #     second_port_id = self.symbol.id
+                                #     # TODO: now we know the device connected to
+                                #     # and the port, so make connection
+                                #     self.network.make_connection(
+                                #         first_device_id, first_port_id, second_device_id, second_port_id)
+                                #     self.advance()
+
+                                # else:
+                                #     self.add_error(
+                                #         ErrorCodes.MISSING_I,
+                                #         "Expected I or DTYPE port after dot")
                             else:
                                 self.add_error(
                                     ErrorCodes.MISSING_DOT,
