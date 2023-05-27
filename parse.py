@@ -638,6 +638,10 @@ class Parser:
             print("String starts with 'I' and ends with a number from 1 to 16.")
         else:
             print("String does not match the pattern.")
+            self.add_error(
+                ErrorCodes.INVALID_NAME,
+                "Invalid name for device input")
+
         return input_valid
 
     def parse_conns_line(self):
