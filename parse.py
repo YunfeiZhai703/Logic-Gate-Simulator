@@ -630,7 +630,9 @@ class Parser:
         if (self.validate_device_name(device_list)):
             device_list.append(self.symbol.name)
             devices_are_valid = True
-            # first_device =
+
+            first_device_id = self.names.query(device_list)
+            first_port_id = self.names.query(device_list)
             self.advance()
 
             if (devices_are_valid):
@@ -640,14 +642,17 @@ class Parser:
                     if (self.validate_device_name(device_list)):
                         device_list.append(self.symbol.name)
                         devices_are_valid = True
+                        second_device_id = self.symbol.id
                         self.advance()
                         if (self.symbol.type == self.scanner.DOT):
                             self.advance()
                             if (self.symbol.name == "I"):
                                 self.advance()
-                                if (self.symbol.type == self.scanner.NUMBER):
+                                if (self.symbol.type == self.scanner.PORT):
+                                    second_port_id = self.symbol.id
                                     # TODO: now we know the device connected to and the port, so make connection
-                                    # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
+                                    self.network.make_connection(
+                                        first_device_id, first_port_id, second_device_id, second_port_id)
                                     self.advance()
                                     if (self.symbol.type == self.scanner.COMMA):
                                         self.advance()
@@ -655,7 +660,7 @@ class Parser:
                                             self.advance()
                                             if (self.symbol.type == self.scanner.INPUT):
                                                 # TODO: now we know the device connected to and the port, so make connection
-                                                # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
+                                                # self.network.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
                                                 pass
                                     else:
                                         pass
@@ -665,20 +670,28 @@ class Parser:
                                         "Expected port number after I")
 
                             elif (self.symbol.name == 'DATA'):
+                                second_port_id = self.symbol.id
                                 # TODO: now we know the device connected to and the port, so make connection
-                                # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
+                                self.network.make_connection(
+                                    first_device_id, first_port_id, second_device_id, second_port_id)
                                 self.advance()
                             elif (self.symbol.name == 'CLK'):
+                                second_port_id = self.symbol.id
                                 # TODO: now we know the device connected to and the port, so make connection
-                                # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
+                                self.network.make_connection(
+                                    first_device_id, first_port_id, second_device_id, second_port_id)
                                 self.advance()
                             elif (self.symbol.name == 'SET'):
+                                second_port_id = self.symbol.id
                                 # TODO: now we know the device connected to and the port, so make connection
-                                # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
+                                self.network.make_connection(
+                                    first_device_id, first_port_id, second_device_id, second_port_id)
                                 self.advance()
                             elif (self.symbol.name == 'CLEAR'):
+                                second_port_id = self.symbol.id
                                 # TODO: now we know the device connected to and the port, so make connection
-                                # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
+                                self.network.make_connection(
+                                    first_device_id, first_port_id, second_device_id, second_port_id)
                                 self.advance()
 
                             else:
