@@ -41,6 +41,7 @@ class SymbolList:
     def __init__(self):
         self.HEADING = "HEADING"
         self.LOGIC = "LOGIC"
+        self.DTYPE = "DTYPE"
         self.NUMBER = "NUMBER"
         self.NAME = "NAME"
         self.INPUT = "INPUT"
@@ -136,6 +137,9 @@ class Scanner(SymbolList):
                 symbol.type = self.HEADING
             elif self.name_string in self.logic_list:
                 symbol.type = self.LOGIC
+                [symbol.id] = self.names.lookup([self.name_string])
+            elif self.name_string in self.dtype_list:
+                symbol.type = self.DTYPE
                 [symbol.id] = self.names.lookup([self.name_string])
             else:
                 symbol.type = self.NAME
