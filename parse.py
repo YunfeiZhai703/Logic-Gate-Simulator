@@ -680,7 +680,6 @@ class Parser:
                     while (self.symbol.type != self.scanner.SEMICOLON):
                         if (self.validate_device_name_for_conns(device_list)):
                             device_list.append(self.symbol.name)
-                            print("Dev: ", device_list)
                             devices_are_valid = True
                             second_device_id = self.names.query(device_list[1])
                             self.advance()
@@ -688,6 +687,7 @@ class Parser:
                             if (self.symbol.type == self.scanner.DOT):
                                 self.advance()
                                 if (self.check_inputs_name(self.symbol.name)):
+                                    conns_list.append(self.symbol.name)
                                     self.advance()
 
                                     if (self.symbol.type ==
@@ -695,15 +695,12 @@ class Parser:
                                         self.add_error(
                                             ErrorCodes.SYNTAX_ERROR,
                                             "Expected ','")
+                                        print(
+                                            "Dev: ", device_list, "Conns: ", conns_list)
 
                                         break
                                     elif (self.symbol.type == self.scanner.COMMA):
                                         self.advance()
-                                    else:
-                                        self.add_error(
-                                            ErrorCodes.SYNTAX_ERROR,
-                                            "Expected ','")
-                                        break
 
                                     # second_port_id = self.symbol.id
                                     # TODO: now we know the device
