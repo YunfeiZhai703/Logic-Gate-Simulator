@@ -669,7 +669,7 @@ class Parser:
         if (self.validate_device_name_for_conns(device_list)):
             device_list.append(self.symbol.name)
             devices_are_valid = True
-            first_device_id = self.names.query(device_list[0])
+            # first_device_id = self.names.query(device_list[0])
             # first_port_id = self.symbol.id
             # TODO: confirm that this is an output
             self.advance()
