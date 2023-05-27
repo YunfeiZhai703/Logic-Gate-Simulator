@@ -637,11 +637,6 @@ class Parser:
 
             self.parse_conns_line()
 
-    # Need this: make_connection(self, first_device_id, first_port_id, second_device_id,
-    #            second_port_id): Connects the first device to the second
-    #                             device.
-    # i.e. self.make_connection(first_device_id, first port_id, second_device_id, second_port_id)
-
     def parse_conns_line(self):
         # print("Conns line current symbol: " + self.symbol.name)
         # output = self.symbol.name
@@ -650,6 +645,7 @@ class Parser:
 
         print("Conns line device symbol:" + str(self.symbol))
         device_list = []
+        conns_list = []
 
         if (self.validate_device_name(device_list)):
             device_list.append(self.symbol.name)
@@ -660,10 +656,9 @@ class Parser:
                 if (self.symbol.type == self.scanner.EQUAL):
                     self.advance()
 
-                    if (self.symbol.type == self.scanner.LOGIC):
-                        gate = self.symbol.name
-                        self.advance()
-                        self.parse_logic_gate(gate, device_list)
+                    if (self.validate_device_name(device_list)):
+                        device_list.append(self.symbol.name)
+                        devices_are_valid = True
                         self.advance()
                         if (self.symbol.type == self.scanner.dot):
                             self.advance()
@@ -690,8 +685,8 @@ class Parser:
                         print(device_list)
                     else:
                         self.add_error(
-                            ErrorCodes.INVALID_LOGIC_GATE,
-                            "Expected logic gate")
+                            ErrorCodes.INVALID_DEVICE,
+                            "Device name not defined in 'devices'")
 
                 else:
                     self.add_error(
