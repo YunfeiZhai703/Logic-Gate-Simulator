@@ -51,14 +51,6 @@ class Parser:
         self.symbol = self.scanner.get_symbol()
         self.errors: List[Error] = []
 
-        self.ports_list = [
-            self.DATA,
-            self.CLK,
-            self.SET,
-            self.CLEAR,
-            self.Q,
-            self.QBAR] = range(6)  # delete if not needed
-
     def add_error(self, error_code, message):
         """Add an error to the list of errors."""
         self.errors.append(Error(
