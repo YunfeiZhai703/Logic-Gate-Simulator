@@ -1,2 +1,6 @@
-G1 = G8.I1, G9.I1;
+[devices]
+ G1, G2, G3 = NAND;
+
+[conns]
+G1 = G2.I1, G3.I1, G3.I2;
 
