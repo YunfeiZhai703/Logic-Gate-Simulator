@@ -12,7 +12,7 @@ devices = Devices(name)
 networks = Network(name, devices)
 monitors = Monitors(name, devices, networks)
 parser = Parser(name, devices, networks, monitors, scan)
-parser.parse_devices_block()
+parser.parse_conns_block()
 print(parser.errors)
 
 devs = parser.devices.devices_list
