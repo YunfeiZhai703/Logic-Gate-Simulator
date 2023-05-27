@@ -650,7 +650,7 @@ class Parser:
                         device_list.append(self.symbol.name)
                         devices_are_valid = True
                         self.advance()
-                        if (self.symbol.type == self.scanner.dot):
+                        if (self.symbol.type == self.scanner.DOT):
                             self.advance()
                             # Or do we need to define self.scanner.I?
                             if (self.symbol.type == "I"):
