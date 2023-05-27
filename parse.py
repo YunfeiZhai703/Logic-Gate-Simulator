@@ -616,8 +616,6 @@ class Parser:
             self.parse_conns_line()
 
     def parse_conns_line(self):
-        # print("Conns line current symbol: " + self.symbol.name)
-        # output = self.symbol.name
         # TODO: Handle DTYPE Name as it has two outputs (check for "." and then
         # check for "Q" or "QBAR")
         # Validate device and inputs names
@@ -645,9 +643,9 @@ class Parser:
                         if (self.symbol.type == self.scanner.DOT):
                             self.advance()
                             # Or do we need to define self.scanner.I?
-                            if (self.symbol.type == "I"):
+                            if (self.symbol.name == "I"):
                                 self.advance()
-                                if (self.symbol.type == self.scanner.INPUT):
+                                if (self.symbol.type == self.scanner.NUMBER):
                                     # TODO: now we know the device connected to and the port, so make connection
                                     # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
                                     self.advance()
@@ -666,23 +664,19 @@ class Parser:
                                         ErrorCodes.MISSING_PORT,
                                         "Expected port number after I")
 
-                            elif (self.symbol.type == self.scanner.DATA):
+                            elif (self.symbol.name == 'DATA'):
                                 # TODO: now we know the device connected to and the port, so make connection
                                 # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
                                 self.advance()
-                            elif (self.symbol.type == self.scanner.CLEAR):
+                            elif (self.symbol.name == 'CLK'):
                                 # TODO: now we know the device connected to and the port, so make connection
                                 # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
                                 self.advance()
-                            elif (self.symbol.type == self.scanner.CLK):
+                            elif (self.symbol.name == 'SET'):
                                 # TODO: now we know the device connected to and the port, so make connection
                                 # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
                                 self.advance()
-                            elif (self.symbol.type == self.scanner.Q):
-                                # TODO: now we know the device connected to and the port, so make connection
-                                # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
-                                self.advance()
-                            elif (self.symbol.type == self.scanner.QBAR):
+                            elif (self.symbol.name == 'CLEAR'):
                                 # TODO: now we know the device connected to and the port, so make connection
                                 # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
                                 self.advance()
@@ -710,7 +704,33 @@ class Parser:
                 ErrorCodes.INVALID_DEVICE,
                 "Device name not defined in 'devices'")
 
-        '''
+
+'''
+    def parse_monit_block(self):
+        if (self.symbol.type == self.scanner.OPEN_SQUARE_BRACKET):
+            self.advance()
+
+            if (self.symbol.type ==
+                    self.scanner.HEADING and self.symbol.name == "monit"):
+                self.advance()
+
+                if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
+                    self.advance()
+
+                    #
+                    self.parse_monit()
+
+                else:
+                    self.add_error(
+                        ErrorCodes.INVALID_HEADER, "Expected ']'")
+
+            else:
+                self.add_error(ErrorCodes.INVALID_HEADER, "Expected 'monit'")
+
+        else:
+            self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
+
+
 
         print("Conns line symbol:" + str(self.symbol))
         conns_list = []
