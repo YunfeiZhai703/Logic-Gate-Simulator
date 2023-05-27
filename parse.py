@@ -647,7 +647,7 @@ class Parser:
                             # Or do we need to define self.scanner.I?
                             if (self.symbol.type == "I"):
                                 self.advance()
-                                if (self.symbol.type == self.scanner.NUMBER):
+                                if (self.symbol.type == self.scanner.INPUT):
                                     # TODO: now we know the device connected to and the port, so make connection
                                     # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
                                     pass
@@ -655,11 +655,21 @@ class Parser:
                                     self.add_error(
                                         ErrorCodes.MISSING_PORT,
                                         "Expected port number after I")
+                            elif (self.symbol.type == self.scanner.DATA):
+                                self.advance()
+                            elif (self.symbol.type == self.scanner.CLEAR):
+                                self.advance()
+                            elif (self.symbol.type == self.scanner.CLK):
+                                self.advance()
+                            elif (self.symbol.type == self.scanner.Q):
+                                self.advance()
+                            elif (self.symbol.type == self.scanner.QBAR):
+                                self.advance()
 
                             else:
                                 self.add_error(
                                     ErrorCodes.MISSING_I,
-                                    "Expected I after dot")
+                                    "Expected I or DTYPE port after dot")
                         else:
                             self.add_error(
                                 ErrorCodes.MISSING_DOT,

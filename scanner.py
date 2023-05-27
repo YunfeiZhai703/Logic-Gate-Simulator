@@ -94,7 +94,7 @@ class Scanner(SymbolList):
         self.logic_list = ["DTYPE", "NAND", "NOR",
                            "XOR", "AND", "OR", "CLOCK", "SWITCH"]
 
-        self.dtype_list = ["DATA", "SET", "CLEAR", "Q", "QBAR"]
+        self.dtype_list = ["DATA", "CLK", "CLEAR", "Q", "QBAR"]
 
         # contact heading_list and logic_list all in lower case
         self.keywords = self.heading_list + self.logic_list
