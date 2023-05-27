@@ -594,6 +594,7 @@ class Parser:
                 if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
                     self.advance()
 
+                    print("hello")
                     self.parse_conns()
 
                 else:
@@ -624,7 +625,182 @@ class Parser:
             self.parse_conns_line()
 
     def parse_conns_line(self):
-        print("Conns line current symbol: " + self.symbol.name)
-        output = self.symbol.name
+        # print("Conns line current symbol: " + self.symbol.name)
+        # output = self.symbol.name
         # TODO: Handle DTYPE Name as it has two outputs (check for "." and then
         # check for "Q" or "QBAR")
+
+        print("Conns line device symbol:" + str(self.symbol))
+        device_list = []
+        conns_list = []
+
+        if (self.validate_device_name(device_list)):
+            device_list.append(self.symbol.name)
+            devices_are_valid = True
+            self.advance()
+
+            if (devices_are_valid):
+                if (self.symbol.type == self.scanner.EQUAL):
+                    self.advance()
+
+                    if (self.validate_device_name(device_list)):
+                        device_list.append(self.symbol.name)
+                        devices_are_valid = True
+                        self.advance()
+                        if (self.symbol.type == self.scanner.dot):
+                            self.advance()
+                            # Or do we need to define self.scanner.I?
+                            if (self.symbol.type == "I"):
+                                self.advance()
+                                if (self.symbol.type == self.scanner.NUMBER):
+                                    # TODO: now we know the device connected to and the port, so make connection
+                                    # self.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
+                                    pass
+                                else:
+                                    self.add_error(
+                                        ErrorCodes.MISSING_PORT,
+                                        "Expected port number after I")
+
+                            else:
+                                self.add_error(
+                                    ErrorCodes.MISSING_I,
+                                    "Expected I after dot")
+                        else:
+                            self.add_error(
+                                ErrorCodes.MISSING_DOT,
+                                "Expected dot after device name")
+                        print(device_list)
+                    else:
+                        self.add_error(
+                            ErrorCodes.INVALID_DEVICE,
+                            "Device name not defined in 'devices'")
+
+                else:
+                    self.add_error(
+                        ErrorCodes.SYNTAX_ERROR,
+                        "Expected '='")
+        else:
+            self.add_error(
+                ErrorCodes.INVALID_DEVICE,
+                "Device name not defined in 'devices'")
+
+        '''
+
+        print("Conns line symbol:" + str(self.symbol))
+        conns_list = []
+        device_list = []
+
+        if (self.validate_device_name(conns_list, device_list)):
+            conns_list.append(self.symbol.name)
+            conns_are_valid = True
+            self.advance()
+
+            while (
+                self.symbol.type == self.scanner.EQUAL and conns_are_valid
+            ):
+                self.advance()
+
+                if (self.validate_conns_name(conns_list)):
+                    conns_list.append(self.symbol.name)
+                    self.advance()
+                else:
+                    conns_are_valid = False
+
+            if (conns_are_valid):
+                if (self.symbol.type == self.scanner.EQUAL):
+                    self.advance()
+
+                    if (self.symbol.type == self.scanner.LOGIC):
+                        gate = self.symbol.name
+                        self.advance()
+                        self.parse_logic_gate(gate, conns_list)
+                        self.advance()
+                        print(conns_list)
+                    else:
+                        self.add_error(
+                            ErrorCodes.INVALID_LOGIC_GATE,
+                            "Expected logic gate")
+
+                else:
+                    self.add_error(
+                        ErrorCodes.SYNTAX_ERROR,
+                        "Expected '='")
+
+    def parse_monit_block(self):
+        if (self.symbol.type == self.scanner.OPEN_SQUARE_BRACKET):
+            self.advance()
+
+            if (self.symbol.type ==
+                    self.scanner.HEADING and self.symbol.name == "monit"):
+                self.advance()
+
+                if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
+                    self.advance()
+
+                    self.parse_monit()
+
+                else:
+                    self.add_error(
+                        ErrorCodes.INVALID_HEADER, "Expected ']'")
+
+            else:
+                self.add_error(ErrorCodes.INVALID_HEADER, "Expected 'monit'")
+
+        else:
+            self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
+
+    def monit_validate_monit_name(self):
+        pass
+
+    def parse_monit(self):
+        i = 0
+        while (self.symbol.type != self.scanner.OPEN_SQUARE_BRACKET):
+            i += 1
+            if (self.symbol.type == self.scanner.HEADING):
+                self.add_error(
+                    # TODO: Do we need a way to identify the end of the text file
+                    # or can we go back to start to see "[devices]"?
+                    ErrorCodes.SYNTAX_ERROR,
+                    "Expected [devices] block")
+                break
+            if (i > 500):
+                self.add_error(
+                    ErrorCodes.OVERFLOW_ERROR,
+                    "Overflow error: Looping too many times in devices, please check that you have a [conns] block")
+                break
+
+            self.parse_monit_line()
+
+    def parse_monit_line(self):
+        print("Monit line symbol:" + str(self.symbol))
+        monit_list = []
+
+        if (self.validate_monit_name(monit_list)):
+            monit_list.append(self.symbol.name)
+            monit_are_valid = True
+            self.advance()
+
+            while (
+                self.symbol.type == self.scanner.COMMA and monit_are_valid
+            ):
+                # Need to add if its followed by a dot and DATA, CLEAR, SET, Q OR QBAR as condition
+                self.advance()
+
+                if (self.symbol.type == self.scanner.SEMICOLON):
+                    break
+
+                if (self.validate_monit_name(monit_list)):
+                    monit_list.append(self.symbol.name)
+                    self.advance()
+                else:
+                    monit_are_valid = False
+
+            if (monit_are_valid):
+                if (self.symbol.type == self.scanner.SEMICOLON):
+                    self.advance()
+
+                else:
+                    self.add_error(
+                        ErrorCodes.SYNTAX_ERROR,
+                        "Expected ';'")
+'''
