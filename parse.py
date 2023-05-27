@@ -674,6 +674,12 @@ class Parser:
             self.advance()
 
             if (devices_are_valid):
+                if (self.symbol.type == self.scanner.DOT):
+                    self.advance()
+                    if (self.check_inputs_name(self.symbol.name)):
+                        ports_list.append(self.symbol.name)
+                        self.advance()
+
                 if (self.symbol.type == self.scanner.EQUAL):
                     self.advance()
                     print("------Symbol after equl:--------- " + str(self.symbol))
@@ -687,7 +693,7 @@ class Parser:
                             if (self.symbol.type == self.scanner.DOT):
                                 self.advance()
                                 if (self.check_inputs_name(self.symbol.name)):
-                                    conns_list.append(self.symbol.name)
+                                    ports_list.append(self.symbol.name)
                                     self.advance()
 
                                     if (self.symbol.type ==
@@ -696,7 +702,7 @@ class Parser:
                                             ErrorCodes.SYNTAX_ERROR,
                                             "Expected ','")
                                         print(
-                                            "Dev: ", device_list, "Conns: ", conns_list)
+                                            "Dev: ", device_list, "Ports: ", ports_list)
 
                                         break
                                     elif (self.symbol.type == self.scanner.COMMA):
