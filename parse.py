@@ -16,6 +16,7 @@ from names import Names
 from devices import Devices
 from network import Network
 from monitors import Monitors
+import re
 
 
 class Parser:
@@ -849,3 +850,14 @@ class Parser:
                         ErrorCodes.SYNTAX_ERROR,
                         "Expected ';'")
 '''
+
+
+def check_string_pattern(string):
+    input_valid = False
+    pattern = r'^I.*([1-9]|1[0-6])$'
+    if re.match(pattern, string):
+        input_valid = True
+        print("String starts with 'I' and ends with a number from 1 to 16.")
+    else:
+        print("String does not match the pattern.")
+    return input_valid
