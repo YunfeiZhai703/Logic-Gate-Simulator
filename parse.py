@@ -633,7 +633,8 @@ class Parser:
         """Check if inputs are in the form Ia, where a is digit from 1 - 16"""
         input_valid = False
         pattern = r'^I.*([1-9]|1[0-6])$'
-        if re.match(pattern, string):
+        dtype_pins = ["CLK", "DATA", "Q", "QBAR"]
+        if re.match(pattern, string) or string in dtype_pins:
             input_valid = True
             print("String starts with 'I' and ends with a number from 1 to 16.")
         else:
