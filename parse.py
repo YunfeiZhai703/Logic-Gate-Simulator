@@ -121,6 +121,13 @@ class Parser:
                     ErrorCodes.SYNTAX_ERROR,
                     "Expected [conns] block")
                 break
+
+            if (self.symbol.type == self.scanner.EOF):
+                self.add_error(
+                    ErrorCodes.SYNTAX_ERROR,
+                    "Expected [conns] block")
+                break
+
             if (i > 500):
                 self.add_error(
                     ErrorCodes.OVERFLOW_ERROR,
@@ -608,6 +615,12 @@ class Parser:
                     ErrorCodes.SYNTAX_ERROR,
                     "Expected [conns] block")
                 break
+            if (self.symbol.type == self.scanner.EOF):
+                self.add_error(
+                    ErrorCodes.SYNTAX_ERROR,
+                    "Expected [conns] block")
+                break
+
             if (i > 500):
                 self.add_error(
                     ErrorCodes.OVERFLOW_ERROR,
