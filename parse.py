@@ -642,6 +642,9 @@ class Parser:
         # output = self.symbol.name
         # TODO: Handle DTYPE Name as it has two outputs (check for "." and then
         # check for "Q" or "QBAR")
+        # Validate device and inputs names
+        # Check for "."
+        # Check for correct connection (no self connection)
 
         print("Conns line device symbol:" + str(self.symbol))
         device_list = []
