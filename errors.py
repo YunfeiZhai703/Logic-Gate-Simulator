@@ -4,9 +4,13 @@ class ErrorCodes:
     INVALID_NUMBER = "InvalidNumber"
     INVALID_HEADER = "InvalidHeader"
     MISSING_HEADER = "MissingHeader"
+    MISSING_DOT = "MissingDot"
+    MISSING_I = "MissingI"
+    MISSING_PORT = "MissingPort"
     NAME_DEFINED = "NameDefined"
     SYNTAX_ERROR = "SyntaxError"
     INVALID_LOGIC_GATE = "InvalidLogicGate"
+    INVALID_DEVICE = "InvalidDevice"
     OVERFLOW_ERROR = "OverflowError"
 
     description = {
