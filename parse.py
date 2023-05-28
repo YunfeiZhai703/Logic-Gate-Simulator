@@ -655,114 +655,107 @@ class Parser:
             return False
 
     def parse_conns_line(self):
-        # TODO: Handle DTYPE Name as it has two outputs (check for "." and then
-        # check for "Q" or "QBAR")
-        # Validate device and inputs names
-        # Check for "."
-        # Check for correct connection (no self connection)
 
-        print("Conns line device symbol:" + str(self.symbol))
         device_list = []
         ports_list = []
-        conns_list = []
 
         if (self.validate_device_name_for_conns(device_list)):
             device_list.append(self.symbol.name)
-            devices_are_valid = True
-            # first_device_id = self.names.query(device_list[0])
-            # first_port_id = self.symbol.id
             # TODO: confirm that this is an output
+
             self.advance()
 
-            if (devices_are_valid):
-                if (self.symbol.type == self.scanner.DOT):
+            if (self.symbol.type == self.scanner.DOT):
+                self.advance()
+                if (self.check_inputs_name(self.symbol.name)):
+                    ports_list.append(self.symbol.name)
                     self.advance()
-                    if (self.check_inputs_name(self.symbol.name)):
-                        ports_list.append(self.symbol.name)
+
+            if (self.symbol.type == self.scanner.EQUAL):
+                self.advance()
+
+                while (
+                        self.symbol.type != self.scanner.SEMICOLON and self.symbol.type != self.scanner.EOF):
+
+                    if (self.validate_device_name_for_conns(device_list)):
+                        device_list.append(self.symbol.name)
                         self.advance()
 
-                if (self.symbol.type == self.scanner.EQUAL):
-                    self.advance()
-                    print("------Symbol after equl:--------- " + str(self.symbol))
-                    while (self.symbol.type != self.scanner.SEMICOLON):
-                        if (self.validate_device_name_for_conns(device_list)):
-                            device_list.append(self.symbol.name)
-                            devices_are_valid = True
-                            second_device_id = self.names.query(device_list[1])
+                        if (self.symbol.type == self.scanner.DOT):
                             self.advance()
 
-                            if (self.symbol.type == self.scanner.DOT):
+                            if (self.check_inputs_name(self.symbol.name)):
+                                ports_list.append(self.symbol.name)
                                 self.advance()
-                                if (self.check_inputs_name(self.symbol.name)):
-                                    ports_list.append(self.symbol.name)
+
+                                if (self.symbol.type ==
+                                        self.scanner.SEMICOLON):
+                                    self.add_error(
+                                        ErrorCodes.SYNTAX_ERROR,
+                                        "Expected ','")
+                                    print(
+                                        "Dev: ", device_list, "Ports: ", ports_list)
+
+                                    break
+                                elif (self.symbol.type == self.scanner.COMMA):
                                     self.advance()
 
-                                    if (self.symbol.type ==
-                                            self.scanner.SEMICOLON):
-                                        self.add_error(
-                                            ErrorCodes.SYNTAX_ERROR,
-                                            "Expected ','")
-                                        print(
-                                            "Dev: ", device_list, "Ports: ", ports_list)
+                output_device_id = self.names.query(device_list[0])
+                output_device = self.devices.get_device(output_device_id)
 
-                                        break
-                                    elif (self.symbol.type == self.scanner.COMMA):
-                                        self.advance()
+                input_device_ids = self.names.lookup(device_list[1:])
 
-                    output_device_id = self.names.query(device_list[0])
-                    output_device = self.devices.get_device(output_device_id)
+                input_devices = [
+                    self.devices.get_device(
+                        device_id) for device_id in input_device_ids]
 
-                    input_device_ids = self.names.lookup(device_list[1:])
+                if len(ports_list) == len(device_list):
+                    print("==========WE GOT DTYPE==========")
+                    dtype_mapping = {
+                        "Q": self.devices.Q_ID,
+                        "QBAR": self.devices.QBAR_ID
+                    }
+                    output_device_pin_id = dtype_mapping[ports_list[0]]
+                    # remove first element from ports list
+                    ports_list.pop(0)
+                else:
+                    output_device_pin_id = None
 
-                    input_devices = [
-                        self.devices.get_device(
-                            device_id) for device_id in input_device_ids]
+                for i, input_dev in enumerate(input_devices):
+                    port_name = ports_list[i]
+                    input_id = None
 
-                    print("Output device: ", output_device)
-
-                    if len(ports_list) == len(device_list):
-                        # WE GOT DTYPE
-                        print("==========WE GOT DTYPE==========")
-                        dtype_mapping = {
-                            "Q": self.devices.Q_ID,
-                            "QBAR": self.devices.QBAR_ID
-                        }
-                        output_device_pin_id = dtype_mapping[ports_list[0]]
-                        # remove first element from ports list
-                        ports_list.pop(0)
+                    if port_name in ["CLK", "DATA", "SET", "CLEAR"]:
+                        input_id = {
+                            "CLK": self.devices.CLK_ID,
+                            "DATA": self.devices.DATA_ID,
+                            "SET": self.devices.SET_ID,
+                            "CLEAR": self.devices.CLEAR_ID
+                        }[port_name]
                     else:
-                        output_device_pin_id = None  # TODO: DTYPE has two outputs
-
-                    for i, input_dev in enumerate(input_devices):
-                        port_name = ports_list[i]
-                        # remove the first letter "I" from the port name and
-                        # convert to int
                         input_device_pin_index = int(port_name[1:]) - 1
-                        input_dict = input_dev.inputs
-                        # get keys of input dict in a list
-                        input_keys = list(input_dict.keys())
-                        input_id = input_keys[input_device_pin_index]
 
-                        print(
-                            "Input dev: ",
-                            input_dev,
-                            "Input id: ",
-                            input_id,
-                            "Input dev id",
-                            input_device_ids[i])
+                        if input_dev:
+                            input_dict = input_dev.inputs
+                            # get keys of input dict in a list
+                            input_keys = list(input_dict.keys())
+                            input_id = input_keys[input_device_pin_index]
+                        else:
+                            self.add_error(
+                                ErrorCodes.INVALID_DEVICE,
+                                "Device not defined in 'devices'")
 
+                    if input_id:
                         error = self.network.make_connection(
                             output_device_id, output_device_pin_id, input_device_ids[i], input_id)
                         if error != self.network.NO_ERROR:
-                            print(
-                                "---------------------!ERROR in make_connection: ",
-                                error,
-                                self.network.NO_ERROR)
+                            print("----------ERROR in make_connection----------Code: ", error)
 
-                else:
-                    self.add_error(
-                        ErrorCodes.SYNTAX_ERROR,
-                        "Expected '='")
+            else:
+                self.add_error(
+                    ErrorCodes.SYNTAX_ERROR,
+                    "Expected '='")
+
         else:
             self.add_error(
                 ErrorCodes.INVALID_DEVICE,
