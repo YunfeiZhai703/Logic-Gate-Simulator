@@ -747,7 +747,8 @@ class Parser:
                         error = self.network.make_connection(
                             output_device_id, output_device_pin_id, input_device_ids[i], input_id)
                         if error != self.network.NO_ERROR:
-                            print("----------ERROR in make_connection----------Code: ", error)
+                            print(
+                                "----------ERROR in make_connection----------Code: ", error)
 
             else:
                 self.add_error(
@@ -758,6 +759,48 @@ class Parser:
             self.add_error(
                 ErrorCodes.INVALID_DEVICE,
                 "Device name not defined in 'devices'")
+
+    def parse_monit_block(self):
+        if (self.symbol.type == self.scanner.OPEN_SQUARE_BRACKET):
+            self.advance()
+
+            if (self.symbol.type ==
+                    self.scanner.HEADING and self.symbol.name == "monit"):
+                self.advance()
+
+                if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
+                    self.advance()
+
+                    self.parse_monit()
+
+                else:
+                    self.add_error(
+                        ErrorCodes.INVALID_HEADER, "Expected ']'")
+
+            else:
+                self.add_error(ErrorCodes.INVALID_HEADER, "Expected 'monit'")
+
+        else:
+            self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
+
+    def parse_monit(self):
+        i = 0
+        while (self.symbol.type != self.scanner.EOF):
+            i += 1
+            if (self.symbol.type == self.scanner.HEADING):
+                self.add_error(
+                    # TODO: Do we need a way to identify the end of the text file
+                    # or can we go back to start to see "[devices]"?
+                    ErrorCodes.SYNTAX_ERROR,
+                    "Expected [devices] block")
+                break
+            if (i > 500):
+                self.add_error(
+                    ErrorCodes.OVERFLOW_ERROR,
+                    "Overflow error: Looping too many times in devices, please check that you have a [conns] block")
+                break
+
+            self.parse_monit_line()
 
 
 '''
@@ -827,50 +870,12 @@ class Parser:
                         ErrorCodes.SYNTAX_ERROR,
                         "Expected '='")
 
-    def parse_monit_block(self):
-        if (self.symbol.type == self.scanner.OPEN_SQUARE_BRACKET):
-            self.advance()
-
-            if (self.symbol.type ==
-                    self.scanner.HEADING and self.symbol.name == "monit"):
-                self.advance()
-
-                if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
-                    self.advance()
-
-                    self.parse_monit()
-
-                else:
-                    self.add_error(
-                        ErrorCodes.INVALID_HEADER, "Expected ']'")
-
-            else:
-                self.add_error(ErrorCodes.INVALID_HEADER, "Expected 'monit'")
-
-        else:
-            self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
+    
 
     def monit_validate_monit_name(self):
         pass
 
-    def parse_monit(self):
-        i = 0
-        while (self.symbol.type != self.scanner.OPEN_SQUARE_BRACKET):
-            i += 1
-            if (self.symbol.type == self.scanner.HEADING):
-                self.add_error(
-                    # TODO: Do we need a way to identify the end of the text file
-                    # or can we go back to start to see "[devices]"?
-                    ErrorCodes.SYNTAX_ERROR,
-                    "Expected [devices] block")
-                break
-            if (i > 500):
-                self.add_error(
-                    ErrorCodes.OVERFLOW_ERROR,
-                    "Overflow error: Looping too many times in devices, please check that you have a [conns] block")
-                break
-
-            self.parse_monit_line()
+    
 
     def parse_monit_line(self):
         print("Monit line symbol:" + str(self.symbol))
