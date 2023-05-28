@@ -140,7 +140,6 @@ class Parser:
             self.parse_device_line()
 
     def parse_device_line(self):
-        print("Device line symbol:" + str(self.symbol))
         device_list = []
 
         if (self.validate_device_name(device_list)):
@@ -172,7 +171,6 @@ class Parser:
                         self.advance()
                         self.parse_logic_gate(gate, device_list)
                         self.advance()
-                        print(device_list)
                     else:
                         self.add_error(
                             ErrorCodes.INVALID_LOGIC_GATE,
