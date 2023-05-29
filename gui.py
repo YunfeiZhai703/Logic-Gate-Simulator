@@ -202,7 +202,7 @@ class ConfigurationPanel(Box):
         self.Add(Button(self, "Start Simulation",
                         onClick=on_start,
                         color=COLORS.GREEN_950,
-                        size="md"), 0, wx.ALL, 20)
+                        size="lg"), 0, wx.ALL, 20)
 
 
 class CodePage(ScrollBox):
