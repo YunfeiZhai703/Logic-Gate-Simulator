@@ -668,11 +668,15 @@ class Parser:
                     ports_list.append(self.symbol.name)
                     self.advance()
 
+            # Check for = sign denoting a connection
             if self.symbol.type == self.scanner.EQUAL:
                 self.advance()
 
+                # While not reached end of line or EOF
                 while self.symbol.type not in [
                         self.scanner.SEMICOLON, self.scanner.EOF]:
+
+                    # validate the device name
                     if self.validate_device_name_for_conns(device_list):
                         device_list.append(self.symbol.name)
                         self.advance()
@@ -680,32 +684,39 @@ class Parser:
                         if self.symbol.type == self.scanner.DOT:
                             self.advance()
 
+                            # validate the input/output name
                             if self.check_inputs_name(self.symbol.name):
                                 ports_list.append(self.symbol.name)
                                 self.advance()
 
                                 if self.symbol.type == self.scanner.SEMICOLON:
-                                    self.add_error(
-                                        ErrorCodes.SYNTAX_ERROR, "Expected ','")
+                                    # Reached end of line
                                     print(
                                         "Dev: ", device_list, "Ports: ", ports_list)
                                     break
+
                                 elif self.symbol.type == self.scanner.COMMA:
+                                    # Continue to next device
                                     self.advance()
 
+                # output device is the first device in the list
                 output_device_id = self.names.query(device_list[0])
                 output_device = self.devices.get_device(output_device_id)
 
+                # input devices are the rest of the devices in the list
                 input_device_ids = self.names.lookup(device_list[1:])
                 input_devices = [self.devices.get_device(
                     device_id) for device_id in input_device_ids]
 
+                # If len of ports list is same as len of device list, then we
+                # have a DTYPE
                 if len(ports_list) == len(device_list):
-                    print("==========WE GOT DTYPE==========")
                     dtype_mapping = {
                         "Q": self.devices.Q_ID,
                         "QBAR": self.devices.QBAR_ID}
+
                     output_device_pin_id = dtype_mapping[ports_list[0]]
+                    # remove the DTYPE Q or QBAR from the list
                     ports_list.pop(0)
                 else:
                     output_device_pin_id = None
@@ -727,6 +738,8 @@ class Parser:
                             input_dict = input_dev.inputs
                             input_keys = list(input_dict.keys())
                             input_id = input_keys[input_device_pin_index]
+                            # TODO: Wrap a try catch around this to catch index
+                            # out of bounds (invalid pin)
                         else:
                             self.add_error(
                                 ErrorCodes.INVALID_DEVICE,
@@ -735,16 +748,10 @@ class Parser:
                     if input_id:
                         error = self.network.make_connection(
                             output_device_id, output_device_pin_id, input_device_ids[i], input_id)
-                        
-                        print("Symbol: ", self.symbol.name, "Ports: ", ports_list, "Device: ", device_list)
-                        
 
                         if error != self.network.NO_ERROR:
                             print(
                                 "----------ERROR in make_connection----------Code: ", error)
-
-            else:
-                self.add_error(ErrorCodes.SYNTAX_ERROR, "Expected '='")
 
         else:
             self.add_error(
