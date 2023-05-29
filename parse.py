@@ -472,12 +472,12 @@ class Parser:
                     # TODO: Do we need a way to identify the end of the text file
                     # or can we go back to start to see "[devices]"?
                     ErrorCodes.SYNTAX_ERROR,
-                    "Expected [devices] block")
+                    "Expected [monit] block")
                 break
             if (i > 500):
                 self.add_error(
                     ErrorCodes.OVERFLOW_ERROR,
-                    "Overflow error: Looping too many times in devices, please check that you have a [conns] block")
+                    "Overflow error: Looping too many times in devices, please check that you have correctly defined monitor block")
                 break
 
             self.parse_monit_line()
