@@ -24,7 +24,7 @@ class Device:
     No public methods.
     """
 
-    def __init__(self, device_id):
+    def __init__(self, device_id, name=None):
         """Initialise device properties."""
 
         self.device_id = device_id
@@ -41,10 +41,11 @@ class Device:
         self.clock_counter = None
         self.switch_state = None
         self.dtype_memory = None
+        self.name = name
 
     def __repr__(self):
         """Return device ID and device kind."""
-        return f"Device({self.device_id}, {self.device_kind}, inps: {self.inputs}, outs: {self.outputs})"
+        return f"Device({self.name}, {self.device_id}, {self.device_kind}, inps: {self.inputs}, outs: {self.outputs})"
 
 
 class Devices:
@@ -151,9 +152,9 @@ class Devices:
                 device_id_list.append(device.device_id)
         return device_id_list
 
-    def add_device(self, device_id, device_kind):
+    def add_device(self, device_id, device_kind, name=None):
         """Add the specified device to the network."""
-        new_device = Device(device_id)
+        new_device = Device(device_id, name)
         new_device.device_kind = device_kind
         self.devices_list.append(new_device)
 
@@ -228,26 +229,26 @@ class Devices:
             device.switch_state = signal
             return True
 
-    def make_switch(self, device_id, initial_state):
+    def make_switch(self, device_id, initial_state, name=None):
         """Make a switch device and set its initial state."""
         self.add_device(device_id, self.SWITCH)
         self.add_output(device_id, output_id=None)
         self.set_switch(device_id, initial_state)
 
-    def make_clock(self, device_id, clock_half_period):
+    def make_clock(self, device_id, clock_half_period, name=None):
         """Make a clock device with the specified half period.
 
         clock_half_period is an integer > 0. It is the number of simulation
         cycles before the clock switches state.
         """
-        self.add_device(device_id, self.CLOCK)
+        self.add_device(device_id, self.CLOCK, name)
         device = self.get_device(device_id)
         device.clock_half_period = clock_half_period
         self.cold_startup()  # clock initialised to a random point in its cycle
 
-    def make_gate(self, device_id, device_kind, no_of_inputs):
+    def make_gate(self, device_id, device_kind, no_of_inputs, name=None):
         """Make logic gates with the specified number of inputs."""
-        self.add_device(device_id, device_kind)
+        self.add_device(device_id, device_kind, name)
         self.add_output(device_id, output_id=None)
 
         for input_number in range(1, no_of_inputs + 1):
@@ -255,9 +256,9 @@ class Devices:
             [input_id] = self.names.lookup([input_name])
             self.add_input(device_id, input_id)
 
-    def make_d_type(self, device_id):
+    def make_d_type(self, device_id, name=None):
         """Make a D-type device."""
-        self.add_device(device_id, self.D_TYPE)
+        self.add_device(device_id, self.D_TYPE, name)
         for input_id in self.dtype_input_ids:
             self.add_input(device_id, input_id)
         for output_id in self.dtype_output_ids:
@@ -282,7 +283,12 @@ class Devices:
                 device.clock_counter = \
                     random.randrange(device.clock_half_period)
 
-    def make_device(self, device_id, device_kind, device_property=None):
+    def make_device(
+            self,
+            device_id,
+            device_kind,
+            device_property=None,
+            name=None):
         """Create the specified device.
 
         Return self.NO_ERROR if successful. Return corresponding error if not.
@@ -298,7 +304,7 @@ class Devices:
             elif device_property not in [self.LOW, self.HIGH]:
                 error_type = self.INVALID_QUALIFIER
             else:
-                self.make_switch(device_id, device_property)
+                self.make_switch(device_id, device_property, name)
                 error_type = self.NO_ERROR
 
         elif device_kind == self.CLOCK:
@@ -308,7 +314,7 @@ class Devices:
             elif device_property <= 0:
                 error_type = self.INVALID_QUALIFIER
             else:
-                self.make_clock(device_id, device_property)
+                self.make_clock(device_id, device_property, name)
                 error_type = self.NO_ERROR
 
         elif device_kind in self.gate_types:
@@ -317,7 +323,7 @@ class Devices:
                 if device_property is not None:
                     error_type = self.QUALIFIER_PRESENT
                 else:
-                    self.make_gate(device_id, device_kind, 2)
+                    self.make_gate(device_id, device_kind, 2, name)
                     error_type = self.NO_ERROR
             else:  # other gates
                 if device_property is None:
@@ -325,14 +331,15 @@ class Devices:
                 elif device_property not in range(1, 17):  # between 1 and 16
                     error_type = self.INVALID_QUALIFIER
                 else:
-                    self.make_gate(device_id, device_kind, device_property)
+                    self.make_gate(
+                        device_id, device_kind, device_property, name)
                     error_type = self.NO_ERROR
 
         elif device_kind == self.D_TYPE:
             if device_property is not None:
                 error_type = self.QUALIFIER_PRESENT
             else:
-                self.make_d_type(device_id)
+                self.make_d_type(device_id, name)
                 error_type = self.NO_ERROR
 
         else:
