@@ -304,6 +304,10 @@ class Parser:
         dtype_pins = ["CLK", "DATA", "Q", "QBAR", "SET", "CLEAR"]
         if re.match(pattern, string) or string in dtype_pins:
             input_valid = True
+        else:
+            self.add_error(
+                ErrorCodes.INVALID_NAME,
+                "Invalid name for device input")
 
         return input_valid
 
@@ -367,10 +371,7 @@ class Parser:
                                 elif self.symbol.type == self.scanner.COMMA:
                                     # Continue to next device
                                     self.advance()
-                            else:
-                                self.add_error(
-                                    ErrorCodes.INVALID_NAME,
-                                    "Invalid name for device input")
+
                 # output device is the first device in the list
                 output_device_id = self.names.query(device_list[0])
                 output_device = self.devices.get_device(output_device_id)
