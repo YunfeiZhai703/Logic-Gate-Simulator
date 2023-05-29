@@ -477,12 +477,13 @@ class Parser:
                     "Overflow error: Looping too many times in devices, please check that you have a [conns] block")
                 break
 
-            # self.parse_monit_line() !!!!!NOTE DONT COMMIT CODE WITH UNDEFINED
+            self.parse_monit_line()
+            # !!!!!NOTE DONT COMMIT CODE WITH UNDEFINED
             # FUNCTION - Lakee
 
     def parse_monit_line(self):
         devices_list = []
-        ports_list = []
+        dtype_outputs_list = []
 
         if self.validate_device_name_for_conns():
             devices_list.append(self.symbol.name)
@@ -495,7 +496,7 @@ class Parser:
                 if self.symbol.type == self.scanner.DOT:
                     self.advance()
                     if self.symbol.name in ["Q", "QBAR"]:
-                        ports_list.append(self.symbol.name)
+                        dtype_outputs_list.append(self.symbol.name)
                         self.advance()
                     else:
                         self.add_error(
@@ -509,15 +510,15 @@ class Parser:
 
                     else:
                         self.add_error(
-                            ErrorCodes.INVALID_DEVICE
-                            "Invalid name for the device"
-                        )
+                            ErrorCodes.INVALID_DEVICE,
+                            "Invalid name for the device")
         else:
             self.add_error(
                 ErrorCodes.INVALID_DEVICE,
                 "Device name not defined in 'devices'")
 
-        
+# make_monitor(self, device_id, output_id): Sets a specified monitor on the
+#                                             specified output.
 
 
 '''
