@@ -231,7 +231,7 @@ class Devices:
 
     def make_switch(self, device_id, initial_state, name=None):
         """Make a switch device and set its initial state."""
-        self.add_device(device_id, self.SWITCH)
+        self.add_device(device_id, self.SWITCH, name)
         self.add_output(device_id, output_id=None)
         self.set_switch(device_id, initial_state)
 

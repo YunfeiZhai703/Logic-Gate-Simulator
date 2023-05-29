@@ -245,7 +245,6 @@ class Parser:
                 name
             )
             if (error != self.devices.NO_ERROR):
-                print(error, device_list)
                 self.add_error(
                     ErrorCodes.DEVICE_ERROR,
                     "Error in making device " +
@@ -716,7 +715,6 @@ class Parser:
         return input_valid
 
     def validate_device_name_for_conns(self):
-        print(self.symbol.name)
         if self.names.query(self.symbol.name) is None:
             self.add_error(
                 ErrorCodes.INVALID_NAME,
