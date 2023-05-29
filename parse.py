@@ -643,20 +643,20 @@ class Parser:
 
         return input_valid
 
-    def validate_device_name_for_conns(self, device_list):
-        return True
-        # TODO: Implement this later ensure that the device exists
+    def validate_device_name_for_conns(self):
         if self.names.query(self.symbol.name) is None:
             self.add_error(
                 ErrorCodes.INVALID_NAME,
                 "Invalid device name")
             return False
+        else:
+            return True
 
     def parse_conns_line(self):
         device_list = []
         ports_list = []
 
-        if self.validate_device_name_for_conns(device_list):
+        if self.validate_device_name_for_conns():
             device_list.append(self.symbol.name)
 
             self.advance()
@@ -664,9 +664,13 @@ class Parser:
             # Checking for DTYPE outputs
             if self.symbol.type == self.scanner.DOT:
                 self.advance()
-                if self.check_inputs_name(self.symbol.name):
+                if self.symbol.name in ["Q", "QBAR"]:
                     ports_list.append(self.symbol.name)
                     self.advance()
+                else:
+                    self.add_error(
+                        ErrorCodes.INVALID_PIN,
+                        "Invalid name for device output of DTYPE")
 
             # Check for = sign denoting a connection
             if self.symbol.type == self.scanner.EQUAL:
@@ -677,7 +681,7 @@ class Parser:
                         self.scanner.SEMICOLON, self.scanner.EOF]:
 
                     # validate the device name
-                    if self.validate_device_name_for_conns(device_list):
+                    if self.validate_device_name_for_conns():
                         device_list.append(self.symbol.name)
                         self.advance()
 
@@ -691,8 +695,9 @@ class Parser:
 
                                 if self.symbol.type == self.scanner.SEMICOLON:
                                     # Reached end of line
+                                    self.advance()
                                     print(
-                                        "Dev: ", device_list, "Ports: ", ports_list)
+                                        "------- Dev: ", device_list, "Ports: ", ports_list)
                                     break
 
                                 elif self.symbol.type == self.scanner.COMMA:
@@ -737,9 +742,14 @@ class Parser:
                         if input_dev:
                             input_dict = input_dev.inputs
                             input_keys = list(input_dict.keys())
-                            input_id = input_keys[input_device_pin_index]
-                            # TODO: Wrap a try catch around this to catch index
-                            # out of bounds (invalid pin)
+                            if input_device_pin_index < len(input_keys):
+                                # check if the input pin index is valid
+                                self.add_error(
+                                    ErrorCodes.INVALID_PIN,
+                                    "Invalid pin for device input, device only has " + str(len(input_keys)) + " inputs"
+                                )
+                            else:
+                                input_id = input_keys[input_device_pin_index]
                         else:
                             self.add_error(
                                 ErrorCodes.INVALID_DEVICE,

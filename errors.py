@@ -4,6 +4,7 @@ class ErrorCodes:
     INVALID_NUMBER = "InvalidNumber"
     INVALID_HEADER = "InvalidHeader"
     MISSING_HEADER = "MissingHeader"
+    INVALID_PIN = "InvalidPin"
     MISSING_DOT = "MissingDot"
     MISSING_I = "MissingI"
     MISSING_PORT = "MissingPort"
