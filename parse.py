@@ -371,7 +371,7 @@ class Parser:
                                 elif self.symbol.type == self.scanner.COMMA:
                                     # Continue to next device
                                     self.advance()
-                            else:
+                            else:  # Not sure if we raise the error immediately
                                 raise ValueError('Inputs value out of range')
 
                 # output device is the first device in the list
