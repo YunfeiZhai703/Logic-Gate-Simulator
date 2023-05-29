@@ -671,7 +671,8 @@ class Parser:
             if self.symbol.type == self.scanner.EQUAL:
                 self.advance()
 
-                while self.symbol.type not in [self.scanner.SEMICOLON, self.scanner.EOF]:
+                while self.symbol.type not in [
+                        self.scanner.SEMICOLON, self.scanner.EOF]:
                     if self.validate_device_name_for_conns(device_list):
                         device_list.append(self.symbol.name)
                         self.advance()
@@ -786,7 +787,8 @@ class Parser:
                     "Overflow error: Looping too many times in devices, please check that you have a [conns] block")
                 break
 
-            self.parse_monit_line()
+            # self.parse_monit_line() !!!!!NOTE DONT COMMIT CODE WITH UNDEFINED
+            # FUNCTION - Lakee
 
 
 '''
@@ -856,12 +858,12 @@ class Parser:
                         ErrorCodes.SYNTAX_ERROR,
                         "Expected '='")
 
-    
+
 
     def monit_validate_monit_name(self):
         pass
 
-    
+
 
     def parse_monit_line(self):
         print("Monit line symbol:" + str(self.symbol))
