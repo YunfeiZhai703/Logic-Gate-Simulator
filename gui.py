@@ -203,7 +203,7 @@ class ConfigurationPanel(Box):
 
         self.Add(Text(self, "Configuration"), 0, wx.ALL, 5)
 
-        cycles_input = Box(self, dir="row")
+        cycles_input = Box(self, dir="row", bg_color=COLORS.GRAY_800)
         cycles_input.Add(Text(cycles_input, "Number of Cycles",
                          style=wx.ALIGN_LEFT), 2, wx.ALL, 8)
 
@@ -212,10 +212,23 @@ class ConfigurationPanel(Box):
 
         self.Add(cycles_input, 0, wx.CENTER, 10)
 
-        self.Add(Button(self, "Start Simulation",
-                        onClick=on_start,
-                        color=COLORS.GREEN_950,
-                        size="lg"), 0, wx.ALL, 20)
+        buttons = Box(self, dir="row", bg_color=COLORS.GRAY_800)
+
+        buttons.Add(Button(buttons, "Start Simulation",
+                           onClick=on_start,
+                           color=COLORS.GREEN_950,
+                           size="md"), 0, wx.ALL, 5)
+        # TODO: add functionality to the buttons
+        buttons.Add(Button(buttons, "Continue",
+                           onClick=on_start,
+                           color=COLORS.BLUE,
+                           size="md"), 0, wx.ALL, 5)
+        buttons.Add(Button(buttons, "Reset",
+                           onClick=on_start,
+                           color=COLORS.RED,
+                           size="md"), 0, wx.ALL, 5)
+
+        self.Add(buttons, 0, wx.CENTER, 20)
 
 
 class CodePage(ScrollBox):
