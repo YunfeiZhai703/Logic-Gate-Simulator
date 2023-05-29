@@ -54,7 +54,7 @@ class Error(SyntaxError):
             error_code)
 
         self.error_message = f"Error - {error_code}: {message}" + "\n" + \
-            f"Line {self.line_number + 1} Char {self.char_number + 1}:\n{self.line_content}" + "\n" + \
+            f"Line {self.line_number + 1} Char {self.char_number + 1}:\n{self.line_content}" + \
             " " * (self.char_number) + "^" + "\n"
         if self.description:
             self.error_message += "Description: " + self.description + "\n"

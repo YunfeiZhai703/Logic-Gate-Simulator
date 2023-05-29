@@ -57,7 +57,7 @@ class Parser:
         """Add an error to the list of errors."""
         self.errors.append(Error(
             self.scanner.current_line,
-            self.scanner.current_character,
+            self.scanner.get_current_line(),
             self.scanner.current_position,
             error_code,
             message))
