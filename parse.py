@@ -466,6 +466,8 @@ class Parser:
             i += 1
             if (self.symbol.type == self.scanner.HEADING):
                 self.add_error(
+                    # TODO: Do we need a way to identify the end of the text file
+                    # or can we go back to start to see "[devices]"?
                     ErrorCodes.SYNTAX_ERROR,
                     "Expected [devices] block")
                 break
