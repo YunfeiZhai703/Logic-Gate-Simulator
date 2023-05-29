@@ -191,7 +191,7 @@ class Parser:
             "OR": 2,
             "NAND": 2,
             "NOR": 2,
-            "XOR": 2,
+            "XOR": None,
             "SWITCH": 0,
             "CLOCK": None,
             "DTYPE": None,
@@ -245,10 +245,13 @@ class Parser:
                 name
             )
             if (error != self.devices.NO_ERROR):
+                print(error, device_list)
                 self.add_error(
                     ErrorCodes.DEVICE_ERROR,
-                    "Error in making device " + name + " Error code:" + error
-                )
+                    "Error in making device " +
+                    name +
+                    " Error code:" +
+                    str(error))
 
         # if (device_type == "AND"):
         #     if (self.symbol.type == self.scanner.SEMICOLON):
@@ -702,7 +705,7 @@ class Parser:
         """Check if inputs are in the form Ia, where a is digit from 1 - 16"""
         input_valid = False
         pattern = r'^I.*([1-9]|1[0-6])$'
-        dtype_pins = ["CLK", "DATA", "Q", "QBAR"]
+        dtype_pins = ["CLK", "DATA", "Q", "QBAR", "SET", "CLEAR"]
         if re.match(pattern, string) or string in dtype_pins:
             input_valid = True
         else:
@@ -713,6 +716,7 @@ class Parser:
         return input_valid
 
     def validate_device_name_for_conns(self):
+        print(self.symbol.name)
         if self.names.query(self.symbol.name) is None:
             self.add_error(
                 ErrorCodes.INVALID_NAME,
