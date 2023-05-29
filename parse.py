@@ -371,6 +371,9 @@ class Parser:
                                 elif self.symbol.type == self.scanner.COMMA:
                                     # Continue to next device
                                     self.advance()
+                            else:
+                                self.advance()
+                                print('--------Error')
 
                 # output device is the first device in the list
                 output_device_id = self.names.query(device_list[0])
