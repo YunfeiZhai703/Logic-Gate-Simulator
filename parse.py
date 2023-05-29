@@ -372,8 +372,7 @@ class Parser:
                                     # Continue to next device
                                     self.advance()
                             else:
-                                self.advance()
-                                print('--------Error')
+                                raise ValueError('Invalid')
 
                 # output device is the first device in the list
                 output_device_id = self.names.query(device_list[0])
