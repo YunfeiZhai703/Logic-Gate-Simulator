@@ -8,11 +8,13 @@ class ErrorCodes:
     MISSING_DOT = "MissingDot"
     MISSING_I = "MissingI"
     MISSING_PORT = "MissingPort"
+    MISSING_REQUIRED_PARAMETER = "MissingRequiredParameter"
     NAME_DEFINED = "NameDefined"
     SYNTAX_ERROR = "SyntaxError"
     INVALID_LOGIC_GATE = "InvalidLogicGate"
     INVALID_DEVICE = "InvalidDevice"
     OVERFLOW_ERROR = "OverflowError"
+    DEVICE_ERROR = "DeviceError"
 
     description = {
         INVALID_CHARACTER: "This character is not allowed in the definition file.",
