@@ -23,7 +23,7 @@ class FileButton(Button):
             wildcard=wildcard)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
-            # read file contents
+            notebook.file_path = path
             with open(path, 'r') as f:
                 notebook.uploaded_code = f.read()
         notebook.Refresh()
