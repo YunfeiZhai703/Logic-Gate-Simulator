@@ -300,7 +300,7 @@ class Parser:
     def check_inputs_name(self, string):
         """Check if inputs are in the form Ia, where a is digit from 1 - 16"""
         input_valid = False
-        pattern = r'^I.*([1-9]|1[0-6])$'
+        pattern = r'^I([1-9]|1[0-6])$'
         dtype_pins = ["CLK", "DATA", "Q", "QBAR", "SET", "CLEAR"]
         if re.match(pattern, string) or string in dtype_pins:
             input_valid = True
@@ -371,6 +371,8 @@ class Parser:
                                 elif self.symbol.type == self.scanner.COMMA:
                                     # Continue to next device
                                     self.advance()
+                            else:  # Not sure if we raise the error immediately
+                                raise ValueError('Inputs value out of range')
 
                 # output device is the first device in the list
                 output_device_id = self.names.query(device_list[0])
@@ -419,6 +421,7 @@ class Parser:
                                 )
                             else:
                                 input_id = input_keys[input_device_pin_index]
+
                         else:
                             self.add_error(
                                 ErrorCodes.INVALID_DEVICE,
@@ -507,18 +510,10 @@ class Parser:
                     if self.validate_device_name_for_conns():
                         devices_list.append(self.symbol.name)
                         self.advance()
-
-                    else:
-                        self.add_error(
-                            ErrorCodes.INVALID_DEVICE,
-                            "Invalid name for the device")
         else:
             self.add_error(
                 ErrorCodes.INVALID_DEVICE,
                 "Device name not defined in 'devices'")
-
-# make_monitor(self, device_id, output_id): Sets a specified monitor on the
-#                                             specified output.
 
 
 '''
