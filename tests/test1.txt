@@ -1,4 +1,4 @@
 [conns]
 G4.Q = G2.I2;
-G1 = G2.I17, G3.I1, G3.I2; # Whitespace not required
+G1 = G2.I15, G3.I1, G3.I2; # Whitespace not required
 
