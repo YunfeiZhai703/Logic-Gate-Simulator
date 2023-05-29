@@ -181,6 +181,11 @@ class Parser:
                         "Expected '='")
 
     def parse_logic_gate(self, gate, device_list):
+        """
+        @Dhillon: A lot of this is very unessesary,
+        look at the make_device function in devices.py
+        it does the main part for you!!! - Lakee
+        """
         if (gate == "AND"):
             if (self.symbol.type == self.scanner.SEMICOLON):
                 device_ids = self.names.lookup(
