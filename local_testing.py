@@ -7,12 +7,14 @@ from monitors import Monitors
 
 
 name = Names()
-scan = Scanner("./tests/test2.txt", name)
+scan = Scanner("./tests/test1.txt", name)
 devices = Devices(name)
 networks = Network(name, devices)
 monitors = Monitors(name, devices, networks)
 parser = Parser(name, devices, networks, monitors, scan)
 parser.parse_devices_block()
+parser.parse_conns_block()
+# paser.parse_monit_block()
 print(parser.errors)
 
 devs = parser.devices.devices_list
