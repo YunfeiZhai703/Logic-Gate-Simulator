@@ -1,6 +1,3 @@
-[devices]
- G1, G2, G3 = NAND;
- G4 = DTYPE;
 
 [conns]
 G4.Q = G2.I2;
