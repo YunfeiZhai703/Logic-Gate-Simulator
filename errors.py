@@ -40,7 +40,8 @@ class Error(SyntaxError):
             line_content,
             char_number,
             error_code,
-            message):
+            message,
+    ):
         """Initialise ScannerError with the message."""
         self.error_code = error_code
         self.message = message
@@ -49,12 +50,13 @@ class Error(SyntaxError):
         self.char_number = char_number
 
         self.description = ErrorCodes.description.get(
-            error_code, "No description available.")
+            error_code)
 
         self.error_message = f"Error - {error_code}: {message}" + "\n" + \
-            f"Line {self.line_number} Char {self.char_number}:\n{self.line_content}" + "\n" + \
-            " " * (self.char_number) + "^" + "\n" + \
-            "Description: " + self.description + "\n"
+            f"Line {self.line_number + 1} Char {self.char_number + 1}:\n{self.line_content}" + "\n" + \
+            " " * (self.char_number) + "^" + "\n"
+        if self.description:
+            self.error_message += "Description: " + self.description + "\n"
 
     def __str__(self):
         return self.error_message
