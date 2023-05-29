@@ -735,6 +735,10 @@ class Parser:
                     if input_id:
                         error = self.network.make_connection(
                             output_device_id, output_device_pin_id, input_device_ids[i], input_id)
+                        
+                        print("Symbol: ", self.symbol.name, "Ports: ", ports_list, "Device: ", device_list)
+                        
+
                         if error != self.network.NO_ERROR:
                             print(
                                 "----------ERROR in make_connection----------Code: ", error)
