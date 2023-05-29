@@ -8,6 +8,7 @@ Classes:
 MyGLCanvas - handles all canvas drawing operations.
 Gui - configures the main window and all the widgets.
 """
+import math
 import random
 from typing import List
 import wx
@@ -182,17 +183,29 @@ class Heading(wx.BoxSizer):
             wx.ICON_INFORMATION | wx.OK)
 
 
-class DevicesPanel(Box):
+class DevicesPanel(ScrollBox):
     def __init__(self, parent, devices: Devices):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col")
+        # self.Add(Text(self, "Devices"), 1, wx.TOP, 5)
         self.parent = parent
         self.device_list: List[Device] = devices.devices_list
         self.device_names = [device.name for device in self.device_list]
 
-        print(self.device_names)
+        cols = 2
+        rows = math.ceil(len(self.device_names) / cols)
 
-        self.Add(Text(self, "Devices"), 1, wx.ALL, 5)
+        grid = wx.GridSizer(rows, cols, 5, 5)
+
+        for device in self.device_list:
+            grid.Add(
+                Button(self, device.name, size="sm"), 0, wx.ALL, 5)
+
+        self.Add(grid, 1, wx.ALL, 5)
+
+        self.SetSizeHints(200, 200)
+
+        print(self.device_names)
 
 
 class ConfigurationPanel(Box):
