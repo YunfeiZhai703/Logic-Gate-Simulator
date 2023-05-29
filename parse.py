@@ -499,13 +499,23 @@ class Parser:
                         self.add_error(
                             ErrorCodes.INVALID_PIN,
                             "Invalid name for device output of DTYPE")
-                if self.symbol.type == self.scanner.COMMA:
+                elif self.symbol.type == self.scanner.COMMA:
                     self.advance()
+                    if self.validate_device_name_for_conns():
+                        devices_list.append(self.symbol.name)
+                        self.advance()
 
-                else:
-                    self.add_error(
-                        ErrorCodes.INVALID
-                    )
+                    else:
+                        self.add_error(
+                            ErrorCodes.INVALID_DEVICE
+                            "Invalid name for the device"
+                        )
+        else:
+            self.add_error(
+                ErrorCodes.INVALID_DEVICE,
+                "Device name not defined in 'devices'")
+
+        
 
 
 '''
