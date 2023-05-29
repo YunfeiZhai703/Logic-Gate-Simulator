@@ -466,6 +466,8 @@ class Parser:
             i += 1
             if (self.symbol.type == self.scanner.HEADING):
                 self.add_error(
+                    # TODO: Do we need a way to identify the end of the text file
+                    # or can we go back to start to see "[devices]"?
                     ErrorCodes.SYNTAX_ERROR,
                     "Expected [devices] block")
                 break
@@ -477,35 +479,6 @@ class Parser:
 
             # self.parse_monit_line() !!!!!NOTE DONT COMMIT CODE WITH UNDEFINED
             # FUNCTION - Lakee
-
-    def parse_monit_line(self):
-        devices_list = []
-        ports_list = []
-
-        if self.validate_device_name_for_conns():
-            devices_list.append(self.symbol.name)
-            self.advance()
-
-            # While not reached end of line or EOF
-            while self.symbol.type not in [
-                    self.scanner.SEMICOLON, self.scanner.EOF]:
-                # Checking for DTYPE outputs
-                if self.symbol.type == self.scanner.DOT:
-                    self.advance()
-                    if self.symbol.name in ["Q", "QBAR"]:
-                        ports_list.append(self.symbol.name)
-                        self.advance()
-                    else:
-                        self.add_error(
-                            ErrorCodes.INVALID_PIN,
-                            "Invalid name for device output of DTYPE")
-                if self.symbol.type == self.scanner.COMMA:
-                    self.advance()
-
-                else:
-                    self.add_error(
-                        ErrorCodes.INVALID
-                    )
 
 
 '''
