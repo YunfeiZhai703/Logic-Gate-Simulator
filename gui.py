@@ -9,11 +9,12 @@ MyGLCanvas - handles all canvas drawing operations.
 Gui - configures the main window and all the widgets.
 """
 import random
+from typing import List
 import wx
 
 
 from names import Names
-from devices import Devices
+from devices import Device, Devices
 from network import Network
 from monitors import Monitors
 from scanner import Scanner
@@ -186,7 +187,10 @@ class DevicesPanel(Box):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col")
         self.parent = parent
-        self.device_list = devices.devices_list
+        self.device_list: List[Device] = devices.devices_list
+        self.device_names = [device.name for device in self.device_list]
+
+        print(self.device_names)
 
         self.Add(Text(self, "Devices"), 1, wx.ALL, 5)
 
