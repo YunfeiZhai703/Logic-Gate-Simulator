@@ -22,16 +22,24 @@ from components.ui import Button, Text, NumberInput, TextBox, COLORS
 from components import Canvas, FileButton, Box, ScrollBox
 
 
+class Notebook(wx.Notebook):
+    def __init__(self, parent, devices, monitors):
+        super().__init__(parent, style=wx.NB_FIXEDWIDTH)
+        self.canvas = Canvas(self, devices, monitors)
+        self.file_path = ""
+        self.uploaded_code = ""
+        self.SetBackgroundColour(COLORS.GRAY_400)
+
+
 class Gui(wx.Frame):
     # notebook
 
     def __init__(self, title, path, names, devices, network, monitors):
         super().__init__(parent=None, title=title, size=(800, 600))
 
-        nb = wx.Notebook(self, style=wx.NB_FIXEDWIDTH)
+        nb = Notebook(self, devices, monitors)
         self.nb = nb
-        nb.SetBackgroundColour(COLORS.GRAY_400)
-        nb.canvas = Canvas(nb, devices, monitors)
+
         nb.file_path = path
         nb.uploaded_code = self._read_file(nb.file_path)
         nb.AddPage(MainPage("Logic Simulator", path, names, devices,
@@ -39,6 +47,7 @@ class Gui(wx.Frame):
 
         nb.AddPage(nb.canvas, "Graphs")
         nb.AddPage(CodePage(nb), "Code")
+
         self.setup_menu()
 
         self.Show()
@@ -76,10 +85,10 @@ class MainPage(wx.Panel):
             title,
             path,
             names,
-            devices,
-            network,
+            devices: Devices,
+            network: Network,
             monitors,
-            notebook=None):
+            notebook: Notebook):
         """Initialise widgets and layout."""
         super().__init__(parent=notebook)
 
@@ -96,7 +105,7 @@ class MainPage(wx.Panel):
 
         Heading(self, notebook).Attach(left_sizer, 0, wx.EXPAND, 5)
 
-        DevicesPanel(self, canvas=self.canvas).Attach(
+        DevicesPanel(self, devices).Attach(
             left_sizer, 3, wx.EXPAND | wx.ALL, 5)
 
         right_sizer.Add(self.canvas,
@@ -173,11 +182,11 @@ class Heading(wx.BoxSizer):
 
 
 class DevicesPanel(Box):
-    def __init__(self, parent, canvas):
+    def __init__(self, parent, devices: Devices):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col")
         self.parent = parent
-        self.canvas = canvas
+        self.device_list = devices.devices_list
 
         self.Add(Text(self, "Devices"), 1, wx.ALL, 5)
 
@@ -206,7 +215,7 @@ class ConfigurationPanel(Box):
 
 
 class CodePage(ScrollBox):
-    def __init__(self, parent: wx.Notebook):
+    def __init__(self, parent: Notebook):
         super().__init__(parent, dir="col")
         self.parent = parent
         self.code = parent.uploaded_code
