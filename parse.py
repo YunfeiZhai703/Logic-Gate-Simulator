@@ -742,7 +742,7 @@ class Parser:
                         if input_dev:
                             input_dict = input_dev.inputs
                             input_keys = list(input_dict.keys())
-                            if input_device_pin_index < len(input_keys):
+                            if input_device_pin_index - 1 > len(input_keys):
                                 # check if the input pin index is valid
                                 self.add_error(
                                     ErrorCodes.INVALID_PIN,
