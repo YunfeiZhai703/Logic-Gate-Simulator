@@ -293,7 +293,7 @@ class Parser:
             if (i > 500):
                 self.add_error(
                     ErrorCodes.OVERFLOW_ERROR,
-                    "Overflow error: Looping too many times in devices, please check that you have a [conns] block")
+                    "Overflow error: Looping too many times in conns, please check that you have a [monitor] block")
                 break
             self.parse_conns_line()
 
