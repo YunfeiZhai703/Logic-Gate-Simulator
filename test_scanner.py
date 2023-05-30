@@ -16,15 +16,32 @@ def test_symbol():
 
 
 @pytest.fixture
-def test_path():
+def test_path_1():
     path = "tests/scanner/test_file_1.txt"
     return path
 
 
-def test_get_symbol(test_names, test_path):
+@pytest.fixture
+def test_path_2():
+    path = "tests/scanner/test_file_2.txt"
+
+
+@pytest.fixture
+def test_path_error_1():
+    path = "tests/scanner/error_1.txt"
+    return path
+
+
+@pytest.fixture
+def test_path_error_2():
+    path = "tests/scanner/error_2.txt"
+    return path
+
+
+def test_get_symbol(test_names, test_path_1):
     """Test that names, numbers, symbols and keywords are all
     initialised and stored in the right sections"""
-    test_scan = Scanner(test_path, test_names)
+    test_scan = Scanner(test_path_1, test_names)
 
     test_string = [
         "[",
@@ -55,9 +72,9 @@ def test_get_symbol(test_names, test_path):
             break
 
 
-def test_keywords_error(test_names):
+def test_keywords_error(test_names, test_path_error_1):
     """Test that keywords are not allowed as names"""
-    test_scan = Scanner("tests/scanner/error_1.txt", test_names)
+    test_scan = Scanner(test_path_error_1, test_names)
     test_scan.get_all_symbols()
     errors = test_scan.errors
 
@@ -65,9 +82,9 @@ def test_keywords_error(test_names):
         assert e.error_code == ErrorCodes.INVALID_NAME
 
 
-def test_invalid_char_error(test_names):
+def test_invalid_char_error(test_names, test_path_error_2):
     """Test that keywords are not allowed as names"""
-    test_scan = Scanner("tests/scanner/error_2.txt", test_names)
+    test_scan = Scanner(test_path_error_2, test_names)
     test_scan.get_all_symbols()
     errors = test_scan.errors
 
