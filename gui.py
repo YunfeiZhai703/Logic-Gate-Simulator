@@ -237,7 +237,7 @@ class DevicesPanel(ScrollBox):
     def __init__(self, parent, devices: Devices):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col")
-        self.Add(Text(self, "Devices"), 1, wx.TOP, 5)
+        self.Add(Text(self, "Devices"), 0, wx.ALL, 5)
         self.parent = parent
         self.device_list: List[Device] = devices.devices_list
 
@@ -261,7 +261,7 @@ class SwitchesPanel(ScrollBox):
     def __init__(self, parent, devices: Devices):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col")
-        self.Add(Text(self, "Switches"), 1, wx.TOP, 5)
+        self.Add(Text(self, "Switches"), 0, wx.ALL, 5)
         self.parent = parent
         self.device_list: List[Device] = devices.devices_list
         self.switches: List[Device] = []
@@ -328,7 +328,7 @@ class MonitorsPanel(ScrollBox):
             cycles_completed):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col")
-        self.Add(Text(self, "Montiors"), 1, wx.TOP, 5)
+        self.Add(Text(self, "Montiors"), 0, wx.ALL, 5)
         self.parent = parent
         self.device_list: List[Device] = devices.devices_list
         self.signal_names = monitors.get_signal_names()
