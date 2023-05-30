@@ -89,10 +89,13 @@ class MainPage(wx.Panel):
             names,
             devices: Devices,
             network: Network,
-            monitors,
+            monitors: Monitors,
             notebook: Notebook):
         """Initialise widgets and layout."""
         super().__init__(parent=notebook)
+
+        self.network = network
+        self.monitors = monitors
 
         self.SetBackgroundColour(COLORS.GRAY_950)
         self.number_of_cycles = 10
@@ -143,15 +146,37 @@ class MainPage(wx.Panel):
 
     def on_start(self, event):
         # randomly generate a signal of 1 and 0 length 10
-        random_signal = [random.randint(0, 1)
-                         for i in range(self.number_of_cycles)]
-        print(random_signal)
-        self.canvas.add_signal(
-            random_signal, "A" + str(len(self.canvas.signals))
-        )
-        self.canvas2.add_signal(
-            random_signal, "A" + str(len(self.canvas.signals))
-        )
+        self.monitors.reset_monitors()
+        self.canvas.signals = []
+        self.canvas2.signals = []
+        for _ in range(self.number_of_cycles):
+            self.network.execute_network()
+            self.monitors.record_signals()
+
+        monitors_dict = self.monitors.monitors_dictionary
+        signal_names = self.monitors.get_signal_names()[0]
+
+        # get a list of montiors_dict values
+        monitored_signals = list(monitors_dict.values())
+
+        for i, signal in enumerate(monitored_signals):
+            self.canvas.add_signal(signal, signal_names[i])
+            self.canvas2.add_signal(signal, signal_names[i])
+
+        # for k, v in monitors_dict.items():
+        #     self.canvas.add_signal(v, "A1")
+        #     self.canvas2.add_signal(v, "A2")
+
+        # random_signal = [random.randint(0, 1)
+        #                  for i in range(self.number_of_cycles)]
+        # print(random_signal)
+        # self.canvas.add_signal(
+        #     random_signal, "A" + str(len(self.canvas.signals))
+        # )
+        # self.canvas2.add_signal(
+        #     random_signal, "A" + str(len(self.canvas.signals))
+        # )
+
         self.canvas.Refresh()
 
     def on_number_input(self, event):
