@@ -38,4 +38,4 @@
 
 [monit]
     G9, G8;
-    G6.DATA;
+    G6.QBAR;
