@@ -1,6 +1,7 @@
 [devices] 
 	G1, G2 = NAND;     # defaults to 2 inputs
 	SW1, SW2 = SWITCH; # defaults to 0 i.Ie "False"
+	C1 = CLOCK(1);
 
 [conns]
 	SW1 = G1.I1;
@@ -12,4 +13,5 @@
 
 [monit]                # need a newline after a block
 	G1, G2;
+	C1;
 

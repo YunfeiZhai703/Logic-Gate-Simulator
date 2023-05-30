@@ -4,6 +4,9 @@ from OpenGL import GL, GLUT
 import wx
 import math
 
+from devices import Devices
+from monitors import Monitors
+
 
 glColors = [
     (1.0, 0.0, 0.0),  # red
@@ -53,7 +56,7 @@ class Canvas(wxcanvas.GLCanvas):
                                            operations.
     """
 
-    def __init__(self, parent, devices, monitors):
+    def __init__(self, parent, devices: Devices, monitors: Monitors):
         """Initialise canvas properties and useful variables."""
         super().__init__(parent, -1,
                          attribList=[wxcanvas.WX_GL_RGBA,
@@ -63,6 +66,8 @@ class Canvas(wxcanvas.GLCanvas):
         self.init = False
         self.context = wxcanvas.GLContext(self)
         self.colors = glColors
+        self.monitors = monitors
+        self.devices = devices
 
         # Initialise variables for panning
         self.pan_x = 0
@@ -94,6 +99,10 @@ class Canvas(wxcanvas.GLCanvas):
         GL.glLoadIdentity()
         GL.glTranslated(self.pan_x, self.pan_y, 0.0)
         GL.glScaled(self.zoom, self.zoom, self.zoom)
+
+    def reset(self):
+        self.signals = []
+        self.monitors.reset_monitors()
 
     def draw_signal_trace(
         self,
