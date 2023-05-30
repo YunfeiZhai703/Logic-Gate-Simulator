@@ -146,9 +146,8 @@ class MainPage(wx.Panel):
 
     def on_start(self, event):
         # randomly generate a signal of 1 and 0 length 10
-        self.monitors.reset_monitors()
-        self.canvas.signals = []
-        self.canvas2.signals = []
+        self.canvas.reset()
+        self.canvas2.reset()
         for _ in range(self.number_of_cycles):
             self.network.execute_network()
             self.monitors.record_signals()
