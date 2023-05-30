@@ -293,14 +293,14 @@ class Parser:
             if (i > 500):
                 self.add_error(
                     ErrorCodes.OVERFLOW_ERROR,
-                    "Overflow error: Looping too many times in devices, please check that you have a [conns] block")
+                    "Overflow error: Looping too many times in conns, please check that you have a [monitor] block")
                 break
             self.parse_conns_line()
 
     def check_inputs_name(self, string):
         """Check if inputs are in the form Ia, where a is digit from 1 - 16"""
         input_valid = False
-        pattern = r'^I.*([1-9]|1[0-6])$'
+        pattern = r'^I([1-9]|1[0-6])$'
         dtype_pins = ["CLK", "DATA", "Q", "QBAR", "SET", "CLEAR"]
         if re.match(pattern, string) or string in dtype_pins:
             input_valid = True
@@ -371,6 +371,8 @@ class Parser:
                                 elif self.symbol.type == self.scanner.COMMA:
                                     # Continue to next device
                                     self.advance()
+                            else:  # Not sure if we raise the error immediately
+                                raise ValueError('Inputs value out of range')
 
                 # output device is the first device in the list
                 output_device_id = self.names.query(device_list[0])
@@ -414,10 +416,12 @@ class Parser:
                                 # check if the input pin index is valid
                                 self.add_error(
                                     ErrorCodes.INVALID_PIN,
-                                    "Invalid pin for device input, device only has " + str(len(input_keys)) + " inputs"
+                                    "Invalid pin for device input, device only has " +
+                                    str(len(input_keys)) + " inputs"
                                 )
                             else:
                                 input_id = input_keys[input_device_pin_index]
+
                         else:
                             self.add_error(
                                 ErrorCodes.INVALID_DEVICE,
@@ -468,122 +472,71 @@ class Parser:
                     # TODO: Do we need a way to identify the end of the text file
                     # or can we go back to start to see "[devices]"?
                     ErrorCodes.SYNTAX_ERROR,
-                    "Expected [devices] block")
+                    "Expected [monit] block")
                 break
             if (i > 500):
                 self.add_error(
                     ErrorCodes.OVERFLOW_ERROR,
-                    "Overflow error: Looping too many times in devices, please check that you have a [conns] block")
+                    "Overflow error: Looping too many times in devices, please check that you have correctly defined monitor block")
                 break
 
-            # self.parse_monit_line() !!!!!NOTE DONT COMMIT CODE WITH UNDEFINED
-            # FUNCTION - Lakee
-
-
-'''
-    def parse_monit_block(self):
-        if (self.symbol.type == self.scanner.OPEN_SQUARE_BRACKET):
-            self.advance()
-
-            if (self.symbol.type ==
-                    self.scanner.HEADING and self.symbol.name == "monit"):
-                self.advance()
-
-                if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
-                    self.advance()
-
-                    #
-                    self.parse_monit()
-
-                else:
-                    self.add_error(
-                        ErrorCodes.INVALID_HEADER, "Expected ']'")
-
-            else:
-                self.add_error(ErrorCodes.INVALID_HEADER, "Expected 'monit'")
-
-        else:
-            self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
-
-
-
-        print("Conns line symbol:" + str(self.symbol))
-        conns_list = []
-        device_list = []
-
-        if (self.validate_device_name(conns_list, device_list)):
-            conns_list.append(self.symbol.name)
-            conns_are_valid = True
-            self.advance()
-
-            while (
-                self.symbol.type == self.scanner.EQUAL and conns_are_valid
-            ):
-                self.advance()
-
-                if (self.validate_conns_name(conns_list)):
-                    conns_list.append(self.symbol.name)
-                    self.advance()
-                else:
-                    conns_are_valid = False
-
-            if (conns_are_valid):
-                if (self.symbol.type == self.scanner.EQUAL):
-                    self.advance()
-
-                    if (self.symbol.type == self.scanner.LOGIC):
-                        gate = self.symbol.name
-                        self.advance()
-                        self.parse_logic_gate(gate, conns_list)
-                        self.advance()
-                        print(conns_list)
-                    else:
-                        self.add_error(
-                            ErrorCodes.INVALID_LOGIC_GATE,
-                            "Expected logic gate")
-
-                else:
-                    self.add_error(
-                        ErrorCodes.SYNTAX_ERROR,
-                        "Expected '='")
-
-
-
-    def monit_validate_monit_name(self):
-        pass
-
-
+            self.parse_monit_line()
 
     def parse_monit_line(self):
-        print("Monit line symbol:" + str(self.symbol))
-        monit_list = []
+        devices_list = []
+        dtype_outputs_list = []
 
-        if (self.validate_monit_name(monit_list)):
-            monit_list.append(self.symbol.name)
-            monit_are_valid = True
+        if self.validate_device_name_for_conns():
+            devices_list.append(self.symbol.name)
             self.advance()
 
-            while (
-                self.symbol.type == self.scanner.COMMA and monit_are_valid
-            ):
-                # Need to add if its followed by a dot and DATA, CLEAR, SET, Q OR QBAR as condition
-                self.advance()
-
-                if (self.symbol.type == self.scanner.SEMICOLON):
-                    break
-
-                if (self.validate_monit_name(monit_list)):
-                    monit_list.append(self.symbol.name)
+            # While not reached end of line or EOF
+            while self.symbol.type not in [
+                    self.scanner.SEMICOLON, self.scanner.EOF]:
+                # Checking for DTYPE outputs
+                if self.symbol.type == self.scanner.DOT:
                     self.advance()
-                else:
-                    monit_are_valid = False
-
-            if (monit_are_valid):
-                if (self.symbol.type == self.scanner.SEMICOLON):
+                    if self.symbol.name in ["Q", "QBAR"]:
+                        dtype_outputs_list.append(self.symbol.name)
+                        self.advance()
+                    else:
+                        self.add_error(
+                            ErrorCodes.INVALID_PIN,
+                            "Invalid name for device output of DTYPE")
+                elif self.symbol.type == self.scanner.COMMA:
                     self.advance()
+                    if self.validate_device_name_for_conns():
+                        devices_list.append(self.symbol.name)
+                        self.advance()
 
-                else:
-                    self.add_error(
-                        ErrorCodes.SYNTAX_ERROR,
-                        "Expected ';'")
-'''
+            # get output devices
+            for i in range(len(devices_list)):
+                output_device_id = self.names.query(devices_list[i])
+                output_device = self.devices.get_device(output_device_id)
+
+            # NOT sure if this is the right way
+
+            # If len of ports list is same as len of device list, then we
+            # have a DTYPE
+            if len(dtype_outputs_list) == len(devices_list):
+                dtype_mapping = {
+                    "Q": self.devices.Q_ID,
+                    "QBAR": self.devices.QBAR_ID}
+
+                output_device_pin_id = dtype_mapping[dtype_outputs_list[0]]
+                # remove the DTYPE Q or QBAR from the list
+                dtype_outputs_list.pop(0)
+            else:
+                output_device_pin_id = None
+
+            error = self.monitors.make_monitor(
+                output_device_id, output_device_pin_id)
+
+            if error != self.monitors.NO_ERROR:
+                print(
+                    "----------ERROR in make_connection----------Code: ", error)
+
+        else:
+            self.add_error(
+                ErrorCodes.INVALID_DEVICE,
+                "Device name not defined in 'devices'")
