@@ -1,2 +1,3 @@
 [monit]
-G2, G3;
+G2, G3.Q, G4.QBAR;
+G1;

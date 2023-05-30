@@ -509,7 +509,7 @@ class Parser:
                         devices_list.append(self.symbol.name)
                         self.advance()
 
-            # output device is the first device in the list
+            # get output devices
             for i in range(len(devices_list)):
                 output_device_id = self.names.query(devices_list[i])
                 output_device = self.devices.get_device(output_device_id)
