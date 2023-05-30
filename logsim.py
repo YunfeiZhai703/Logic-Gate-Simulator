@@ -46,9 +46,7 @@ def main(arg_list):
     names = Names()
     devices = Devices(names)
     network = Network(names, devices)
-    # monitors = Monitors(names, devices, network)
-    # names = None
-    monitors = None
+    monitors = Monitors(names, devices, network)
 
     for option, path in options:
         if option == "-h":  # print the usage message
