@@ -245,7 +245,7 @@ class DevicesPanel(ScrollBox):
 
         self.SetSizeHints(200, 200)
 
-        print(self.device_list)
+        # print(self.device_list)
 
 
 class SwitchesPanel(ScrollBox):

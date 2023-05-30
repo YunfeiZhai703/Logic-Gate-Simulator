@@ -365,8 +365,8 @@ class Parser:
                                 if self.symbol.type == self.scanner.SEMICOLON:
                                     # Reached end of line
                                     self.advance()
-                                    print(
-                                        "------- Dev: ", device_list, "Ports: ", ports_list)
+                                    # print(
+                                    #     "------- Dev: ", device_list, "Ports: ", ports_list)
                                     break
 
                                 elif self.symbol.type == self.scanner.COMMA:
@@ -509,7 +509,6 @@ class Parser:
                     if self.validate_device_name_for_conns():
                         devices_list.append(self.symbol.name)
                         self.advance()
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-Dev", devices_list)
             # get output devices
             output_device_ids = [self.names.query(dev) for dev in devices_list]
 
