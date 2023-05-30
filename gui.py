@@ -99,6 +99,7 @@ class MainPage(wx.Panel):
 
         self.SetBackgroundColour(COLORS.GRAY_950)
         self.number_of_cycles = 10
+        self.cycles_completed = 0
 
         # Configure sizers for layout
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -123,8 +124,15 @@ class MainPage(wx.Panel):
 
         right_sizer.Add(right_bottom_block, 1, wx.EXPAND, 5)
 
-        MonitorsPanel(right_bottom_block, devices, monitors).Attach(
-            right_bottom_block, 1, wx.ALL, 5)
+        MonitorsPanel(
+            right_bottom_block,
+            devices,
+            monitors,
+            self.cycles_completed).Attach(
+            right_bottom_block,
+            1,
+            wx.ALL,
+            5)
 
         ConfigurationPanel(
             right_bottom_block,
@@ -150,7 +158,6 @@ class MainPage(wx.Panel):
         for _ in range(self.number_of_cycles):
             self.network.execute_network()
             self.monitors.record_signals()
-
         monitors_dict = self.monitors.monitors_dictionary
         signal_names = self.monitors.get_signal_names()[0]
 
@@ -163,6 +170,7 @@ class MainPage(wx.Panel):
 
         self.canvas.Refresh()
         self.canvas2.Refresh()
+        self.cycles_completed = self.number_of_cycles
 
     def on_continue(self, event):
 
@@ -177,11 +185,12 @@ class MainPage(wx.Panel):
         monitored_signals = list(monitors_dict.values())
 
         for i, signal in enumerate(monitored_signals):
-            self.canvas.add_signal(signal, signal_names[i])
-            self.canvas2.add_signal(signal, signal_names[i])
+            self.canvas.add_signal(signal, signal_names[i], self.cycles_completed)
+            self.canvas2.add_signal(signal, signal_names[i], self.cycles_completed)
 
         self.canvas.Refresh()
         self.canvas2.Refresh()
+        self.cycles_completed += self.number_of_cycles
 
     def on_reset(self, event):
         self.canvas.reset()
@@ -189,6 +198,8 @@ class MainPage(wx.Panel):
 
         self.canvas.Refresh()
         self.canvas2.Refresh()
+
+        self.cycles_completed = 0
 
     def on_number_input(self, event):
         """Handle the event when the user changes the spin control value."""
@@ -305,7 +316,12 @@ class SwitchesPanel(ScrollBox):
 
 
 class MonitorsPanel(ScrollBox):
-    def __init__(self, parent, devices: Devices, monitors: Monitors):
+    def __init__(
+            self,
+            parent,
+            devices: Devices,
+            monitors: Monitors,
+            cycles_completed):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col")
         self.Add(Text(self, "Montiors"), 1, wx.TOP, 5)
@@ -320,14 +336,15 @@ class MonitorsPanel(ScrollBox):
         grid = wx.GridSizer(rows, cols, 10, 10)
 
         for i, output in enumerate(self.signal_names[0]):
-            print(output)
 
             button = Button(
                 self,
                 str(output),
                 color=COLORS.GREEN_900,
-                onClick=lambda event: self.on_switch_toggle(event, monitors)
-            )
+                onClick=lambda event: self.on_switch_toggle(
+                    event,
+                    monitors,
+                    cycles_completed))
 
             grid.Add(button, 0, wx.EXPAND, 5)
 
@@ -337,8 +354,10 @@ class MonitorsPanel(ScrollBox):
                 self,
                 str(output),
                 color=COLORS.RED,
-                onClick=lambda event: self.on_switch_toggle(event, monitors)
-            )
+                onClick=lambda event: self.on_switch_toggle(
+                    event,
+                    monitors,
+                    cycles_completed))
 
             grid.Add(button, 0, wx.EXPAND, 5)
 
@@ -349,14 +368,12 @@ class MonitorsPanel(ScrollBox):
     def on_switch_toggle(
             self,
             event,
-            monitors: Monitors):
+            monitors: Monitors, cycles_completed):
 
         port_name = event.GetEventObject().GetLabel()
-        monitors.toggle_monitor(port_name)
+        monitors.toggle_monitor(port_name, cycles_completed)
 
         self.signal_names = monitors.get_signal_names()
-
-        print(self.signal_names[0], monitors.monitors_dictionary)
 
         is_monitored = port_name in self.signal_names[0]
 

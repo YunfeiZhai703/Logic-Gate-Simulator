@@ -110,6 +110,7 @@ class Canvas(wxcanvas.GLCanvas):
         x_pos: int,
         y_pos: int,
         label: str,
+        start_time: int,
         color: tuple = (
             0.0,
             0.0,
@@ -119,7 +120,7 @@ class Canvas(wxcanvas.GLCanvas):
         Args:
             signal (list): A list of 1 and 0s
         """
-        GL.glColor3f(*color)
+        GL.glColor3f(color[0], color[1], color[2])
         GL.glBegin(GL.GL_LINE_STRIP)
         for i in range(len(signal)):
             x = (i * 20) + x_pos
@@ -154,7 +155,7 @@ class Canvas(wxcanvas.GLCanvas):
         x_pos -= int(40 / 3 * len(label))
         self.render_text(label, x_pos, y_pos + 18)
 
-    def add_signal(self, signal: list, label: str):
+    def add_signal(self, signal: list, label: str, start_time: int = 0):
         """Add a signal to the canvas.
 
         Args:
@@ -167,7 +168,8 @@ class Canvas(wxcanvas.GLCanvas):
                 if s["name"] == label:
                     s["signal"] = signal
         else:
-            self.signals.append({"name": label, "signal": signal})
+            self.signals.append(
+                {"name": label, "signal": signal, "start_time": start_time})
 
     def _get_color(self, index):
         if index < len(self.colors):
@@ -197,6 +199,7 @@ class Canvas(wxcanvas.GLCanvas):
                 50,
                 60 * i + 50,
                 signal["name"],
+                signal["start_time"],
                 self._get_color(i))
 
         # We have been drawing to the back buffer, flush the graphics pipeline
@@ -286,7 +289,7 @@ class Canvas(wxcanvas.GLCanvas):
         """Handle text drawing operations."""
         self.set_graph_color()
         GL.glRasterPos2f(x_pos, y_pos)
-        font = GLUT.GLUT_BITMAP_HELVETICA_12
+        font = GLUT.GLUT_BITMAP_HELVETICA_12  # type: ignore
 
         for character in text:
             if character == '\n':
