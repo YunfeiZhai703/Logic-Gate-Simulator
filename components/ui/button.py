@@ -7,7 +7,7 @@ from wx.lib.agw.gradientbutton import GradientButton
 from .colors import COLORS
 from typing import Tuple, Union
 
-button_size_type = Union[str, Tuple[int, int]]
+button_size_type = Union[str, Tuple[int, int], None]
 
 # str: xs, sm, md, lg, xl (removed Literal due to python 3.7 compatibility)
 
@@ -16,7 +16,7 @@ class Button(GradientButton):
     """Button widget class."""
 
     def __init__(self, parent, label, onClick=None, color=wx.BLACK,
-                 size: button_size_type = "sm"
+                 size: button_size_type = None
                  ):
         """Custom button widget.
 
@@ -37,7 +37,8 @@ class Button(GradientButton):
         if onClick:
             self.Bind(wx.EVT_BUTTON, onClick)
 
-        self.SetSize(size)
+        if size:
+            self.SetSize(size)
 
     def SetSize(self, size: button_size_type):
         """Set the size of the button."""
@@ -54,6 +55,10 @@ class Button(GradientButton):
                 self.SetMinSize((250, 60))
         elif isinstance(size, tuple):
             self.SetMinSize(size)
+
+    def SetColor(self, color):
+        """Set the color of the button."""
+        self.SetBaseColours(color, wx.WHITE)
 
     # def OnHover(self, event):
     #     self.SetBackgroundColour(self.hover_bg_color)

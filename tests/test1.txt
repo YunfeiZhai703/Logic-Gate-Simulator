@@ -14,4 +14,5 @@
 [monit]                # need a newline after a block
 	G1, G2;
 	C1;
+	SW1;
 

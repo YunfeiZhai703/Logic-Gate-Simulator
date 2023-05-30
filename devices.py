@@ -9,6 +9,7 @@ Device - stores device properties.
 Devices - makes and stores all the devices in the logic network.
 """
 import random
+from typing import Union
 
 
 class Device:
@@ -131,7 +132,7 @@ class Devices:
 
         self.max_gate_inputs = 16
 
-    def get_device(self, device_id):
+    def get_device(self, device_id) -> Union[Device, None] :
         """Return the Device object corresponding to device_id."""
         for device in self.devices_list:
             if device.device_id == device_id:

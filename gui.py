@@ -112,6 +112,8 @@ class MainPage(wx.Panel):
 
         DevicesPanel(self, devices).Attach(
             left_sizer, 3, wx.EXPAND | wx.ALL, 5)
+        SwitchesPanel(self, devices).Attach(
+            left_sizer, 3, wx.EXPAND | wx.ALL, 5)
 
         right_sizer.Add(self.canvas,
                         3, wx.EXPAND | wx.ALL, 5)
@@ -211,25 +213,85 @@ class DevicesPanel(ScrollBox):
     def __init__(self, parent, devices: Devices):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col")
-        # self.Add(Text(self, "Devices"), 1, wx.TOP, 5)
+        self.Add(Text(self, "Devices"), 1, wx.TOP, 5)
         self.parent = parent
         self.device_list: List[Device] = devices.devices_list
-        self.device_names = [device.name for device in self.device_list]
 
         cols = 2
-        rows = math.ceil(len(self.device_names) / cols)
+        rows = math.ceil(len(self.device_list) / cols)
 
-        grid = wx.FlexGridSizer(rows, cols, 5, 5)
+        grid = wx.GridSizer(rows, cols, 10, 10)
 
         for device in self.device_list:
             grid.Add(
-                Button(self, device.name, size="sm"), 0, wx.ALL, 5)
+                Button(self, device.name), 0, wx.EXPAND, 5)
 
-        self.Add(grid, 1, wx.ALL, 5)
+        self.Add(grid, 5, wx.EXPAND, 5)
 
         self.SetSizeHints(200, 200)
 
         print(self.device_list)
+
+
+class SwitchesPanel(ScrollBox):
+    def __init__(self, parent, devices: Devices):
+        """Initialise the devices panel."""
+        super().__init__(parent, dir="col")
+        self.Add(Text(self, "Switches"), 1, wx.TOP, 5)
+        self.parent = parent
+        self.device_list: List[Device] = devices.devices_list
+        self.switches: List[Device] = []
+
+        for device in self.device_list:
+            if device.device_kind == devices.SWITCH:
+                self.switches.append(device)
+
+        cols = 2
+        rows = math.ceil(len(self.switches) / cols)
+
+        grid = wx.GridSizer(rows, cols, 10, 10)
+
+        for i, switch in enumerate(self.switches):
+            switch_id = switch.device_id
+            output_value = switch.switch_state
+
+            color = COLORS.GREEN_900 if output_value == 1 else COLORS.RED_900
+
+            button = Button(
+                self,
+                switch.name,
+                color=color,
+                onClick=lambda event: self.on_switch_toggle(event, devices)
+            )
+
+            grid.Add(button, 0, wx.EXPAND, 5)
+
+        self.Add(grid, 5, wx.EXPAND, 5)
+
+        self.SetSizeHints(200, 200)
+
+    def on_switch_toggle(
+            self,
+            event,
+            devices: Devices):
+
+        switch_name = event.GetEventObject().GetLabel()
+
+        switch_id = [
+            switch.device_id for switch in self.switches if switch.name == switch_name][0]
+
+        switch = devices.get_device(switch_id)
+
+        if switch is None:
+            return
+        output_value = switch.switch_state
+        new_output_value = 0 if output_value == 1 else 1
+        devices.set_switch(switch_id, new_output_value)
+
+        switch = devices.get_device(switch_id)
+
+        event.GetEventObject().SetColor(
+            COLORS.GREEN_900 if new_output_value == 1 else COLORS.RED_900)
 
 
 class ConfigurationPanel(Box):
