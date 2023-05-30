@@ -193,8 +193,8 @@ class Monitors:
         devices = self.devices.devices_list
 
         device_id = [
-            dev.device_id for dev in self.devices.devices_list if device in str(
-                dev.name)][0]
+            dev.device_id for dev in self.devices.devices_list if device == str(
+                dev.name).split(":")[1]][0]
 
         if (device_id, output_id) in self.monitors_dictionary.keys():
             self.remove_monitor(device_id, output_id)
