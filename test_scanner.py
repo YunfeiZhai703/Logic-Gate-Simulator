@@ -109,3 +109,5 @@ def test_no_semicolon(test_names, test_path_error_3):
 
     for e in errors:
         assert e.error_code == ErrorCodes.SYNTAX_ERROR
+
+def 
