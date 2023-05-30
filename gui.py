@@ -128,6 +128,7 @@ class MainPage(wx.Panel):
             right_bottom_block,
             devices,
             monitors,
+            [self.canvas, self.canvas2],
             self.cycles_completed).Attach(
             right_bottom_block,
             1,
@@ -323,6 +324,7 @@ class MonitorsPanel(ScrollBox):
             parent,
             devices: Devices,
             monitors: Monitors,
+            canvases: List[Canvas],
             cycles_completed):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col")
@@ -346,6 +348,7 @@ class MonitorsPanel(ScrollBox):
                 onClick=lambda event: self.on_switch_toggle(
                     event,
                     monitors,
+                    canvases,
                     cycles_completed))
 
             grid.Add(button, 0, wx.EXPAND, 5)
@@ -359,6 +362,7 @@ class MonitorsPanel(ScrollBox):
                 onClick=lambda event: self.on_switch_toggle(
                     event,
                     monitors,
+                    canvases,
                     cycles_completed))
 
             grid.Add(button, 0, wx.EXPAND, 5)
@@ -370,7 +374,7 @@ class MonitorsPanel(ScrollBox):
     def on_switch_toggle(
             self,
             event,
-            monitors: Monitors, cycles_completed):
+            monitors: Monitors, canvases: List[Canvas], cycles_completed):
 
         port_name = event.GetEventObject().GetLabel()
         monitors.toggle_monitor(port_name, cycles_completed)
@@ -378,6 +382,10 @@ class MonitorsPanel(ScrollBox):
         self.signal_names = monitors.get_signal_names()
 
         is_monitored = port_name in self.signal_names[0]
+
+        if not is_monitored:
+            for canvas in canvases:
+                canvas.remove_signal(port_name)
 
         event.GetEventObject().SetColor(
             COLORS.GREEN_900 if is_monitored else COLORS.RED_900)

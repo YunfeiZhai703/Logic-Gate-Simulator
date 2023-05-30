@@ -104,6 +104,12 @@ class Canvas(wxcanvas.GLCanvas):
         self.signals = []
         self.monitors.reset_monitors()
 
+    def remove_signal(self, label):
+        for signal in self.signals:
+            if signal["name"] == label:
+                self.signals.remove(signal)
+                break
+
     def draw_signal_trace(
         self,
         signal: list,
