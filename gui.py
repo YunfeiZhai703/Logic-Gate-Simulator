@@ -195,7 +195,7 @@ class DevicesPanel(ScrollBox):
         cols = 2
         rows = math.ceil(len(self.device_names) / cols)
 
-        grid = wx.GridSizer(rows, cols, 5, 5)
+        grid = wx.FlexGridSizer(rows, cols, 5, 5)
 
         for device in self.device_list:
             grid.Add(
@@ -205,7 +205,7 @@ class DevicesPanel(ScrollBox):
 
         self.SetSizeHints(200, 200)
 
-        print(self.device_names)
+        print(self.device_list)
 
 
 class ConfigurationPanel(Box):
