@@ -247,7 +247,7 @@ class Network:
 
         # Update and store the new signal
         signal = self.get_output_signal(device_id, None)
-        target = output_signal
+        target = output_signal  # type: ignore
         updated_signal = self.update_signal(signal, target)
         if updated_signal is None:  # if the update is unsuccessful
             return False
@@ -275,14 +275,16 @@ class Network:
                 set_signal = input_signal
 
         # Set D-type memory depending on the input signal
-        if clock_signal == self.devices.RISING:
-            if data_signal in [self.devices.HIGH, self.devices.FALLING]:
+        if clock_signal == self.devices.RISING:  # type: ignore
+            if data_signal in [  # type: ignore
+                    self.devices.HIGH,
+                    self.devices.FALLING]:  # type: ignore
                 device.dtype_memory = self.devices.HIGH
-            elif data_signal in [self.devices.LOW, self.devices.RISING]:
+            elif data_signal in [self.devices.LOW, self.devices.RISING]:  # type: ignore
                 device.dtype_memory = self.devices.LOW
-        if set_signal == self.devices.HIGH:
-            device.dtype_memory = self.devices.HIGH
-        if clear_signal == self.devices.HIGH:
+        if set_signal == self.devices.HIGH:  # type: ignore
+            device.dtype_memory = self.devices.HIGH  # type: ignore
+        if clear_signal == self.devices.HIGH:  # type: ignore
             device.dtype_memory = self.devices.LOW
 
         if self.devices.Q_ID not in device.outputs:

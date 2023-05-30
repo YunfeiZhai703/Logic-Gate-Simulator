@@ -124,7 +124,7 @@ class Monitors:
 
         for device_id in self.devices.find_devices():
             device = self.devices.get_device(device_id)
-            for output_id in device.outputs:
+            for output_id in device.outputs:  # type: ignore
                 if (device_id, output_id) not in self.monitors_dictionary:
                     signal_name = self.devices.get_signal_name(device_id,
                                                                output_id)
@@ -150,7 +150,7 @@ class Monitors:
         length_list = []  # for storing name lengths
         for device_id, output_id in self.monitors_dictionary:
             monitor_name = self.devices.get_signal_name(device_id, output_id)
-            name_length = len(monitor_name)
+            name_length = len(monitor_name)  # type: ignore
             length_list.append(name_length)
         if length_list:  # if the list is not empty
             return max(length_list)
@@ -162,9 +162,10 @@ class Monitors:
         margin = self.get_margin()
         for device_id, output_id in self.monitors_dictionary:
             monitor_name = self.devices.get_signal_name(device_id, output_id)
-            name_length = len(monitor_name)
+            name_length = len(monitor_name)  # type: ignore
             signal_list = self.monitors_dictionary[(device_id, output_id)]
-            print(monitor_name + (margin - name_length) * " ", end=": ")
+            print(monitor_name + (margin - name_length)  # type: ignore
+                  * " ", end=": ")  # type: ignore
             for signal in signal_list:
                 if signal == self.devices.HIGH:
                     print("-", end="")

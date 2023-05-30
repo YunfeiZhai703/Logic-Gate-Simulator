@@ -132,7 +132,7 @@ class Devices:
 
         self.max_gate_inputs = 16
 
-    def get_device(self, device_id) -> Union[Device, None] :
+    def get_device(self, device_id) -> Union[Device, None]:
         """Return the Device object corresponding to device_id."""
         for device in self.devices_list:
             if device.device_id == device_id:
@@ -244,7 +244,7 @@ class Devices:
         """
         self.add_device(device_id, self.CLOCK, name)
         device = self.get_device(device_id)
-        device.clock_half_period = clock_half_period
+        device.clock_half_period = clock_half_period  # type: ignore
         self.cold_startup()  # clock initialised to a random point in its cycle
 
     def make_gate(self, device_id, device_kind, no_of_inputs, name=None):
