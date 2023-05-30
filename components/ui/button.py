@@ -60,6 +60,20 @@ class Button(GradientButton):
         """Set the color of the button."""
         self.SetBaseColours(color, wx.WHITE)
 
+    def SetBaseColours(self, startcolour=wx.BLACK, foregroundcolour=wx.WHITE):
+        """Set the base colors of the button."""
+        self.SetForegroundColour(foregroundcolour)
+
+        self._bottomEndColour = startcolour
+        self._bottomStartColour = startcolour
+        self._topEndColour = startcolour
+        self._topStartColour = startcolour
+
+        self._pressedBottomColour = startcolour
+        self._pressedTopColour = startcolour
+
+        # self.SetBackgroundColour(startcolour)
+
     # def OnHover(self, event):
     #     self.SetBackgroundColour(self.hover_bg_color)
     #     self.SetForegroundColour(self.hover_fg_color)
