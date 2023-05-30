@@ -9,7 +9,7 @@
     SW3, SW4 = SWITCH(0);    # Can be specified as 0 for "False" but defaults to 0 if not specified
 
     G6 = DTYPE;
-    CLK1 = CLOCK(5);         # Clock of period 5 (Not shown in the diagram)
+    CLK1 = CLOCK(3);         # Clock of period 5 (Not shown in the diagram)
 
 
 [conns]

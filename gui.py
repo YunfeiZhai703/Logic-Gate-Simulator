@@ -185,8 +185,10 @@ class MainPage(wx.Panel):
         monitored_signals = list(monitors_dict.values())
 
         for i, signal in enumerate(monitored_signals):
-            self.canvas.add_signal(signal, signal_names[i], self.cycles_completed)
-            self.canvas2.add_signal(signal, signal_names[i], self.cycles_completed)
+            self.canvas.add_signal(
+                signal, signal_names[i], self.cycles_completed)
+            self.canvas2.add_signal(
+                signal, signal_names[i], self.cycles_completed)
 
         self.canvas.Refresh()
         self.canvas2.Refresh()
