@@ -150,7 +150,7 @@ class Canvas(wxcanvas.GLCanvas):
             GL.glVertex2f(x, y_pos)
             GL.glVertex2f(x, y_pos - 4)
             GL.glEnd()
-            self.render_text(str(i), x - 5, y_pos - 15)
+            self.render_text(str(i + start_time), x - 5, y_pos - 15)
 
         x_pos -= int(40 / 3 * len(label))
         self.render_text(label, x_pos, y_pos + 18)
