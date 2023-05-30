@@ -514,6 +514,8 @@ class Parser:
                 output_device_id = self.names.query(devices_list[i])
                 output_device = self.devices.get_device(output_device_id)
 
+            # NOT sure if this is the right way
+
             # If len of ports list is same as len of device list, then we
             # have a DTYPE
             if len(dtype_outputs_list) == len(devices_list):
