@@ -161,7 +161,13 @@ class Canvas(wxcanvas.GLCanvas):
             signal (list): A list of 1 and 0s
             label (str): The label of the signal
         """
-        self.signals.append({"name": label, "signal": signal})
+        if label in [s["name"] for s in self.signals]:
+            # edit existing signal
+            for s in self.signals:
+                if s["name"] == label:
+                    s["signal"] = signal
+        else:
+            self.signals.append({"name": label, "signal": signal})
 
     def _get_color(self, index):
         if index < len(self.colors):
