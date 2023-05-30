@@ -69,9 +69,13 @@ class Parser:
         # skeleton code. When complete, should return False when there are
         # errors in the circuit definition file.
 
-        self.parse_devices_block()  # parsing devices block
-        self.parse_conns_block()
-        self.parse_monit_block()
+        try:
+            self.parse_devices_block()  # parsing devices block
+            self.parse_conns_block()
+            self.parse_monit_block()
+        except Exception as e:
+            print(e)
+            print(self.errors)
 
         if (len(self.errors) > 0):
             for error in self.errors:
@@ -318,13 +322,21 @@ class Parser:
         return input_valid
 
     def validate_device_name_for_conns(self):
-        if self.names.query(self.symbol.name) is None:
+        try:
+            if self.names.query(self.symbol.name) is None:
+                self.add_error(
+                    ErrorCodes.INVALID_NAME,
+                    "Invalid device name")
+                return False
+            else:
+                return True
+        except SyntaxError:
             self.add_error(
-                ErrorCodes.INVALID_NAME,
-                "Invalid device name")
+                ErrorCodes.SYNTAX_ERROR,
+                "Invalid symbol: " +
+                self.symbol.name +
+                " if this is a equals sign, you may have missed a end of line on the previous line")
             return False
-        else:
-            return True
 
     def parse_conns_line(self):
         device_list = []
@@ -379,6 +391,8 @@ class Parser:
                                     self.advance()
                             else:  # Not sure if we raise the error immediately
                                 raise ValueError('Inputs value out of range')
+                    else:
+                        break
 
                 # output device is the first device in the list
                 output_device_id = self.names.query(device_list[0])

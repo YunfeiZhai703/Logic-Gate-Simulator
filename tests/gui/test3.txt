@@ -1,0 +1,28 @@
+# JK Flip Flop
+[devices]
+S1, S2 = NAND;
+G1, G2 = NAND(3);
+C1 = CLOCK(1);
+
+J = SWITCH(0);
+K = SWITCH(0);
+
+[conns]
+
+C1 = G1.I1, G2.I1;
+J = G1.I2;
+K = G2.I2;
+
+S1 = G2.I3, S2.I2;
+S2 = G1.I3, S1.I2;
+
+G1 = S1.I1;
+G2 = S2.I1;
+
+[monit]
+
+C1, S1, S2;
+
+
+
+

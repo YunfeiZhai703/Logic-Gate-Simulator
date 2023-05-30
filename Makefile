@@ -1,2 +1,2 @@
 gui:
-	python logsim.py ./tests/gui/test2.txt
+	python logsim.py ./tests/gui/test3.txt
