@@ -1,0 +1,40 @@
+[devices]
+    G1 = OR;        
+    G2 = NAND;            
+    G3 = AND(3);		  
+    G5 = XOR;
+    G7 = NOR;
+    G8 = AND
+
+    SW1, SW2 = SWITCH;
+    SW3, SW4 = SWITCH;
+    SW5, SW6, SW7 = SWITCH;    
+
+    G4, G6 = DTYPE;
+    CLK1 = CLOCK(10);
+
+[conns]
+    SW1 = G1.I1;
+    SW2 = G1.I2;
+    SW3 = G2.I1;
+    SW4 = G2.I2;
+    SW5 = G3.I1;
+    SW6 = G3.I2;
+    SW7 = G3.I3;
+
+    CLK1 = G4.CLK;
+    CLK1 = G6.CLK;
+
+    G1 =  G5.I1;
+    G2 =  G4.DATA, G4.SET, G5.I2;
+    G3 =  G4.CLEAR, G6.CLEAR;  
+    G4.Q = G6.SET;
+    G4.QBAR = G6.DATA;      
+    G5 =  G7.I1;  
+    G6.Q = G7.I2;     
+    G6.QBAR= G8.I2;
+    G7 = G8.I1;       
+
+[monit]
+    G5, G7, G8;
+    G6.QBAR;
