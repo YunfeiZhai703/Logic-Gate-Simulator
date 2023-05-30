@@ -14,11 +14,15 @@ monitors = Monitors(name, devices, networks)
 parser = Parser(name, devices, networks, monitors, scan)
 # parser.parse_devices_block()
 # parser.parse_conns_block()
-parser.parse_monit_block()
+parser.parse_network()
 print(parser.errors)
 
-devs = parser.devices.devices_list
+devices = parser.devices.devices_list
+
+for device in devices:
+    print(device)
 
 
-for dev in devs:
-    print(dev)
+devs = parser.monitors.monitors_dictionary
+
+print(devs)

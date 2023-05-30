@@ -71,6 +71,7 @@ class Parser:
 
         self.parse_devices_block()  # parsing devices block
         self.parse_conns_block()
+        self.parse_monit_block()
 
         return True
 
@@ -508,11 +509,9 @@ class Parser:
                     if self.validate_device_name_for_conns():
                         devices_list.append(self.symbol.name)
                         self.advance()
-
-            # output device is the first device in the list
-            for i in range(len(devices_list)):
-                output_device_id = self.names.query(devices_list[i])
-                output_device = self.devices.get_device(output_device_id)
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-Dev", devices_list)
+            # get output devices
+            output_device_ids = [self.names.query(dev) for dev in devices_list]
 
             # If len of ports list is same as len of device list, then we
             # have a DTYPE
@@ -527,12 +526,16 @@ class Parser:
             else:
                 output_device_pin_id = None
 
-            error = self.monitors.make_monitor(
-                output_device_id, output_device_pin_id)
+            for i, output_device_id in enumerate(output_device_ids):
+                error = self.monitors.make_monitor(
+                    output_device_id, output_device_pin_id)
+                if error != self.monitors.NO_ERROR:
+                    print(
+                        "----------ERROR in make_connection----------Code: ",
+                        error,
+                        self.monitors.MONITOR_PRESENT)
 
-            if error != self.monitors.NO_ERROR:
-                print(
-                    "----------ERROR in make_connection----------Code: ", error)
+            self.advance()
 
         else:
             self.add_error(
