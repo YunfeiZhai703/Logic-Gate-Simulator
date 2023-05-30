@@ -283,7 +283,7 @@ class SwitchesPanel(ScrollBox):
 
             button = Button(
                 self,
-                switch.name,
+                str(switch.name).split(":")[1],
                 color=color,
                 onClick=lambda event: self.on_switch_toggle(event, devices)
             )
@@ -299,7 +299,7 @@ class SwitchesPanel(ScrollBox):
             event,
             devices: Devices):
 
-        switch_name = event.GetEventObject().GetLabel()
+        switch_name = "SWITCH:" + event.GetEventObject().GetLabel()
 
         switch_id = [
             switch.device_id for switch in self.switches if switch.name == switch_name][0]
@@ -388,7 +388,7 @@ class MonitorsPanel(ScrollBox):
                 canvas.remove_signal(port_name)
 
         event.GetEventObject().SetColor(
-            COLORS.GREEN_900 if is_monitored else COLORS.RED_900)
+            COLORS.GREEN_900 if is_monitored else COLORS.RED)
 
 
 class ConfigurationPanel(Box):

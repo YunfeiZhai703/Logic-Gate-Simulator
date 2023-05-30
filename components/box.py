@@ -42,5 +42,3 @@ class ScrollBox(wx.ScrolledWindow):
                wx.Panel], proportion, flag, border):
         """Attach the heading to the parent."""
         parent.Add(self, proportion, flag, border)
-    
-
