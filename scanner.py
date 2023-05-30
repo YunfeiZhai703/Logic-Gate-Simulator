@@ -139,7 +139,7 @@ class Scanner(SymbolList):
                 symbol.type = self.LOGIC
                 [symbol.id] = self.names.lookup([self.name_string])
             elif self.name_string in self.dtype_list:
-                symbol.type = self.DTYPE
+                symbol.type = self.DTYPE  # Can be deleted
                 [symbol.id] = self.names.lookup([self.name_string])
             else:
                 symbol.type = self.NAME

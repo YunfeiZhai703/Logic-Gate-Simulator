@@ -24,7 +24,18 @@ class ErrorCodes:
         """,
         INVALID_NUMBER: "Invalid number",
         INVALID_HEADER: "Missing bracket in the header definition.",
-        MISSING_HEADER: "Missing header definition."}
+        MISSING_HEADER: "Missing header definition.",
+        INVALID_PIN: "",
+        MISSING_DOT: "Missing dot to show connections or output of dtype",
+        MISSING_I: "Missing I before the input port number",
+        MISSING_PORT: "Missing port for either the input or output",
+        MISSING_REQUIRED_PARAMETER: "Missing a parameter that needs to be defined",
+        NAME_DEFINED: "Name is already assigned to another gate",
+        SYNTAX_ERROR: "General syntax error, i.e check for missing brackets, semicolon etc.",
+        INVALID_LOGIC_GATE: "Logic gate is not valid",
+        INVALID_DEVICE: "The device hasn't been defined in the [devices] block",
+        OVERFLOW_ERROR: "Loops too many times",
+        DEVICE_ERROR: "Error when making the device"}
 
 
 class Error(SyntaxError):

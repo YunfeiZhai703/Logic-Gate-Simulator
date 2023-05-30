@@ -1,7 +1,7 @@
 import pytest
 from scanner import Scanner, Symbol, ErrorCodes
 from names import Names
-from parser import Parser, ErrorCodes
+from parse import *
 
 
 @pytest.fixture
@@ -11,12 +11,12 @@ def test_names():
 
 
 @pytest.fixture
-def test_scanner():
-    scanner = Scanner()
-    return scanner
+def test_file_1():
+    path = "tests/parser/test1.txt"
+    return path
 
 
 @pytest.fixture
-def test_parser():
-    parser = Parser()
-    return parser
+def test_file_2():
+    path = "tests/parser/test2.txt"
+    return path
