@@ -10,6 +10,8 @@ Monitors - records and displays specified output signals.
 """
 import collections
 
+from devices import Devices
+
 
 class Monitors:
 
@@ -51,7 +53,7 @@ class Monitors:
         """Initialise the monitors dictionary and monitor errors."""
         self.names = names
         self.network = network
-        self.devices = devices
+        self.devices: Devices = devices
 
         # monitors_dictionary stores
         # {(device_id, output_id): [signal_list]}
@@ -175,3 +177,25 @@ class Monitors:
                 if signal == self.devices.BLANK:
                     print(" ", end="")
             print("\n", end="")
+
+    def toggle_monitor(self, port_name, cycles_completed=0):
+        if "." in port_name:
+            device, output_id = port_name.split(".")
+            output_id = {
+                "Q": self.devices.Q_ID,
+                "QBAR": self.devices.QBAR_ID
+            }[output_id]
+        else:
+            device = port_name
+            output_id = None
+
+        devices = self.devices.devices_list
+
+        device_id = [
+            dev.device_id for dev in self.devices.devices_list if device in str(
+                dev.name)][0]
+
+        if (device_id, output_id) in self.monitors_dictionary.keys():
+            self.remove_monitor(device_id, output_id)
+        else:
+            self.make_monitor(device_id, output_id, cycles_completed)

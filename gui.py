@@ -121,15 +121,10 @@ class MainPage(wx.Panel):
         right_bottom_block = Box(
             right_sizer, dir="row")
 
-        right_bottom_left = Box(
-            right_bottom_block, dir="col", bg_color=COLORS.GRAY_800)
-
-        right_bottom_left.Add(
-            Text(right_bottom_left, "Switches"), 0, wx.ALL, 5)
-
-        right_bottom_block.Add(right_bottom_left, 1, wx.EXPAND | wx.ALL, 5)
-
         right_sizer.Add(right_bottom_block, 1, wx.EXPAND, 5)
+
+        MonitorsPanel(right_bottom_block, devices, monitors).Attach(
+            right_bottom_block, 1, wx.ALL, 5)
 
         ConfigurationPanel(
             right_bottom_block,
@@ -139,7 +134,7 @@ class MainPage(wx.Panel):
             self.on_number_input).Attach(
             right_bottom_block,
             1,
-            wx.EXPAND | wx.ALL,
+            wx.ALL,
             5)
 
         main_sizer.Add(left_sizer, 2, wx.ALL, 5)
@@ -270,7 +265,7 @@ class SwitchesPanel(ScrollBox):
             switch_id = switch.device_id
             output_value = switch.switch_state
 
-            color = COLORS.GREEN_900 if output_value == 1 else COLORS.RED_900
+            color = COLORS.GREEN_900 if output_value == 1 else COLORS.RED
 
             button = Button(
                 self,
@@ -306,7 +301,67 @@ class SwitchesPanel(ScrollBox):
         switch = devices.get_device(switch_id)
 
         event.GetEventObject().SetColor(
-            COLORS.GREEN_900 if new_output_value == 1 else COLORS.RED_900)
+            COLORS.GREEN_900 if new_output_value == 1 else COLORS.RED)
+
+
+class MonitorsPanel(ScrollBox):
+    def __init__(self, parent, devices: Devices, monitors: Monitors):
+        """Initialise the devices panel."""
+        super().__init__(parent, dir="col")
+        self.Add(Text(self, "Montiors"), 1, wx.TOP, 5)
+        self.parent = parent
+        self.device_list: List[Device] = devices.devices_list
+        self.signal_names = monitors.get_signal_names()
+
+        cols = 2
+        rows = math.ceil(
+            len(self.signal_names[0]) + len(self.signal_names[1]) / cols)
+
+        grid = wx.GridSizer(rows, cols, 10, 10)
+
+        for i, output in enumerate(self.signal_names[0]):
+            print(output)
+
+            button = Button(
+                self,
+                str(output),
+                color=COLORS.GREEN_900,
+                onClick=lambda event: self.on_switch_toggle(event, monitors)
+            )
+
+            grid.Add(button, 0, wx.EXPAND, 5)
+
+        for i, output in enumerate(self.signal_names[1]):
+
+            button = Button(
+                self,
+                str(output),
+                color=COLORS.RED,
+                onClick=lambda event: self.on_switch_toggle(event, monitors)
+            )
+
+            grid.Add(button, 0, wx.EXPAND, 5)
+
+        self.Add(grid, 5, wx.EXPAND, 5)
+
+        self.SetSizeHints(200, 200)
+
+    def on_switch_toggle(
+            self,
+            event,
+            monitors: Monitors):
+
+        port_name = event.GetEventObject().GetLabel()
+        monitors.toggle_monitor(port_name)
+
+        self.signal_names = monitors.get_signal_names()
+
+        print(self.signal_names[0], monitors.monitors_dictionary)
+
+        is_monitored = port_name in self.signal_names[0]
+
+        event.GetEventObject().SetColor(
+            COLORS.GREEN_900 if is_monitored else COLORS.RED_900)
 
 
 class ConfigurationPanel(Box):
