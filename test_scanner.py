@@ -110,4 +110,35 @@ def test_no_semicolon(test_names, test_path_error_3):
     for e in errors:
         assert e.error_code == ErrorCodes.SYNTAX_ERROR
 
-def 
+
+def test_no_bracket(test_names, test_path_error_3):
+    """Test that it raises an error for no bracket"""
+
+    test_scan = Scanner(test_path_error_3, test_names)
+    test_scan.get_all_symbols()
+    errors = test_scan.errors
+
+    for e in errors:
+        assert e.error_code == ErrorCodes.SYNTAX_ERROR
+
+
+def test_no_equals(test_names, test_path_error_3):
+    """Test that it raises an error for no bracket"""
+
+    test_scan = Scanner(test_path_error_3, test_names)
+    test_scan.get_all_symbols()
+    errors = test_scan.errors
+
+    for e in errors:
+        assert e.error_code == ErrorCodes.SYNTAX_ERROR
+
+
+def test_two_hashtags(test_names, test_path_error_3):
+    """Test that it raises an error for no bracket"""
+
+    test_scan = Scanner(test_path_error_3, test_names)
+    test_scan.get_all_symbols()
+    errors = test_scan.errors
+
+    for e in errors:
+        assert e.error_code == ErrorCodes.SYNTAX_ERROR

@@ -1,1 +1,5 @@
-[devices ] G1 = AND(2)
+[devices ] 
+G1 = AND(2)
+G2 = NAND;
+CLK1 = CLOCK10); ## Comment
+
