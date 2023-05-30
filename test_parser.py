@@ -11,12 +11,5 @@ def test_names():
 
 
 @pytest.fixture
-def test_scanner():
-    scanner = Scanner()
-    return scanner
-
-
-@pytest.fixture
-def test_parser():
-    parser = Parser()
-    return parser
+def test_file_1():
+    path = "tests"
