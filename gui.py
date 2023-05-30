@@ -112,7 +112,7 @@ class MainPage(wx.Panel):
         Heading(self, notebook).Attach(left_sizer, 0, wx.EXPAND, 5)
 
         DevicesPanel(self, devices).Attach(
-            left_sizer, 3, wx.EXPAND | wx.ALL, 5)
+            left_sizer, 5, wx.EXPAND | wx.ALL, 5)
         SwitchesPanel(self, devices).Attach(
             left_sizer, 3, wx.EXPAND | wx.ALL, 5)
 
@@ -143,7 +143,7 @@ class MainPage(wx.Panel):
             self.on_number_input).Attach(
             right_bottom_block,
             1,
-            wx.ALL,
+            wx.EXPAND,
             5)
 
         main_sizer.Add(left_sizer, 2, wx.ALL, 5)
@@ -400,17 +400,17 @@ class ConfigurationPanel(Box):
         on_reset, on_number_input
     ):
         """Initialise the devices panel."""
-        super().__init__(parent, dir="col", bg_color=COLORS.GRAY_800)
+        super().__init__(parent, dir="col")
         self.parent = parent
 
         self.Add(Text(self, "Configuration"), 0, wx.ALL, 5)
 
-        cycles_input = Box(self, dir="row", bg_color=COLORS.GRAY_800)
+        cycles_input = Box(self, dir="row")
         cycles_input.Add(Text(cycles_input, "Number of Cycles",
-                         style=wx.ALIGN_LEFT), 2, wx.ALL, 8)
+                         style=wx.ALIGN_LEFT), 2, wx.ALL, 20)
 
         cycles_input.Add(NumberInput(
-            cycles_input, value=10, onChange=on_number_input), 2, wx.ALL, 5)
+            cycles_input, value=10, onChange=on_number_input), 2, wx.ALL, 20)
 
         self.Add(cycles_input, 0, wx.CENTER, 10)
 
@@ -420,7 +420,6 @@ class ConfigurationPanel(Box):
                            onClick=on_start,
                            color=COLORS.GREEN_950,
                            size="md"), 0, wx.ALL, 5)
-        # TODO: add functionality to the buttons
         buttons.Add(Button(buttons, "Continue",
                            onClick=on_continue,
                            color=COLORS.BLUE,
