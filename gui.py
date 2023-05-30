@@ -134,6 +134,8 @@ class MainPage(wx.Panel):
         ConfigurationPanel(
             right_bottom_block,
             self.on_start,
+            self.on_continue,
+            self.on_reset,
             self.on_number_input).Attach(
             right_bottom_block,
             1,
@@ -165,8 +167,10 @@ class MainPage(wx.Panel):
             self.canvas2.add_signal(signal, signal_names[i])
 
         self.canvas.Refresh()
+        self.canvas2.Refresh()
 
     def on_continue(self, event):
+
         for _ in range(self.number_of_cycles):
             self.network.execute_network()
             self.monitors.record_signals()
@@ -182,6 +186,14 @@ class MainPage(wx.Panel):
             self.canvas2.add_signal(signal, signal_names[i])
 
         self.canvas.Refresh()
+        self.canvas2.Refresh()
+
+    def on_reset(self, event):
+        self.canvas.reset()
+        self.canvas2.reset()
+
+        self.canvas.Refresh()
+        self.canvas2.Refresh()
 
     def on_number_input(self, event):
         """Handle the event when the user changes the spin control value."""
@@ -298,7 +310,13 @@ class SwitchesPanel(ScrollBox):
 
 
 class ConfigurationPanel(Box):
-    def __init__(self, parent, on_start, on_number_input):
+    def __init__(
+        self,
+        parent,
+        on_start,
+        on_continue,
+        on_reset, on_number_input
+    ):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col", bg_color=COLORS.GRAY_800)
         self.parent = parent
@@ -322,11 +340,11 @@ class ConfigurationPanel(Box):
                            size="md"), 0, wx.ALL, 5)
         # TODO: add functionality to the buttons
         buttons.Add(Button(buttons, "Continue",
-                           onClick=on_start,
+                           onClick=on_continue,
                            color=COLORS.BLUE,
                            size="md"), 0, wx.ALL, 5)
         buttons.Add(Button(buttons, "Reset",
-                           onClick=on_start,
+                           onClick=on_reset,
                            color=COLORS.RED,
                            size="md"), 0, wx.ALL, 5)
 
