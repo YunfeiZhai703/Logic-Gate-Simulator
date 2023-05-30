@@ -1,0 +1,1 @@
+[devices ] G1 = AND(2)

@@ -38,6 +38,12 @@ def test_path_error_2():
     return path
 
 
+@pytest.fixture
+def test_path_error_3():
+    path = "tests/scanner/error_3.txt"
+    return path
+
+
 def test_get_symbol(test_names, test_path_1):
     """Test that names, numbers, symbols and keywords are all
     initialised and stored in the right sections"""
@@ -92,3 +98,14 @@ def test_invalid_char_error(test_names, test_path_error_2):
         assert e.error_code == ErrorCodes.INVALID_CHARACTER
         assert e.line_number == 32
         assert e.char_number == 12
+
+
+def test_no_semicolon(test_names, test_path_error_3):
+    """Test that it raises an error for no semicolon"""
+
+    test_scan = Scanner(test_path_error_3, test_names)
+    test_scan.get_all_symbols()
+    errors = test_scan.errors
+
+    for e in errors:
+        assert e.error_code == ErrorCodes.SYNTAX_ERROR
