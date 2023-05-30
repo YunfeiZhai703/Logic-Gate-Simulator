@@ -123,8 +123,8 @@ class Canvas(wxcanvas.GLCanvas):
         GL.glColor3f(color[0], color[1], color[2])
         GL.glBegin(GL.GL_LINE_STRIP)
         for i in range(len(signal)):
-            x = (i * 20) + x_pos
-            x_next = (i * 20) + x_pos + 20
+            x = ((i + start_time) * 20) + x_pos
+            x_next = ((i + start_time) * 20) + x_pos + 20
             if signal[i] == 0:
                 y = y_pos
             else:
@@ -140,17 +140,17 @@ class Canvas(wxcanvas.GLCanvas):
         GL.glVertex2f(x_pos, y_pos)
         GL.glVertex2f(x_pos, y_pos + 40)
         GL.glVertex2f(x_pos, y_pos)
-        GL.glVertex2f(x_pos + (len(signal) * 20), y_pos)
+        GL.glVertex2f(x_pos + ((len(signal) + start_time) * 20), y_pos)
         GL.glEnd()
         # draw axis ticks
-        for i in range(len(signal) + 1):
+        for i in range(len(signal) + start_time + 1):
             x = (i * 20) + x_pos
             self.set_graph_color()
             GL.glBegin(GL.GL_LINES)
             GL.glVertex2f(x, y_pos)
             GL.glVertex2f(x, y_pos - 4)
             GL.glEnd()
-            self.render_text(str(i + start_time), x - 5, y_pos - 15)
+            self.render_text(str(i), x - 5, y_pos - 15)
 
         x_pos -= int(40 / 3 * len(label))
         self.render_text(label, x_pos, y_pos + 18)
