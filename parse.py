@@ -73,6 +73,11 @@ class Parser:
         self.parse_conns_block()
         self.parse_monit_block()
 
+        if (len(self.errors) > 0):
+            for error in self.errors:
+                print(error)
+            return False
+
         return True
 
     def advance(self):
