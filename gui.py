@@ -414,7 +414,7 @@ class ConfigurationPanel(Box):
 
         self.Add(cycles_input, 0, wx.CENTER, 10)
 
-        buttons = Box(self, dir="row", bg_color=COLORS.GRAY_800)
+        buttons = Box(self, dir="row")
 
         buttons.Add(Button(buttons, "Start Simulation",
                            onClick=on_start,

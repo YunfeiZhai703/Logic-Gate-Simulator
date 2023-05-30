@@ -1,4 +1,5 @@
 from .ui.button import Button
+from .ui.colors import COLORS
 import wx
 import os
 
@@ -8,10 +9,8 @@ class FileButton(Button):
         Button.__init__(self, parent, label="Open File",
                         onClick=lambda event: self.openFile(event, notebook),
                         size="md",
+                        color=COLORS.TEAL_700,
                         ** kwargs)
-
-        # bmp = wx.Bitmap("components/assests/upload.png")
-        # self.SetBitmap(bmp)
 
     def openFile(self, event, notebook):
         wildcard = "TXT files (*.txt)|*.txt"

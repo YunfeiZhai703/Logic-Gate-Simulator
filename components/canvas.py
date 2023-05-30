@@ -197,7 +197,7 @@ class Canvas(wxcanvas.GLCanvas):
         GL.glClear(GL.GL_COLOR_BUFFER_BIT)
 
         # Draw specified text at position (10, 10)
-        self.render_text(text, 10, 10)
+        # self.render_text(text, 10, 10)
 
         for i, signal in enumerate(self.signals):
             self.draw_signal_trace(
