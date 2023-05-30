@@ -12,4 +12,11 @@ def test_names():
 
 @pytest.fixture
 def test_file_1():
-    path = "tests"
+    path = "tests/parser/test1.txt"
+    return path
+
+
+@pytest.fixture
+def test_file_2():
+    path = "tests/parser/test2.txt"
+    return path
