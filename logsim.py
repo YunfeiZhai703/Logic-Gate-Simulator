@@ -22,7 +22,7 @@ from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
 from userint import UserInterface
-from gui import Gui
+from gui import ErrorsGui, Gui
 
 
 def main(arg_list):
@@ -79,6 +79,10 @@ def main(arg_list):
             gui.Show(True)
             app.MainLoop()
         else:
+            app = wx.App()
+            gui = ErrorsGui(errors)
+            gui.Show(True)
+            app.MainLoop()
             print(errors[0])
 
 

@@ -22,6 +22,7 @@ from scanner import Scanner
 from parse import Parser
 from components.ui import Button, Text, NumberInput, TextBox, COLORS
 from components import Canvas, FileButton, Box, ScrollBox
+from errors import Error
 
 
 class Notebook(wx.Notebook):
@@ -72,6 +73,28 @@ class Gui(wx.Frame):
 
     def print_code(self, event):
         print(self.nb.uploaded_code)
+
+    def on_menu(self, event):
+        """Handle the event when the user selects a menu item."""
+        Id = event.GetId()
+        if Id == wx.ID_EXIT:
+            self.Close(True)
+
+
+class ErrorsGui(wx.Frame):
+    def __init__(self, errors: List[Error]):
+        super().__init__(parent=None, title="Errors", size=(800, 600))
+        self.SetBackgroundColour(COLORS.GRAY_950)
+        self.setup_menu()
+        self.Show()
+
+    def setup_menu(self):
+        fileMenu = wx.Menu()
+        menuBar = wx.MenuBar()
+        fileMenu.Append(wx.ID_EXIT, "&Exit")
+        menuBar.Append(fileMenu, "&File")
+        self.SetMenuBar(menuBar)
+        self.Bind(wx.EVT_MENU, self.on_menu)
 
     def on_menu(self, event):
         """Handle the event when the user selects a menu item."""
