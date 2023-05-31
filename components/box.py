@@ -9,6 +9,11 @@ directions = {
 
 
 class Box(wx.Panel):
+    """A box is a container for other components. It can be used to
+    group components together and to apply a background color to them.
+    It is designed to act as a container for other components.
+    """
+
     def __init__(self, parent, bg_color=COLORS.GRAY_900, dir="col"):
         super().__init__(parent)
         self.SetBackgroundColour(bg_color)
@@ -21,11 +26,15 @@ class Box(wx.Panel):
 
     def Attach(self, parent: Union[wx.BoxSizer,
                wx.Panel], proportion, flag, border):
-        """Attach the heading to the parent."""
+        """Attach the component to the parent."""
         parent.Add(self, proportion, flag, border)
 
 
 class ScrollBox(wx.ScrolledWindow):
+    """A scroll box is a container for other components. It can be used to
+    group components together and to apply a background color to them.
+    It is designed to act as a container for other components."""
+
     def __init__(self, parent, bg_color=COLORS.GRAY_900, dir="col"):
         super().__init__(parent)
         self.SetBackgroundColour(bg_color)
@@ -40,5 +49,5 @@ class ScrollBox(wx.ScrolledWindow):
 
     def Attach(self, parent: Union[wx.BoxSizer,
                wx.Panel], proportion, flag, border):
-        """Attach the heading to the parent."""
+        """Attach the component to the parent."""
         parent.Add(self, proportion, flag, border)

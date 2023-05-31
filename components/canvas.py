@@ -54,6 +54,14 @@ class Canvas(wxcanvas.GLCanvas):
 
     render_text(self, text, x_pos, y_pos): Handles text drawing
                                            operations.
+
+    reset(self): Resets the canvas to its default state.
+
+    remove_signal(self, label): Removes a signal from the canvas with label
+
+    draw_signal_trace(self, signal, x_pos, y_pos, start_time, color): Draws a signal trace
+                                                                      (see function for more details)
+    add_signal(self, signal): Adds a signal to the canvas
     """
 
     def __init__(self, parent, devices: Devices, monitors: Monitors):
@@ -101,10 +109,12 @@ class Canvas(wxcanvas.GLCanvas):
         GL.glScaled(self.zoom, self.zoom, self.zoom)
 
     def reset(self):
+        """Reset the canvas."""
         self.signals = []
         self.monitors.reset_monitors()
 
     def remove_signal(self, label):
+        """Remove a signal from the canvas with label."""
         for signal in self.signals:
             if signal["name"] == label:
                 self.signals.remove(signal)
@@ -121,11 +131,17 @@ class Canvas(wxcanvas.GLCanvas):
             0.0,
             0.0,
             1.0)):
-        """Draws a signa
+        """Draw a signal trace.
 
         Args:
-            signal (list): A list of 1 and 0s
+            signal (list): Signal to draw.
+            x_pos (int): X position to draw the signal.
+            y_pos (int): Y position to draw the signal.
+            label (str): Label of the signal.
+            start_time (int): Start time of the signal.
+            color (tuple, optional): Color of plot. Defaults to ( 0.0, 0.0, 1.0).
         """
+
         GL.glColor3f(color[0], color[1], color[2])
         GL.glBegin(GL.GL_LINE_STRIP)
         for i in range(len(signal)):
@@ -167,6 +183,7 @@ class Canvas(wxcanvas.GLCanvas):
         Args:
             signal (list): A list of 1 and 0s
             label (str): The label of the signal
+            start_time (int, optional): The start time of the signal. Defaults to 0.
         """
         if label in [s["name"] for s in self.signals]:
             # edit existing signal
@@ -178,6 +195,7 @@ class Canvas(wxcanvas.GLCanvas):
                 {"name": label, "signal": signal, "start_time": start_time})
 
     def _get_color(self, index):
+        """Get a color from the color list. If the index is out of range, a new color is generated."""
         if index < len(self.colors):
             return self.colors[index]
         else:

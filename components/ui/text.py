@@ -13,6 +13,8 @@ fonts = {
 
 
 class Text(wx.StaticText):
+    """Text is a component that displays tex using a specified font and styling"""
+
     def __init__(
             self,
             parent,

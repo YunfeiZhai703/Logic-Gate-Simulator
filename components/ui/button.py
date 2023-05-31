@@ -23,11 +23,8 @@ class Button(GradientButton):
         Args:
             parent (): Parent widget.
             label (str): Text to display on the button.
-            handler (function): callback function to call when the button is clicked.
-            bg_color (COLORS, optional): Bg color. Defaults to COLORS.GRAY_800.
-            hover_bg_color (COLORS, optional): Hover BG color. Defaults to COLORS.GRAY_700.
-            fg_color (COLORS, optional): Foreground color. Defaults to COLORS.WHITE.
-            hover_fg_color (COLORS, optional): Foreground hover color. Defaults to COLORS.RED_200.
+            onClick (function): callback function to call when the button is clicked.
+            color (COLORS, optional): Bg color. Defaults to Black.
             size (buttonSizeType, optional): xs, sm, md, kg, xl or Tuple[int, int]. Defaults to "sm".
         """
 
@@ -71,17 +68,3 @@ class Button(GradientButton):
 
         self._pressedBottomColour = startcolour
         self._pressedTopColour = startcolour
-
-        # self.SetBackgroundColour(startcolour)
-
-    # def OnHover(self, event):
-    #     self.SetBackgroundColour(self.hover_bg_color)
-    #     self.SetForegroundColour(self.hover_fg_color)
-    #     self.Refresh()  # Refresh the button to apply changes
-    #     event.Skip()
-
-    # def OnUnHover(self, event):
-    #     self.SetBackgroundColour(self.bg_color)
-    #     self.SetForegroundColour(self.fg_color)
-    #     self.Refresh()  # Refresh the button to apply changes
-    #     event.Skip()

@@ -3,6 +3,8 @@ from .colors import COLORS
 
 
 class NumberInput(wx.SpinCtrl):
+    """NumberInput is a component that allows the user to input a number."""
+
     def __init__(
             self,
             parent,

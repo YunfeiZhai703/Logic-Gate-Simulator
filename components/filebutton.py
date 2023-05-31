@@ -5,6 +5,8 @@ import os
 
 
 class FileButton(Button):
+    """A button that opens a file dialog and returns the path of the file"""
+
     def __init__(self, parent, notebook: wx.Notebook, **kwargs):
         Button.__init__(self, parent, label="Open File",
                         onClick=lambda event: self.openFile(event, notebook),

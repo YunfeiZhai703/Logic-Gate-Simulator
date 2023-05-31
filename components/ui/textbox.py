@@ -2,6 +2,8 @@ import wx
 
 
 class TextBox(wx.TextCtrl):
+    """TextBox is a component that allows the user to input text."""
+
     def __init__(self, parent, value="", placeholder="", onChange=None,
                  onEnter=None,
                  size=wx.DefaultSize
