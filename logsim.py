@@ -70,13 +70,16 @@ def main(arg_list):
         [path] = arguments
         scanner = Scanner(path, names)
         parser = Parser(names, devices, network, monitors, scanner)
-        if parser.parse_network():
+        valid, errors = parser.parse_network()
+        if valid:
             # Initialise an instance of the gui.Gui() class
             app = wx.App()
             gui = Gui("Logic Simulator", path, names, devices, network,
                       monitors)
             gui.Show(True)
             app.MainLoop()
+        else:
+            print(errors[0])
 
 
 if __name__ == "__main__":

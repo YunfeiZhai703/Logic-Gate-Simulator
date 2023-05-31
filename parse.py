@@ -75,14 +75,19 @@ class Parser:
             self.parse_monit_block()
         except Exception as e:
             print(e)
-            print(self.errors)
+            # print(self.errors)
 
-        if (len(self.errors) > 0):
-            for error in self.errors:
-                print(error)
-            return False
+        if (len(self.errors) > 0 or len(self.scanner.errors) > 0):
+            # for error in self.errors:
+            #     print(error)
+            # for error in self.scanner.errors:
+            #     print(error)
 
-        return True
+            all_errors = self.errors + self.scanner.errors
+
+            return False, all_errors
+
+        return True, []
 
     def advance(self):
         self.symbol = self.scanner.get_symbol()

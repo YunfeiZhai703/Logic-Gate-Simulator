@@ -44,7 +44,7 @@ class Gui(wx.Frame):
 
         nb.file_path = path
         nb.uploaded_code = self._read_file(nb.file_path)
-        nb.AddPage(MainPage("Logic Simulator", path, names, devices,
+        nb.AddPage(MainPage(devices,
                    network, monitors, notebook=nb), "Main")
 
         nb.AddPage(nb.canvas, "Graphs")
@@ -84,9 +84,6 @@ class MainPage(wx.Panel):
 
     def __init__(
             self,
-            title,
-            path,
-            names,
             devices: Devices,
             network: Network,
             monitors: Monitors,
