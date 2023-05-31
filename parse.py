@@ -85,10 +85,12 @@ class Parser:
         return True, []
 
     def advance(self):
+        """Advance the scanner to the next symbol."""
         self.symbol = self.scanner.get_symbol()
         print(self.symbol)
 
     def parse_devices_block(self):
+        """Parses the header of the devices block, and then calls parse_devices."""
         if (self.symbol.type == self.scanner.OPEN_SQUARE_BRACKET):
             self.advance()
 
@@ -112,6 +114,7 @@ class Parser:
             self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
 
     def validate_device_name(self, device_list):
+        """Validates the device name."""
         if (self.symbol.type == self.scanner.NAME):
             if (self.symbol.name not in device_list and self.symbol.name not in self.stored_device_list):
                 return True
@@ -130,6 +133,7 @@ class Parser:
             return False
 
     def parse_devices(self):
+        """Parses the devices block. By """
         i = 0
         while (self.symbol.type != self.scanner.OPEN_SQUARE_BRACKET):
             i += 1
@@ -156,6 +160,7 @@ class Parser:
                 break
 
     def parse_device_line(self):
+        """Parses a single line of the devices block."""
         device_list = []
 
         if (self.validate_device_name(device_list)):
@@ -202,6 +207,9 @@ class Parser:
 
     def parse_logic_gate(self, device_type, device_list):
         """
+        Parses the logic gate, and creates the device.
+
+
         @Dhillon: A lot of this is very unessesary,
         look at the make_device function in devices.py
         it does the main part for you, I have rewrote the code for this!!! - Lakee
@@ -273,6 +281,7 @@ class Parser:
                     str(error))
 
     def parse_conns_block(self):
+        """Parses the conns header then calls parse_conns."""
         if (self.symbol.type == self.scanner.OPEN_SQUARE_BRACKET):
             self.advance()
 
@@ -296,6 +305,7 @@ class Parser:
             self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
 
     def parse_conns(self):
+        """Parses the conns block by calling parse_conns_line until it reaches the end of the block"""
         i = 0
         while (self.symbol.type != self.scanner.OPEN_SQUARE_BRACKET):
             i += 1
@@ -332,6 +342,7 @@ class Parser:
         return input_valid
 
     def validate_device_name_for_conns(self):
+        """Validates the device name ensuring it is a valid device name and the device exists"""
         try:
             if self.names.query(self.symbol.name) is None:
                 self.add_error(
@@ -349,6 +360,7 @@ class Parser:
             return False
 
     def parse_conns_line(self):
+        """Parses a single line of the conns block"""
         device_list = []
         ports_list = []
 
@@ -471,6 +483,7 @@ class Parser:
                 "Device name not defined in 'devices'")
 
     def parse_monit_block(self):
+        """Parses the monit block header and calls parse_monit()"""
         if (self.symbol.type == self.scanner.OPEN_SQUARE_BRACKET):
             self.advance()
 
@@ -494,6 +507,7 @@ class Parser:
             self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
 
     def parse_monit(self):
+        """Parses the monit block by calling parse_monit_line() until EOF"""
         i = 0
         while (self.symbol.type != self.scanner.EOF):
             i += 1
@@ -513,6 +527,7 @@ class Parser:
             self.parse_monit_line()
 
     def parse_monit_line(self):
+        """Parses a single line of the monit block"""
         devices_list = []
         dtype_outputs_list = []
 
