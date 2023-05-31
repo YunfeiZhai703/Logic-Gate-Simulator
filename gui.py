@@ -26,6 +26,11 @@ from errors import Error
 
 
 class Notebook(wx.Notebook):
+    """
+    Wrapper for wx.Notebook that contains the canvas
+    file_path and uploaded_code attributes.
+    """
+
     def __init__(self, parent, devices, monitors):
         super().__init__(parent, style=wx.NB_FIXEDWIDTH)
         self.canvas = Canvas(self, devices, monitors)
@@ -35,7 +40,8 @@ class Notebook(wx.Notebook):
 
 
 class Gui(wx.Frame):
-    # notebook
+    """Main GUI for the Logic Simulator.
+    """
 
     def __init__(self, title, path, names, devices, network, monitors):
         super().__init__(parent=None, title=title, size=(800, 600))
@@ -64,15 +70,13 @@ class Gui(wx.Frame):
             return "No Code Uploded"
 
     def setup_menu(self):
+        """Set up the menu bar."""
         fileMenu = wx.Menu()
         menuBar = wx.MenuBar()
         fileMenu.Append(wx.ID_EXIT, "&Exit")
         menuBar.Append(fileMenu, "&File")
         self.SetMenuBar(menuBar)
         self.Bind(wx.EVT_MENU, self.on_menu)
-
-    def print_code(self, event):
-        print(self.nb.uploaded_code)
 
     def on_menu(self, event):
         """Handle the event when the user selects a menu item."""
@@ -82,6 +86,8 @@ class Gui(wx.Frame):
 
 
 class ErrorsGui(wx.Frame):
+    """GUI for displaying errors."""
+
     def __init__(self, errors: List[Error]):
         super().__init__(parent=None, title="Errors", size=(800, 600))
         self.SetBackgroundColour(COLORS.RED_900)
@@ -139,6 +145,7 @@ class ErrorsGui(wx.Frame):
 
 
 class MainPage(wx.Panel):
+    """Main page of the GUI."""
 
     def __init__(
             self,
@@ -207,6 +214,10 @@ class MainPage(wx.Panel):
         self.SetSizer(main_sizer)
 
     def on_run(self, event):
+        """Onclick handler for run button.
+        Executes the network for the specified number of cycles.
+        and records the signals.
+        """
 
         for _ in range(self.number_of_cycles):
             self.network.execute_network()
@@ -229,6 +240,7 @@ class MainPage(wx.Panel):
         self.cycles_completed += self.number_of_cycles
 
     def on_reset(self, event):
+        """Onclick handler for reset button. Resets the canvas and network."""
         self.canvas.reset()
         self.canvas2.reset()
 
@@ -267,6 +279,8 @@ class Heading(wx.BoxSizer):
 
 
 class DevicesPanel(ScrollBox):
+    """Panel for displaying the devices in the network."""
+
     def __init__(self, parent, devices: Devices):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col")
@@ -294,6 +308,10 @@ class DevicesPanel(ScrollBox):
         self.SetSizeHints(200, 200)
 
     def on_click(self, event):
+        """Handle the event when a device button is clicked.
+        Gets the device name from the button label and displays
+        the device information in a message box.
+        """
         device_name = event.GetEventObject().GetLabel()
         device = [dev for dev in self.device_list if dev.name == device_name][0]
         wx.MessageBox(
@@ -303,6 +321,10 @@ class DevicesPanel(ScrollBox):
 
 
 class SwitchesPanel(ScrollBox):
+    """Panel for displaying the switches in the network.
+    Allows the user to change the switch state by clicking on the button.
+    """
+
     def __init__(self, parent, devices: Devices):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col")
@@ -343,6 +365,10 @@ class SwitchesPanel(ScrollBox):
             self,
             event,
             devices: Devices):
+        """Handle the event when a switch button is clicked.
+        Checks the current state of the switch and toggles it.
+        Changes the button color to green if the switch is on and red if it is off.
+        """
 
         switch_name = "SWITCH:" + event.GetEventObject().GetLabel()
 
@@ -364,6 +390,10 @@ class SwitchesPanel(ScrollBox):
 
 
 class MonitorsPanel(ScrollBox):
+    """Panel for displaying the monitors in the network.
+    Allows the user to change the monitor state by clicking on the button.
+    """
+
     def __init__(
             self,
             parent,
@@ -420,6 +450,10 @@ class MonitorsPanel(ScrollBox):
             self,
             event,
             monitors: Monitors, canvases: List[Canvas], cycles_completed):
+        """Handle the event when a monitor button is clicked.
+        Checks the current state of the monitor and toggles it.
+        Changes the button color to green if the monitor is on and red if it is off.
+        """
 
         port_name = event.GetEventObject().GetLabel()
         monitors.toggle_monitor(port_name, cycles_completed)
@@ -437,6 +471,8 @@ class MonitorsPanel(ScrollBox):
 
 
 class ConfigurationPanel(Box):
+    """Panel for displaying the configuration options for the network and the run and reset buttons."""
+
     def __init__(
         self,
         parent,
@@ -473,6 +509,8 @@ class ConfigurationPanel(Box):
 
 
 class CodePage(ScrollBox):
+    """Panel for displaying the code for the network."""
+
     def __init__(self, parent: Notebook):
         super().__init__(parent, dir="col")
         self.parent = parent
