@@ -4,7 +4,7 @@
     G3 = AND(3);		  
     G5 = XOR;
     G7 = NOR;
-    G8 = AND
+    G8 = AND;
 
     SW1, SW2 = SWITCH;
     SW3, SW4 = SWITCH;
