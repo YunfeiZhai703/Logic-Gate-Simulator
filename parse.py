@@ -78,7 +78,7 @@ class Parser:
 
         if (len(self.errors) > 0 or len(self.scanner.errors) > 0):
 
-            all_errors = self.errors + self.scanner.errors
+            all_errors = self.scanner.errors + self.errors
 
             return False, all_errors
 
