@@ -253,7 +253,7 @@ class Heading(wx.BoxSizer):
                    onClick=self.on_click
                    ), 1, wx.ALL, 5)
 
-        self.Add(FileButton(parent, notebook), 1, wx.ALL, 5)
+        # self.Add(FileButton(parent, notebook), 1, wx.ALL, 5)
 
     def Attach(self, parent: wx.BoxSizer, proportion, flag, border):
         """Attach the heading to the parent."""
