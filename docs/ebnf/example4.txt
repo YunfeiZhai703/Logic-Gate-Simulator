@@ -5,8 +5,8 @@ Qa, Qb = NAND;
 G1, G2 = NAND(3);
 CLK1 = CLOCK(1);
 
-J = SWITCH(0);
-K = SWITCH(0);
+J = SWITCH;
+K = SWITCH;
 
 [conns]
 
