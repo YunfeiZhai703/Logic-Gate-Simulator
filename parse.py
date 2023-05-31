@@ -75,13 +75,8 @@ class Parser:
             self.parse_monit_block()
         except Exception as e:
             print(e)
-            # print(self.errors)
 
         if (len(self.errors) > 0 or len(self.scanner.errors) > 0):
-            # for error in self.errors:
-            #     print(error)
-            # for error in self.scanner.errors:
-            #     print(error)
 
             all_errors = self.errors + self.scanner.errors
 
@@ -127,7 +122,12 @@ class Parser:
                 return False
 
         else:
-            self.add_error(ErrorCodes.INVALID_NAME, "Expected name")
+            self.add_error(
+                ErrorCodes.SYNTAX_ERROR,
+                "Invalid symbol: " +
+                self.symbol.name +
+                " if this is a comma, you may have missed a end of line on the previous line")
+            return False
 
     def parse_devices(self):
         i = 0
@@ -151,7 +151,9 @@ class Parser:
                     "Overflow error: Looping too many times in devices, please check that you have a [conns] block")
                 break
 
-            self.parse_device_line()
+            res = self.parse_device_line()
+            if res == "Failed":
+                break
 
     def parse_device_line(self):
         device_list = []
@@ -175,6 +177,7 @@ class Parser:
                     self.advance()
                 else:
                     devices_are_valid = False
+                    break
 
             if (devices_are_valid):
                 if (self.symbol.type == self.scanner.EQUAL):
@@ -194,6 +197,8 @@ class Parser:
                     self.add_error(
                         ErrorCodes.SYNTAX_ERROR,
                         "Expected '='")
+        else:
+            return "Failed"
 
     def parse_logic_gate(self, device_type, device_list):
         """
