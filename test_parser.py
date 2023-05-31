@@ -1,7 +1,7 @@
 import pytest
 from scanner import Scanner, Symbol, ErrorCodes
 from names import Names
-from parse import *
+from parse import Parser
 
 
 @pytest.fixture
