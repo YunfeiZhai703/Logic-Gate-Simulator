@@ -98,7 +98,7 @@ class MainPage(wx.Panel):
         self.monitors = monitors
 
         self.SetBackgroundColour(COLORS.GRAY_950)
-        self.number_of_cycles = 10
+        self.number_of_cycles = 5
         self.cycles_completed = 0
 
         # Configure sizers for layout
@@ -399,7 +399,7 @@ class ConfigurationPanel(Box):
                          style=wx.ALIGN_LEFT), 2, wx.ALL, 20)
 
         cycles_input.Add(NumberInput(
-            cycles_input, value=10, onChange=on_number_input), 2, wx.ALL, 20)
+            cycles_input, value=5, onChange=on_number_input), 2, wx.ALL, 20)
 
         self.Add(cycles_input, 0, wx.CENTER, 10)
 
