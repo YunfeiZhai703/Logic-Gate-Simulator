@@ -137,8 +137,7 @@ class MainPage(wx.Panel):
 
         ConfigurationPanel(
             right_bottom_block,
-            self.on_start,
-            self.on_continue,
+            self.on_run,
             self.on_reset,
             self.on_number_input).Attach(
             right_bottom_block,
@@ -152,28 +151,7 @@ class MainPage(wx.Panel):
         self.SetSizeHints(600, 600)
         self.SetSizer(main_sizer)
 
-    def on_start(self, event):
-        # randomly generate a signal of 1 and 0 length 10
-        self.canvas.reset()
-        self.canvas2.reset()
-        for _ in range(self.number_of_cycles):
-            self.network.execute_network()
-            self.monitors.record_signals()
-        monitors_dict = self.monitors.monitors_dictionary
-        signal_names = self.monitors.get_signal_names()[0]
-
-        # get a list of montiors_dict values
-        monitored_signals = list(monitors_dict.values())
-
-        for i, signal in enumerate(monitored_signals):
-            self.canvas.add_signal(signal, signal_names[i])
-            self.canvas2.add_signal(signal, signal_names[i])
-
-        self.canvas.Refresh()
-        self.canvas2.Refresh()
-        self.cycles_completed = self.number_of_cycles
-
-    def on_continue(self, event):
+    def on_run(self, event):
 
         for _ in range(self.number_of_cycles):
             self.network.execute_network()
@@ -248,13 +226,25 @@ class DevicesPanel(ScrollBox):
 
         for device in self.device_list:
             grid.Add(
-                Button(self, device.name), 0, wx.EXPAND, 5)
+                Button(
+                    self,
+                    device.name,
+                    onClick=self.on_click),
+                0,
+                wx.EXPAND,
+                5)
 
         self.Add(grid, 5, wx.EXPAND, 5)
 
         self.SetSizeHints(200, 200)
 
-        # print(self.device_list)
+    def on_click(self, event):
+        device_name = event.GetEventObject().GetLabel()
+        device = [dev for dev in self.device_list if dev.name == device_name][0]
+        wx.MessageBox(
+            str(device),
+            device_name,
+            wx.ICON_INFORMATION | wx.OK)
 
 
 class SwitchesPanel(ScrollBox):
@@ -395,8 +385,7 @@ class ConfigurationPanel(Box):
     def __init__(
         self,
         parent,
-        on_start,
-        on_continue,
+        on_run,
         on_reset, on_number_input
     ):
         """Initialise the devices panel."""
@@ -416,13 +405,9 @@ class ConfigurationPanel(Box):
 
         buttons = Box(self, dir="row")
 
-        buttons.Add(Button(buttons, "Start Simulation",
-                           onClick=on_start,
+        buttons.Add(Button(buttons, "Run",
+                           onClick=on_run,
                            color=COLORS.GREEN_950,
-                           size="md"), 0, wx.ALL, 5)
-        buttons.Add(Button(buttons, "Continue",
-                           onClick=on_continue,
-                           color=COLORS.BLUE,
                            size="md"), 0, wx.ALL, 5)
         buttons.Add(Button(buttons, "Reset",
                            onClick=on_reset,
