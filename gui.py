@@ -84,8 +84,43 @@ class Gui(wx.Frame):
 class ErrorsGui(wx.Frame):
     def __init__(self, errors: List[Error]):
         super().__init__(parent=None, title="Errors", size=(800, 600))
-        self.SetBackgroundColour(COLORS.GRAY_950)
+        self.SetBackgroundColour(COLORS.RED_900)
         self.setup_menu()
+        main_sizer = wx.BoxSizer(wx.VERTICAL)
+        scroll_box = ScrollBox(
+            self,
+            bg_color=COLORS.RED_900,
+            dir="col")
+
+        main_sizer.Add(
+            Button(
+                self,
+                "Close",
+                size="md",
+                color=COLORS.RED_700,
+                onClick=lambda event: self.Close(True)), 0, wx.ALIGN_CENTER, 20
+
+        )
+
+        for error in errors[0:5]:  # only show first 5 errors
+            scroll_box.Add(
+                Text(
+                    scroll_box,
+                    str(error),
+                    font_family="modern",
+                    style=wx.ALIGN_LEFT),
+                0,
+                wx.EXPAND,
+                5)
+
+        scroll_box.Attach(
+            main_sizer,
+            1,
+            wx.EXPAND,
+            20)
+
+        self.SetSizer(main_sizer)
+
         self.Show()
 
     def setup_menu(self):

@@ -79,11 +79,11 @@ def main(arg_list):
             gui.Show(True)
             app.MainLoop()
         else:
+            print(errors)
             app = wx.App()
             gui = ErrorsGui(errors)
             gui.Show(True)
             app.MainLoop()
-            print(errors[0])
 
 
 if __name__ == "__main__":
