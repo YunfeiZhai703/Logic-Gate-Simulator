@@ -116,7 +116,7 @@ def missing_heading(test_error_8):
     new_parser.parse_network()
     new_errors = new_parser.errors
     for e in new_errors:
-        assert e.error_code == ErrorCodes.MISSING_HEADER
+        assert e.error_code == ErrorCodes.INVALID_HEADER
 
 
 def test_error_inputs(test_error_1):
@@ -144,10 +144,6 @@ def test_missing_parameter(test_error_10):
     new_errors = new_parser.errors
     for e in new_errors:
         assert e.error_code == ErrorCodes.MISSING_REQUIRED_PARAMETER
-
-
-def test_missing_ports():
-    pass
 
 
 def test_device_not_stored(test_error_4):
