@@ -53,10 +53,10 @@ def set_up(path):
     return test_parser
 
 
-# def test_parse_device_block(test_file_1):
-#     new_parser = set_up(test_file_1)
-#     new_parser.parse_devices_block()
-#     assert new_parser.errors is None
+def test_parser(test_file_1):
+    new_parser = set_up(test_file_1)
+    new_parser.parse_network()
+    assert new_parser.errors == []
 
 
 def missing_heading(test_error_2):
