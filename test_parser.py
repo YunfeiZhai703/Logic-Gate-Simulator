@@ -64,7 +64,7 @@ def test_error_7():
 
 @pytest.fixture
 def test_error_8():
-    path = "tests/parser/test_no_monit_heading_error.txt"
+    path = "tests/parser/test_syntax_error.txt"
     return path
 
 
@@ -147,10 +147,17 @@ def test_missing_bracket_in_header(test_error_7):
         assert e.error_code == ErrorCodes.INVALID_HEADER
 
 
-# TODO: This error doesn't work so need to fix this
 def test_missing_bracket_in_header(test_error_8):
     # Tests if missing an open bracket in the header definition, conns
     new_parser = set_up(test_error_8)
     new_errors = new_parser.errors
     for e in new_errors:
         assert e.error_code == ErrorCodes.MISSING_HEADER
+
+
+def test_syntax_errors(test_error_8):
+    """Test all types of possible syntax error"""
+    new_parser = set_up(test_error_8)
+    new_errors = new_parser.errors
+    for e in new_errors:
+        assert e.error_code == ErrorCodes.SYNTAX_ERROR
