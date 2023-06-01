@@ -39,3 +39,7 @@ def set_up(path):
         test_monitors,
         test_scanner)
     return test_parser
+
+
+def test_error_inputs():
+    pass
