@@ -44,6 +44,12 @@ def test_error_4():
     return path
 
 
+@pytest.fixture
+def test_error_5():
+    path = "tests/parser/test_dtype_pin_not_valid.txt"
+    return path
+
+
 def set_up(path):
     test_names = Names()
     test_scanner = Scanner(path, test_names)
@@ -95,3 +101,11 @@ def test_device_not_stored(test_error_4):
     new_errors = new_parser.errors
     for e in new_errors:
         assert e.error_code == ErrorCodes.INVALID_DEVICE
+
+
+def test_dtype_pin_invalid(test_error_5):
+    # Tests if a dtype pin specified is invalid, i.e. not Q or QBAR
+    new_parser = set_up(test_error_5)
+    new_errors = new_parser.errors
+    for e in new_errors:
+        assert e.error_code == ErrorCodes.INVALID_PIN
