@@ -64,7 +64,7 @@ def test_error_7():
 
 @pytest.fixture
 def test_error_8():
-    pass
+    path = "tests/parser/test_no_monit_heading_error.txt"
 
 
 @pytest.fixture
@@ -110,9 +110,9 @@ def test_device_parser(test_error_3):
     assert e.error_code == ErrorCodes.INVALID_LOGIC_GATE
 
 
-def missing_heading(test_error_2):
+def missing_heading(test_error_8):
     """Test missing heading errors"""
-    new_parser = set_up(test_error_2)
+    new_parser = set_up(test_error_8)
     new_parser.parse_network()
     new_errors = new_parser.errors
     for e in new_errors:
@@ -144,6 +144,10 @@ def test_missing_parameter(test_error_10):
     new_errors = new_parser.errors
     for e in new_errors:
         assert e.error_code == ErrorCodes.MISSING_REQUIRED_PARAMETER
+
+
+def test_missing_ports():
+    pass
 
 
 def test_device_not_stored(test_error_4):
