@@ -161,7 +161,7 @@ class Parser:
             return False
 
     def parse_devices(self):
-        """Parses the devices block. By """
+        """Parses the devices block."""
         i = 0
         while (self.symbol.type != self.scanner.OPEN_SQUARE_BRACKET):
             i += 1

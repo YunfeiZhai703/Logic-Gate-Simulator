@@ -53,7 +53,13 @@ def set_up(path):
     return test_parser
 
 
-def missing_heading():
+# def test_parse_device_block(test_file_1):
+#     new_parser = set_up(test_file_1)
+#     new_parser.parse_devices_block()
+#     assert new_parser.errors is None
+
+
+def missing_heading(test_error_2):
     new_parser = set_up(test_error_2)
     new_errors = new_parser.errors
     for e in new_errors:
