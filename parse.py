@@ -53,14 +53,23 @@ class Parser:
         self.errors: List[Error] = []
         self.stored_device_list: List[str] = []
 
-    def add_error(self, error_code, message):
+    def add_error(self, error_code, message, prev_line=False):
         """Add an error to the list of errors."""
-        self.errors.append(Error(
-            self.scanner.current_line,
-            self.scanner.get_current_line(),
-            self.scanner.current_position,
-            error_code,
-            message))
+
+        if (prev_line):
+            self.errors.append(Error(
+                self.scanner.current_line - 1,
+                self.scanner.get_previous_line(),
+                self.scanner.current_position,
+                error_code,
+                message))
+        else:
+            self.errors.append(Error(
+                self.scanner.current_line,
+                self.scanner.get_current_line(),
+                self.scanner.current_position,
+                error_code,
+                message))
 
     def parse_network(self):
         """Parse the circuit definition file."""
@@ -68,15 +77,16 @@ class Parser:
         # For now just return True, so that userint and gui can run in the
         # skeleton code. When complete, should return False when there are
         # errors in the circuit definition file.
-
+        expection = False
         try:
             self.parse_devices_block()  # parsing devices block
             self.parse_conns_block()
             self.parse_monit_block()
         except Exception as e:
             print(e)
+            expection = True
 
-        if (len(self.errors) > 0 or len(self.scanner.errors) > 0):
+        if (len(self.errors) > 0 or len(self.scanner.errors) > 0 or expection):
 
             all_errors = self.scanner.errors + self.errors
 
@@ -454,12 +464,13 @@ class Parser:
                         if input_dev:
                             input_dict = input_dev.inputs
                             input_keys = list(input_dict.keys())
-                            if input_device_pin_index - 1 > len(input_keys):
-                                # check if the input pin index is valid
+                            if input_device_pin_index + 1 > len(input_keys):
+
                                 self.add_error(
                                     ErrorCodes.INVALID_PIN,
                                     "Invalid pin for device input, device only has " +
-                                    str(len(input_keys)) + " inputs"
+                                    str(len(input_keys)) + " inputs",
+                                    prev_line=True
                                 )
                             else:
                                 input_id = input_keys[input_device_pin_index]

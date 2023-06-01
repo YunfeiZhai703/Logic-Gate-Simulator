@@ -265,3 +265,13 @@ class Scanner(SymbolList):
             line = self.file.readline()
         self.file.seek(current_position)
         return line
+
+    def get_previous_line(self):
+        """Return the previous line from the file"""
+        line = ""
+        current_position = self.file.tell()
+        self.file.seek(0)
+        for _ in range(self.current_line):
+            line = self.file.readline()
+        self.file.seek(current_position)
+        return line
