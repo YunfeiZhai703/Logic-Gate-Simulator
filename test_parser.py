@@ -53,15 +53,11 @@ def set_up(path):
     return test_parser
 
 
-def missing_conns():
+def missing_heading():
     new_parser = set_up(test_error_2)
     new_errors = new_parser.errors
     for e in new_errors:
         assert e.error_code == ErrorCodes.MISSING_HEADER
-
-
-def missing_monit():
-    pass
 
 
 def test_error_inputs(test_error_1):
