@@ -121,6 +121,14 @@ def test_error_inputs(test_error_1):
         assert e.error_code == ErrorCodes.INVALID_INPUTS
 
 
+def test_syntax_errors(test_error_9):
+    """Test all types of possible syntax error"""
+    new_parser = set_up(test_error_9)
+    new_errors = new_parser.errors
+    for e in new_errors:
+        assert e.error_code == ErrorCodes.SYNTAX_ERROR
+
+
 def test_device_not_stored(test_error_4):
     # Tests if a device in conns or monit has not been defined in [devices]
     new_parser = set_up(test_error_4)
@@ -159,11 +167,3 @@ def test_missing_bracket_in_header(test_error_8):
     new_errors = new_parser.errors
     for e in new_errors:
         assert e.error_code == ErrorCodes.MISSING_HEADER
-
-
-def test_syntax_errors(test_error_9):
-    """Test all types of possible syntax error"""
-    new_parser = set_up(test_error_9)
-    new_errors = new_parser.errors
-    for e in new_errors:
-        assert e.error_code == ErrorCodes.SYNTAX_ERROR
