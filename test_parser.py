@@ -50,6 +50,18 @@ def test_error_5():
     return path
 
 
+@pytest.fixture
+def test_error_6():
+    path = "tests/parser/test_monit_heading_error.txt"
+    return path
+
+
+@pytest.fixture
+def test_error_7():
+    path = "tests/parser/test_conns_heading_error.txt"
+    return path
+
+
 def set_up(path):
     test_names = Names()
     test_scanner = Scanner(path, test_names)
@@ -109,3 +121,19 @@ def test_dtype_pin_invalid(test_error_5):
     new_errors = new_parser.errors
     for e in new_errors:
         assert e.error_code == ErrorCodes.INVALID_PIN
+
+
+def test_missing_bracket_in_header(test_error_6):
+    # Tests if missing a closed bracket in the header definition, monit
+    new_parser = set_up(test_error_6)
+    new_errors = new_parser.errors
+    for e in new_errors:
+        assert e.error_code == ErrorCodes.INVALID_HEADER
+
+
+def test_missing_bracket_in_header(test_error_7):
+    # Tests if missing an open bracket in the header definition, conns
+    new_parser = set_up(test_error_7)
+    new_errors = new_parser.errors
+    for e in new_errors:
+        assert e.error_code == ErrorCodes.INVALID_HEADER
