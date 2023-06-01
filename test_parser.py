@@ -147,6 +147,7 @@ def test_missing_bracket_in_header(test_error_7):
         assert e.error_code == ErrorCodes.INVALID_HEADER
 
 
+# TODO: This error doesn't work so need to fix this
 def test_missing_bracket_in_header(test_error_8):
     # Tests if missing an open bracket in the header definition, conns
     new_parser = set_up(test_error_8)
