@@ -19,7 +19,7 @@ class ErrorCodes:
 
     description = {
         INVALID_CHARACTER: "This character is not allowed in the definition file.",
-        INVALID_NAME: """
+        INVALID_NAME: """"
         The name used is either a reserved word or is not a valid name for a device.
         Names must start with a letter and can only contain letters, numbers. Logic gates symbols must be in upper case.
         """,

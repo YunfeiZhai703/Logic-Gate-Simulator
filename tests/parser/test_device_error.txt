@@ -1,3 +1,4 @@
 [devices] 
-	G1, G2 = NAND;     # defaults to 2 inputs
+	G1, G2 = NOT;     # defaults to 2 inputs
 	SW1, SW2 = SWITCH; # defaults to 0 i.Ie "False"
+[conns]
