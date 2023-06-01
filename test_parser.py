@@ -64,7 +64,6 @@ def test_device_parser(test_error_3):
     new_parser.parse_devices_block()
     new_errors = new_parser.errors
     for e in new_errors:
-        assert e.error_code == ErrorCodes.SYNTAX_ERROR
         assert e.error_code == ErrorCodes.INVALID_LOGIC_GATE
 
 
