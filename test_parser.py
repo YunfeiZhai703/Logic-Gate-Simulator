@@ -22,13 +22,13 @@ def test_file_2():
 
 @pytest.fixture
 def test_error_1():
-    path = "tests/parser/inputs_error.txt"
+    path = "tests/parser/test_inputs_error.txt"
     return path
 
 
 @pytest.fixture
 def test_error_2():
-    path = "tests/parser/heading_error.txt"
+    path = "tests/parser/test_heading_error.txt"
     return path
 
 
