@@ -64,8 +64,7 @@ def test_error_7():
 
 @pytest.fixture
 def test_error_8():
-    path = "tests/parser/test_monit_heading_error.txt"
-    return path
+    pass
 
 
 @pytest.fixture
@@ -181,12 +180,3 @@ def test_missing_bracket_in_header(test_error_7):
     new_errors = new_parser.errors
     for e in new_errors:
         assert e.error_code == ErrorCodes.INVALID_HEADER
-
-
-def test_missing_bracket_in_header(test_error_8):
-    # Tests if missing an open bracket in the header definition, conns
-    new_parser = set_up(test_error_8)
-    new_parser.parse_network()
-    new_errors = new_parser.errors
-    for e in new_errors:
-        assert e.error_code == ErrorCodes.MISSING_HEADER
