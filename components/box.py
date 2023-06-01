@@ -15,6 +15,13 @@ class Box(wx.Panel):
     """
 
     def __init__(self, parent, bg_color=COLORS.GRAY_900, dir="col"):
+        """Initializes the Box component
+
+        Args:
+            parent (wiget): The parent widget
+            bg_color (COLORS, optional): Background color. Defaults to COLORS.GRAY_900.
+            dir (str, optional): Direction of components. Defaults to "col".
+        """
         super().__init__(parent)
         self.SetBackgroundColour(bg_color)
 
@@ -36,6 +43,13 @@ class ScrollBox(wx.ScrolledWindow):
     It is designed to act as a container for other components."""
 
     def __init__(self, parent, bg_color=COLORS.GRAY_900, dir="col"):
+        """Initializes the Box component
+
+        Args:
+            parent (wiget): The parent widget
+            bg_color (COLORS, optional): Background color. Defaults to COLORS.GRAY_900.
+            dir (str, optional): Direction of components. Defaults to "col".
+        """
         super().__init__(parent)
         self.SetBackgroundColour(bg_color)
 
