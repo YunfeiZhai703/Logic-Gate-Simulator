@@ -9,12 +9,6 @@ from monitors import Monitors
 
 
 @pytest.fixture
-def test_names():
-    names = Names()
-    return names
-
-
-@pytest.fixture
 def test_file_1():
     path = "tests/parser/test1.txt"
     return path
@@ -32,7 +26,8 @@ def test_error_1():
     return path
 
 
-def set_up(test_names, path):
+def set_up(path):
+    test_names = Names()
     test_scanner = Scanner(path, test_names)
     test_devices = Device(test_names)
     test_network = Network(test_names, test_devices)
