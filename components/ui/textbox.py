@@ -8,6 +8,16 @@ class TextBox(wx.TextCtrl):
                  onEnter=None,
                  size=wx.DefaultSize
                  ):
+        """Initializes the TextBox component
+
+        Args:
+            parent (wiget): The parent widget
+            value (str, optional): Inital value. Defaults to "".
+            placeholder (str, optional): Placeholder text. Defaults to "".
+            onChange (function, optional): Function to handle on change event. Defaults to None.
+            onEnter (function, optional): Function to handle on enter event. Defaults to None.
+            size (wxSize, optional): Size of component. Defaults to wx.DefaultSize.
+        """
         wx.TextCtrl.__init__(self, parent, id=wx.ID_ANY,
                              value=value, size=size, style=wx.TE_PROCESS_ENTER)
 

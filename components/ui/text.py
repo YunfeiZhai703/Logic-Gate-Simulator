@@ -23,6 +23,16 @@ class Text(wx.StaticText):
             style=wx.ALIGN_CENTER,
             font_size=10,
             font_family="default"):
+        """Initializes the Text component
+
+        Args:
+            parent (widget): The parent widget
+            label (str): The text to display
+            size (wxSize, optional): Size of component. Defaults to wx.DefaultSize.
+            style (wxStyles, optional): Style of text. Defaults to wx.ALIGN_CENTER.
+            font_size (int, optional): Font size. Defaults to 10.
+            font_family (str, optional): Font family. Defaults to "default".
+        """
         super().__init__(parent, label=label, size=size, style=style)
         self.SetForegroundColour(COLORS.GRAY_100)
         # make font monospace
