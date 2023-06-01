@@ -333,7 +333,7 @@ class Parser:
         dtype_pins = ["CLK", "DATA", "Q", "QBAR", "SET", "CLEAR"]
         if not re.match(pattern, string) or string in dtype_pins:
             self.add_error(
-                ErrorCodes.INVALID_NAME,
+                ErrorCodes.INVALID_INPUTS,
                 "Invalid name for device input")
 
     def validate_device_name_for_conns(self):

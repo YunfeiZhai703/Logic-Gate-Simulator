@@ -15,6 +15,7 @@ class ErrorCodes:
     INVALID_DEVICE = "InvalidDevice"
     OVERFLOW_ERROR = "OverflowError"
     DEVICE_ERROR = "DeviceError"
+    INVALID_INPUTS = "InputsError"
 
     description = {
         INVALID_CHARACTER: "This character is not allowed in the definition file.",
@@ -35,7 +36,8 @@ class ErrorCodes:
         INVALID_LOGIC_GATE: "Logic gate is not valid",
         INVALID_DEVICE: "The device hasn't been defined in the [devices] block",
         OVERFLOW_ERROR: "Loops too many times",
-        DEVICE_ERROR: "Error when making the device"}
+        DEVICE_ERROR: "Error when making the device",
+        INVALID_INPUTS: "The inputs should be within the range 1-16 and dtype inputs should be CLK, DATA, Q, QBAR, SET, CLEAR"}
 
 
 class Error(SyntaxError):
