@@ -20,3 +20,7 @@ def test_file_1():
 def test_file_2():
     path = "tests/parser/test2.txt"
     return path
+
+
+def test_inputs_name_error(test_names):
+    pass
