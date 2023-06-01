@@ -329,17 +329,12 @@ class Parser:
 
     def check_inputs_name(self, string):
         """Check if inputs are in the form Ia, where a is digit from 1 - 16"""
-        input_valid = False
         pattern = r'^I([1-9]|1[0-6])$'
         dtype_pins = ["CLK", "DATA", "Q", "QBAR", "SET", "CLEAR"]
-        if re.match(pattern, string) or string in dtype_pins:
-            input_valid = True
-        else:
+        if not re.match(pattern, string) or string in dtype_pins:
             self.add_error(
                 ErrorCodes.INVALID_NAME,
                 "Invalid name for device input")
-
-        return input_valid
 
     def validate_device_name_for_conns(self):
         """Validates the device name ensuring it is a valid device name and the device exists"""
@@ -397,22 +392,21 @@ class Parser:
                             self.advance()
 
                             # validate the input/output name
-                            if self.check_inputs_name(self.symbol.name):
-                                ports_list.append(self.symbol.name)
+                            self.check_inputs_name(self.symbol.name)
+                            ports_list.append(self.symbol.name)
+                            self.advance()
+
+                            if self.symbol.type == self.scanner.SEMICOLON:
+                                # Reached end of line
+                                self.advance()
+                                # print(
+                                #     "------- Dev: ", device_list, "Ports: ", ports_list)
+                                break
+
+                            elif self.symbol.type == self.scanner.COMMA:
+                                # Continue to next device
                                 self.advance()
 
-                                if self.symbol.type == self.scanner.SEMICOLON:
-                                    # Reached end of line
-                                    self.advance()
-                                    # print(
-                                    #     "------- Dev: ", device_list, "Ports: ", ports_list)
-                                    break
-
-                                elif self.symbol.type == self.scanner.COMMA:
-                                    # Continue to next device
-                                    self.advance()
-                            else:  # Not sure if we raise the error immediately
-                                raise ValueError('Inputs value out of range')
                     else:
                         break
 
