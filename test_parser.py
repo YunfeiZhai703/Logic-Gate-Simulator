@@ -26,6 +26,18 @@ def test_error_1():
     return path
 
 
+@pytest.fixture
+def test_error_2():
+    path = "tests/parser/inputs_error.txt"
+    return path
+
+
+@pytest.fixture
+def test_error_3():
+    path = "tests/parser/inputs_error.txt"
+    return path
+
+
 def set_up(path):
     test_names = Names()
     test_scanner = Scanner(path, test_names)
@@ -39,6 +51,14 @@ def set_up(path):
         test_monitors,
         test_scanner)
     return test_parser
+
+
+def missing_conns():
+    pass
+
+
+def missing_monit():
+    pass
 
 
 def test_error_inputs(test_error_1):
