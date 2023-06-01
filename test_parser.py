@@ -28,7 +28,7 @@ def test_error_1():
 
 @pytest.fixture
 def test_error_2():
-    path = "tests/parser/inputs_error.txt"
+    path = "tests/parser/heading_error.txt"
     return path
 
 
@@ -54,7 +54,10 @@ def set_up(path):
 
 
 def missing_conns():
-    pass
+    new_parser = set_up(test_error_2)
+    new_errors = new_parser.errors
+    for e in new_errors:
+        assert e.error_code == ErrorCodes.MISSING_HEADER
 
 
 def missing_monit():
