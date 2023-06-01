@@ -53,21 +53,31 @@ class Parser:
         self.errors: List[Error] = []
         self.stored_device_list: List[str] = []
 
-    def add_error(self, error_code, message, prev_line=False):
+    def add_error(
+            self,
+            error_code,
+            message,
+            prev_line=False,
+            en_of_line_char=False):
         """Add an error to the list of errors."""
+
+        line = self.scanner.get_previous_line(
+        ) if prev_line else self.scanner.get_current_line()
+        char = len(
+            line) - 1 if en_of_line_char else self.scanner.current_position
 
         if (prev_line):
             self.errors.append(Error(
                 self.scanner.current_line - 1,
-                self.scanner.get_previous_line(),
-                self.scanner.current_position,
+                line,
+                char,
                 error_code,
                 message))
         else:
             self.errors.append(Error(
                 self.scanner.current_line,
-                self.scanner.get_current_line(),
-                self.scanner.current_position,
+                line,
+                char,
                 error_code,
                 message))
 
@@ -366,7 +376,9 @@ class Parser:
                 ErrorCodes.SYNTAX_ERROR,
                 "Invalid symbol: " +
                 self.symbol.name +
-                " if this is a equals sign, you may have missed a end of line on the previous line")
+                " if this is a equals sign, you may have missed a end of line on the previous line",
+                prev_line=True,
+                en_of_line_char=True)
             return False
 
     def parse_conns_line(self):

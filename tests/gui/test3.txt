@@ -11,7 +11,7 @@ K = SWITCH(0);
 [conns]
 
 CLK1 = G1.I1, G2.I1;
-J = G1.I4;
+J = G1.I2
 K = G2.I2;
 
 Qa = G2.I3, Qb.I2;
