@@ -89,7 +89,7 @@ class ErrorsGui(wx.Frame):
     """GUI for displaying errors."""
 
     def __init__(self, errors: List[Error]):
-        super().__init__(parent=None, title="Errors", size=(800, 600))
+        super().__init__(parent=None, title="Errors", size=(500, 500))
         self.SetBackgroundColour(COLORS.RED_900)
         self.setup_menu()
         main_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -108,7 +108,7 @@ class ErrorsGui(wx.Frame):
 
         )
 
-        for error in errors[0:5]:  # only show first 5 errors
+        for error in errors[0:1]:  # only show first 5 errors
             scroll_box.Add(
                 Text(
                     scroll_box,
