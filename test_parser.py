@@ -16,7 +16,7 @@ def test_file_1():
 
 @pytest.fixture
 def test_file_2():
-    path = "tests/parser/test2.txt"
+    path = "tests/parser/test_device_parse.txt"
     return path
 
 
@@ -56,6 +56,12 @@ def set_up(path):
 def test_parser(test_file_1):
     new_parser = set_up(test_file_1)
     new_parser.parse_network()
+    assert new_parser.errors == []
+
+
+def test_device_parser(test_file_2):
+    new_parser = set_up(test_file_2)
+    new_parser.parse_devices_block()
     assert new_parser.errors == []
 
 
