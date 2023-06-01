@@ -346,7 +346,7 @@ class Parser:
             input_valid = True
         else:
             self.add_error(
-                ErrorCodes.INVALID_NAME,
+                ErrorCodes.INVALID_INPUTS,
                 "Invalid name for device input")
 
         return input_valid
