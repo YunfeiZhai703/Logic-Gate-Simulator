@@ -41,5 +41,8 @@ def set_up(path):
     return test_parser
 
 
-def test_error_inputs():
-    pass
+def test_error_inputs(test_error_1):
+    new_parser = set_up(test_error_1)
+    new_errors = new_parser.errors
+    for e in new_errors:
+        assert e.error_code == ErrorCodes.INVALID_INPUTS
