@@ -71,14 +71,12 @@ def test_parser(test_file_1):
     assert new_parser.errors == []
 
 
-'''
 def test_device_parser(test_error_3):
     new_parser = set_up(test_error_3)
     new_parser.parse_devices_block()
     new_errors = new_parser.errors
-    for e in new_errors:
-        assert e.error_code == ErrorCodes.INVALID_LOGIC_GATE
-'''
+    e = new_errors[0]
+    assert e.error_code == ErrorCodes.INVALID_LOGIC_GATE
 
 
 def missing_heading(test_error_2):
