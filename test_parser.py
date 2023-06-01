@@ -66,12 +66,14 @@ def set_up(path):
 
 
 def test_parser(test_file_1):
+    """Test the parser to see if it is working properly"""
     new_parser = set_up(test_file_1)
     new_parser.parse_network()
     assert new_parser.errors == []
 
 
 def test_device_parser(test_error_3):
+    """Test the logic gate errors"""
     new_parser = set_up(test_error_3)
     new_parser.parse_devices_block()
     new_errors = new_parser.errors
@@ -80,6 +82,7 @@ def test_device_parser(test_error_3):
 
 
 def missing_heading(test_error_2):
+    """Test missing heading errors"""
     new_parser = set_up(test_error_2)
     new_errors = new_parser.errors
     for e in new_errors:
@@ -87,6 +90,7 @@ def missing_heading(test_error_2):
 
 
 def test_error_inputs(test_error_1):
+    """Test inputs out of range errors"""
     new_parser = set_up(test_error_1)
     new_errors = new_parser.errors
     for e in new_errors:
