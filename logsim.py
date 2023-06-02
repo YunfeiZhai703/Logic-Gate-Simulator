@@ -11,6 +11,7 @@ Command line user interface: logsim.py -c <file path>
 Graphical user interface: logsim.py <file path>
 """
 import getopt
+import os
 import sys
 
 import wx
@@ -71,6 +72,11 @@ def main(arg_list):
         scanner = Scanner(path, names)
         parser = Parser(names, devices, network, monitors, scanner)
         valid, errors = parser.parse_network()
+
+        # print the LANG environment variable
+        lang = os.environ.get("LANG")
+        print("LANG: " + str(lang))
+
         if valid:
             # Initialise an instance of the gui.Gui() class
             app = wx.App()
