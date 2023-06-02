@@ -1,0 +1,18 @@
+{
+  "gui.logic-simulator": "Логический симулятор",
+  "gui.tabs.code": "Код",
+  "gui.tabs.main": "Главная",
+  "gui.tabs.graphs": "Графики",
+  "gui.devices": "Устройства",
+  "gui.monitors": "Мониторы",
+  "gui.switches": "Переключатели",
+  "gui.configurations": "Конфигурации",
+  "gui.num-of-cycles": "Количество циклов",
+  "gui.run": "Запустить",
+  "gui.reset": "Сбросить",
+  "gui.close": "Закрыть",
+  "gui.dialog.content": "Логический симулятор\nКоманда 19 - Lakee, Dhillon, Yunfei\n2023",
+  "gui.dialog.title": "О программе",
+  "gui.menu.file": "Файл",
+  "gui.menu.exit": "Выход"
+}

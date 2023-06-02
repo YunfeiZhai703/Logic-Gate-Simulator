@@ -23,6 +23,9 @@ from parse import Parser
 from components.ui import Button, Text, NumberInput, TextBox, COLORS
 from components import Canvas, FileButton, Box, ScrollBox
 from errors import Error
+from i18n import Translate
+
+t = Translate("ru", "gui")
 
 
 class Notebook(wx.Notebook):
@@ -46,16 +49,17 @@ class Gui(wx.Frame):
     def __init__(self, title, path, names, devices, network, monitors):
         super().__init__(parent=None, title=title, size=(800, 600))
 
+        locale = "ru"
+
         nb = Notebook(self, devices, monitors)
         self.nb = nb
-
         nb.file_path = path
         nb.uploaded_code = self._read_file(nb.file_path)
         nb.AddPage(MainPage(devices,
-                   network, monitors, notebook=nb), "Main")
+                   network, monitors, notebook=nb), t("tabs.main"))
 
-        nb.AddPage(nb.canvas, "Graphs")
-        nb.AddPage(CodePage(nb), "Code")
+        nb.AddPage(nb.canvas, t("tabs.graphs"))
+        nb.AddPage(CodePage(nb), t("tabs.code"))
 
         self.setup_menu()
 
@@ -70,11 +74,10 @@ class Gui(wx.Frame):
             return "No Code Uploded"
 
     def setup_menu(self):
-        """Set up the menu bar."""
         fileMenu = wx.Menu()
         menuBar = wx.MenuBar()
-        fileMenu.Append(wx.ID_EXIT, "&Exit")
-        menuBar.Append(fileMenu, "&File")
+        fileMenu.Append(wx.ID_EXIT, "&" + t("menu.exit"))
+        menuBar.Append(fileMenu, "&" + t("menu.file"))
         self.SetMenuBar(menuBar)
         self.Bind(wx.EVT_MENU, self.on_menu)
 
@@ -101,7 +104,7 @@ class ErrorsGui(wx.Frame):
         main_sizer.Add(
             Button(
                 self,
-                "Close",
+                t("close"),
                 size="md",
                 color=COLORS.RED_700,
                 onClick=lambda event: self.Close(True)), 0, wx.ALIGN_CENTER, 20
@@ -132,8 +135,8 @@ class ErrorsGui(wx.Frame):
     def setup_menu(self):
         fileMenu = wx.Menu()
         menuBar = wx.MenuBar()
-        fileMenu.Append(wx.ID_EXIT, "&Exit")
-        menuBar.Append(fileMenu, "&File")
+        fileMenu.Append(wx.ID_EXIT, "&" + t("menu.exit"))
+        menuBar.Append(fileMenu, "&" + t("menu.file"))
         self.SetMenuBar(menuBar)
         self.Bind(wx.EVT_MENU, self.on_menu)
 
@@ -260,7 +263,7 @@ class Heading(wx.BoxSizer):
         super().__init__(wx.HORIZONTAL)
 
         self.Add(
-            Button(parent, "Logic Simulator", size="md",
+            Button(parent, t("logic-simulator"), size="md",
                    color=wx.RED,
                    onClick=self.on_click
                    ), 1, wx.ALL, 5)
@@ -273,8 +276,8 @@ class Heading(wx.BoxSizer):
 
     def on_click(self, event):
         wx.MessageBox(
-            "Logic Simulator\nTeam 19 - Lakee, Dhillon, Yunfei\n2023",
-            "About Logsim",
+            t("dialog.content"),
+            t("dialog.title"),
             wx.ICON_INFORMATION | wx.OK)
 
 
@@ -284,7 +287,7 @@ class DevicesPanel(ScrollBox):
     def __init__(self, parent, devices: Devices):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col")
-        self.Add(Text(self, "Devices"), 0, wx.ALL, 5)
+        self.Add(Text(self, t("devices")), 0, wx.ALL, 5)
         self.parent = parent
         self.device_list: List[Device] = devices.devices_list
 
@@ -328,7 +331,7 @@ class SwitchesPanel(ScrollBox):
     def __init__(self, parent, devices: Devices):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col")
-        self.Add(Text(self, "Switches"), 0, wx.ALL, 5)
+        self.Add(Text(self, t("switches")), 0, wx.ALL, 5)
         self.parent = parent
         self.device_list: List[Device] = devices.devices_list
         self.switches: List[Device] = []
@@ -403,7 +406,7 @@ class MonitorsPanel(ScrollBox):
             cycles_completed):
         """Initialise the devices panel."""
         super().__init__(parent, dir="col")
-        self.Add(Text(self, "Montiors"), 0, wx.ALL, 5)
+        self.Add(Text(self, t("monitors")), 0, wx.ALL, 5)
         self.parent = parent
         self.device_list: List[Device] = devices.devices_list
         self.signal_names = monitors.get_signal_names()
@@ -483,10 +486,10 @@ class ConfigurationPanel(Box):
         super().__init__(parent, dir="col")
         self.parent = parent
 
-        self.Add(Text(self, "Configuration"), 0, wx.ALL, 5)
+        self.Add(Text(self, t("configurations")), 0, wx.ALL, 5)
 
         cycles_input = Box(self, dir="row")
-        cycles_input.Add(Text(cycles_input, "Number of Cycles",
+        cycles_input.Add(Text(cycles_input, t("num-of-cycles"),
                          style=wx.ALIGN_LEFT), 2, wx.ALL, 20)
 
         cycles_input.Add(NumberInput(
@@ -496,11 +499,11 @@ class ConfigurationPanel(Box):
 
         buttons = Box(self, dir="row")
 
-        buttons.Add(Button(buttons, "Run",
+        buttons.Add(Button(buttons, t("run"),
                            onClick=on_run,
                            color=COLORS.GREEN_950,
                            size="md"), 0, wx.ALL, 5)
-        buttons.Add(Button(buttons, "Reset",
+        buttons.Add(Button(buttons, t("reset"),
                            onClick=on_reset,
                            color=COLORS.RED,
                            size="md"), 0, wx.ALL, 5)

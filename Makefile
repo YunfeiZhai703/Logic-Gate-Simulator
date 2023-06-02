@@ -1,5 +1,6 @@
 gui:
-	python logsim.py ./tests/gui/test3.txt
+    # set language as russiam
+	export LANG=ru_RU.UTF-8 && python logsim.py ./tests/gui/test3.txt
 sr:
 	python logsim.py ./tests/gui/test1.txt
 jk:

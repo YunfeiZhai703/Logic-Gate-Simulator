@@ -1,0 +1,18 @@
+{
+  "gui.logic-simulator": "Logic Simulator",
+  "gui.tabs.code": "Code",
+  "gui.tabs.main": "Main",
+  "gui.tabs.graphs": "Graphs",
+  "gui.devices": "Devices",
+  "gui.monitors": "Monitors",
+  "gui.switches": "Switches",
+  "gui.configurations": "Configurations",
+  "gui.num-of-cycles": "Number of cycles",
+  "gui.run": "Run",
+  "gui.reset": "Reset",
+  "gui.close": "Close",
+  "gui.dialog.content": "Logic Simulator\nTeam 19 - Lakee, Dhillon, Yunfei\n2023",
+  "gui.dialog.title": "About",
+  "gui.menu.file": "File",
+  "gui.menu.exit": "Exit"
+}
