@@ -39,6 +39,7 @@ class Device:
 
         self.device_kind = None
         self.clock_half_period = None
+        self.RC_switch_period = None
         self.clock_counter = None
         self.switch_state = None
         self.dtype_memory = None
@@ -111,7 +112,7 @@ class Devices:
         self.devices_list = []
 
         gate_strings = ["AND", "OR", "NAND", "NOR", "XOR"]
-        device_strings = ["CLOCK", "SWITCH", "DTYPE"]
+        device_strings = ["CLOCK", "SWITCH", "DTYPE", "RC", "SIGGEN"]
         dtype_inputs = ["CLK", "SET", "CLEAR", "DATA"]
         dtype_outputs = ["Q", "QBAR"]
 
@@ -123,8 +124,12 @@ class Devices:
                              self.FALLING, self.BLANK] = range(5)
         self.gate_types = [self.AND, self.OR, self.NAND, self.NOR,
                            self.XOR] = self.names.lookup(gate_strings)
-        self.device_types = [self.CLOCK, self.SWITCH,
-                             self.D_TYPE] = self.names.lookup(device_strings)
+        self.device_types = [
+            self.CLOCK,
+            self.SWITCH,
+            self.D_TYPE,
+            self.RC,
+            self.SIGGEN] = self.names.lookup(device_strings)
         self.dtype_input_ids = [self.CLK_ID, self.SET_ID, self.CLEAR_ID,
                                 self.DATA_ID] = self.names.lookup(dtype_inputs)
         self.dtype_output_ids = [
@@ -266,6 +271,25 @@ class Devices:
             self.add_output(device_id, output_id)
         self.cold_startup()  # D-type initialised to a random state
 
+    # TODO: finish this
+    def make_RC(self, device_id, name=None):
+        """Make an RC device, with the switch_period as an integer > 0, i.e. the
+        number of simulation cycles before the RC switches state.
+        """
+        self.add_device(device_id, self.RC, name)
+        device = self.get_device(device_id)
+        device.RC_switch_period = RC_switch_period  # type: ignore
+        # self.cold_startup()  # clock initialised to a random point in its
+        # cycle
+
+    # TODO: finish this
+    def make_SIGGEN(self, device_id, name=None):
+        """Make a SIGGEN device, with an arbitrary binary waveform
+        which is specificed by the user in the definition file.
+        """
+        self.add_device(device_id, self.SIGGEN, name)
+        device = self.get_device(device_id)
+
     def cold_startup(self):
         """Simulate cold start-up of D-types and clocks.
 
@@ -341,6 +365,22 @@ class Devices:
                 error_type = self.QUALIFIER_PRESENT
             else:
                 self.make_d_type(device_id, name)
+                error_type = self.NO_ERROR
+
+        # TODO: Finish
+        elif device_kind == self.RC:
+            if device_property is not None:
+                error_type = self.QUALIFIER_PRESENT
+            else:
+                self.make_RC(device_id, name)
+                error_type = self.NO_ERROR
+
+        # TODO: Finish
+        elif device_kind == self.SIGGEN:
+            if device_property is not None:
+                error_type = self.QUALIFIER_PRESENT
+            else:
+                self.make_SIGGEN(device_id, name)
                 error_type = self.NO_ERROR
 
         else:

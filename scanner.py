@@ -91,8 +91,17 @@ class Scanner(SymbolList):
 
         self.heading_list = ["devices", "conns", "monit"]
 
-        self.logic_list = ["DTYPE", "NAND", "NOR",
-                           "XOR", "AND", "OR", "CLOCK", "SWITCH"]
+        self.logic_list = [
+            "DTYPE",
+            "NAND",
+            "NOR",
+            "XOR",
+            "AND",
+            "OR",
+            "CLOCK",
+            "SWITCH",
+            "RC",
+            "SIGGEN"]
 
         self.dtype_list = ["DATA", "CLK", "CLEAR", "Q", "QBAR"]
 
