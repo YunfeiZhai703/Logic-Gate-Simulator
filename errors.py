@@ -24,9 +24,9 @@ class ErrorCodes:
         Names must start with a letter and can only contain letters, numbers. Logic gates symbols must be in upper case.
         """,
         INVALID_NUMBER: "Invalid number",
-        INVALID_HEADER: "Missing bracket in the header definition.",
-        MISSING_HEADER: "Missing header definition.",
-        INVALID_PIN: "",
+        INVALID_HEADER: "Missing bracket in the header definition",
+        MISSING_HEADER: "Missing header definition within the square brackets",
+        INVALID_PIN: "Not a valid pin",
         MISSING_DOT: "Missing dot to show connections or output of dtype",
         MISSING_I: "Missing I before the input port number",
         MISSING_PORT: "Missing port for either the input or output",
