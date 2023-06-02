@@ -237,10 +237,6 @@ class Parser:
         """
         Parses the logic gate, and creates the device.
 
-
-        @Dhillon: A lot of this is very unessesary,
-        look at the make_device function in devices.py
-        it does the main part for you, I have rewrote the code for this!!! - Lakee
         """
         param = {
             "AND": 2,
