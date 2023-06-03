@@ -272,7 +272,7 @@ class Devices:
         self.cold_startup()  # D-type initialised to a random state
 
     # TODO: finish this
-    def make_RC(self, device_id, name=None):
+    def make_RC(self, device_id, RC_switch_period, name=None):
         """Make an RC device, with the switch_period as an integer > 0, i.e. the
         number of simulation cycles before the RC switches state.
         """
