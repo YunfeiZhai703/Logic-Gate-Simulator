@@ -127,13 +127,15 @@ class Parser:
 
                 else:
                     self.add_error(
-                        ErrorCodes.INVALID_HEADER, "Expected ']'")
+                        ErrorCodes.INVALID_HEADER, t("expected", ["]"]))
 
             else:
-                self.add_error(ErrorCodes.INVALID_HEADER, t("expected", ["devices"]))
+                self.add_error(
+                    ErrorCodes.INVALID_HEADER, t(
+                        "expected", ["devices"]))
 
         else:
-            self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
+            self.add_error(ErrorCodes.INVALID_HEADER, t("expected", ["["]))
 
     def validate_device_name(self, device_list):
         """Validates the device name."""
@@ -170,13 +172,13 @@ class Parser:
             if (self.symbol.type == self.scanner.HEADING):
                 self.add_error(
                     ErrorCodes.SYNTAX_ERROR,
-                    "Expected [conns] block")
+                    t("expected", ["[conns]"]))
                 break
 
             if (self.symbol.type == self.scanner.EOF):
                 self.add_error(
                     ErrorCodes.SYNTAX_ERROR,
-                    "Expected [conns] block")
+                    t("expected", ["[conns]"]))
                 break
 
             if (i > 500):
@@ -265,7 +267,7 @@ class Parser:
                     ending_bracket = False
                     self.add_error(
                         ErrorCodes.SYNTAX_ERROR,
-                        "Expected ')' after number")
+                        "Expected ')'")
 
         if (ending_bracket is False):
             return
@@ -322,13 +324,15 @@ class Parser:
 
                 else:
                     self.add_error(
-                        ErrorCodes.INVALID_HEADER, "Expected ']'")
+                        ErrorCodes.INVALID_HEADER, t("expected", ["]"]))
 
             else:
-                self.add_error(ErrorCodes.INVALID_HEADER, "Expected 'conns'")
+                self.add_error(
+                    ErrorCodes.INVALID_HEADER, t(
+                        "expected", ["conns"]))
 
         else:
-            self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
+            self.add_error(ErrorCodes.INVALID_HEADER, t("expected", ["["]))
 
     def parse_conns(self):
         """Parses the conns block by calling parse_conns_line until it reaches the end of the block"""
@@ -338,12 +342,12 @@ class Parser:
             if (self.symbol.type == self.scanner.HEADING):
                 self.add_error(
                     ErrorCodes.SYNTAX_ERROR,
-                    "Expected [conns] block")
+                    t("expected", ["[conns]"]))
                 break
             if (self.symbol.type == self.scanner.EOF):
                 self.add_error(
                     ErrorCodes.SYNTAX_ERROR,
-                    "Expected [conns] block")
+                    t("expected", ["[conns]"]))
                 break
 
             if (i > 500):

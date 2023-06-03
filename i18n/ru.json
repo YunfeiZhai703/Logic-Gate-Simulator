@@ -34,6 +34,13 @@
     "errors.description.INVALID_DEVICE": "Устройство не было определено в блоке [devices]",
     "errors.description.OVERFLOW_ERROR": "Превышено максимальное количество итераций",
     "errors.description.DEVICE_ERROR": "Ошибка при создании устройства",
-    "errors.description.INVALID_INPUTS": "Входы должны быть в диапазоне от 1 до 16, а входы dtype должны быть CLK, DATA, Q, QBAR, SET, CLEAR"
+    "errors.description.INVALID_INPUTS": "Входы должны быть в диапазоне от 1 до 16, а входы dtype должны быть CLK, DATA, Q, QBAR, SET, CLEAR",
+    "errors.error": "Ошибка",
+    "errors.line": "Строка",
+    "errors.character": "Символ",
+    "errors.description": "Описание"
+  },
+  "parse": {
+    "parse.expected": "Ожидаемый '{0}'"
   }
 }

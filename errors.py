@@ -1,4 +1,3 @@
-import os
 from i18n import Translate
 
 t = Translate("errors")
@@ -71,11 +70,12 @@ class Error(SyntaxError):
         self.description = ErrorCodes.description.get(
             error_code)
 
-        self.error_message = f"Error - {error_code}: {message}" + "\n" + \
-            f"Line {self.line_number + 1} Char {self.char_number + 1}:\n{self.line_content}" + \
+        self.error_message = f"{t('error')} - {error_code}: {message}" + "\n" + \
+            f"{t('line')} {self.line_number + 1} {t('character')} {self.char_number + 1}:\n{self.line_content}" + \
             " " * (self.char_number) + "^" + "\n"
         if self.description:
-            self.error_message += "Description: " + self.description + "\n"
+            self.error_message += f"{t('description')}: " + \
+                self.description + "\n"
 
     def __str__(self):
         return self.error_message
