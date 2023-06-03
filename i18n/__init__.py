@@ -15,8 +15,7 @@ class Translate:
             data = json.load(f)
             # return data
             try:
-                if self.module:
-                    id = self.module + "." + id
-                return data[id]
+                id = self.module + "." + id
+                return data[self.module][id]
             except BaseException:
                 return "Error: Failed to load translation"

@@ -1,3 +1,11 @@
+import os
+from i18n import Translate
+
+
+locale = os.environ.get("LANG", "en")[0:2]
+t = Translate(locale, "errors")
+
+
 class ErrorCodes:
     INVALID_CHARACTER = "InvalidCharacter"
     INVALID_NAME = "InvalidName"
@@ -18,26 +26,23 @@ class ErrorCodes:
     INVALID_INPUTS = "InputsError"
 
     description = {
-        INVALID_CHARACTER: "This character is not allowed in the definition file.",
-        INVALID_NAME: """"
-        The name used is either a reserved word or is not a valid name for a device.
-        Names must start with a letter and can only contain letters, numbers. Logic gates symbols must be in upper case.
-        """,
-        INVALID_NUMBER: "Invalid number",
-        INVALID_HEADER: "Missing bracket in the header definition",
-        MISSING_HEADER: "Missing header definition within the square brackets",
-        INVALID_PIN: "Not a valid pin",
-        MISSING_DOT: "Missing dot to show connections or output of dtype",
-        MISSING_I: "Missing I before the input port number",
-        MISSING_PORT: "Missing port for either the input or output",
-        MISSING_REQUIRED_PARAMETER: "Missing a parameter that needs to be defined",
-        NAME_DEFINED: "Name is already assigned to another gate",
-        SYNTAX_ERROR: "General syntax error, i.e check for missing brackets, semicolon etc.",
-        INVALID_LOGIC_GATE: "Logic gate is not valid",
-        INVALID_DEVICE: "The device hasn't been defined in the [devices] block",
-        OVERFLOW_ERROR: "Loops too many times",
-        DEVICE_ERROR: "Error when making the device",
-        INVALID_INPUTS: "The inputs should be within the range 1-16 and dtype inputs should be CLK, DATA, Q, QBAR, SET, CLEAR"}
+        INVALID_CHARACTER: t("description.INVALID_CHARACTER"),
+        INVALID_NAME: t("description.INVALID_NAME"),
+        INVALID_NUMBER: t("description.INVALID_NUMBER"),
+        INVALID_HEADER: t("description.INVALID_HEADER"),
+        MISSING_HEADER: t("description.MISSING_HEADER"),
+        INVALID_PIN: t("description.INVALID_PIN"),
+        MISSING_DOT: t("description.MISSING_DOT"),
+        MISSING_I: t("description.MISSING_I"),
+        MISSING_PORT: t("description.MISSING_PORT"),
+        MISSING_REQUIRED_PARAMETER: t("description.MISSING_REQUIRED_PARAMETER"),
+        NAME_DEFINED: t("description.NAME_DEFINED"),
+        SYNTAX_ERROR: t("description.SYNTAX_ERROR"),
+        INVALID_LOGIC_GATE: t("description.INVALID_LOGIC_GATE"),
+        INVALID_DEVICE: t("description.INVALID_DEVICE"),
+        OVERFLOW_ERROR: t("description.OVERFLOW_ERROR"),
+        DEVICE_ERROR: t("description.DEVICE_ERROR"),
+        INVALID_INPUTS: t("description.INVALID_INPUTS")}
 
 
 class Error(SyntaxError):

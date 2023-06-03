@@ -24,8 +24,10 @@ from components.ui import Button, Text, NumberInput, TextBox, COLORS
 from components import Canvas, FileButton, Box, ScrollBox
 from errors import Error
 from i18n import Translate
+import os
 
-t = Translate("ru", "gui")
+locale = os.environ.get("LANG", "en")[0:2]
+t = Translate(locale, "gui")
 
 
 class Notebook(wx.Notebook):
@@ -48,8 +50,6 @@ class Gui(wx.Frame):
 
     def __init__(self, title, path, names, devices, network, monitors):
         super().__init__(parent=None, title=title, size=(800, 600))
-
-        locale = "ru"
 
         nb = Notebook(self, devices, monitors)
         self.nb = nb
