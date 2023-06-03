@@ -46,8 +46,8 @@ class Gui(wx.Frame):
     """Main GUI for the Logic Simulator.
     """
 
-    def __init__(self, title, path, names, devices, network, monitors):
-        super().__init__(parent=None, title=title, size=(800, 600))
+    def __init__(self, path, names, devices, network, monitors):
+        super().__init__(parent=None, title=t("logic-simulator"), size=(800, 600))
 
         nb = Notebook(self, devices, monitors)
         self.nb = nb

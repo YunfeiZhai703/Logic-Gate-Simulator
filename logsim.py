@@ -73,14 +73,10 @@ def main(arg_list):
         parser = Parser(names, devices, network, monitors, scanner)
         valid, errors = parser.parse_network()
 
-        # print the LANG environment variable
-        lang = os.environ.get("LANG")
-        print("LANG: " + str(lang))
-
         if valid:
             # Initialise an instance of the gui.Gui() class
             app = wx.App()
-            gui = Gui("Logic Simulator", path, names, devices, network,
+            gui = Gui(path, names, devices, network,
                       monitors)
             gui.Show(True)
             app.MainLoop()

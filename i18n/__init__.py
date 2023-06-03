@@ -3,16 +3,16 @@ import json
 import os
 from typing import List, Optional
 
-locales = ["en", "ru"]
+locales = ["en_GB", "ru_RU", "en_US", "fr_FR", "el_GR", "es_ES"]
 
 
 class Translate:
     def __init__(self, module, locale=None):
-        self.locale = os.environ.get("LANG", "en")[0:2]
+        self.locale = os.environ.get("LANG", "en_GB").split(".")[0]
         if locale is not None:
             self.locale = locale
         if self.locale not in locales:
-            self.locale = "en"
+            self.locale = "en_GB"
         self.module = module
 
     def __call__(self, id, values: Optional[List[str]] = None):
