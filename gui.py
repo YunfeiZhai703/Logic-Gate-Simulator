@@ -24,10 +24,8 @@ from components.ui import Button, Text, NumberInput, TextBox, COLORS
 from components import Canvas, FileButton, Box, ScrollBox
 from errors import Error
 from i18n import Translate
-import os
 
-locale = os.environ.get("LANG", "en")[0:2]
-t = Translate(locale, "gui")
+t = Translate("gui")
 
 
 class Notebook(wx.Notebook):

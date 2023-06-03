@@ -1,9 +1,7 @@
 import os
 from i18n import Translate
 
-
-locale = os.environ.get("LANG", "en")[0:2]
-t = Translate(locale, "errors")
+t = Translate("errors")
 
 
 class ErrorCodes:
