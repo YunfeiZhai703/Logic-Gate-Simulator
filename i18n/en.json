@@ -35,5 +35,8 @@
     "errors.description.OVERFLOW_ERROR": "Loops too many times",
     "errors.description.DEVICE_ERROR": "Error when making the device",
     "errors.description.INVALID_INPUTS": "The inputs should be within the range 1-16 and dtype inputs should be CLK, DATA, Q, QBAR, SET, CLEAR"
+  },
+  "parse": {
+    "parse.expected": "Expected '{0}'"
   }
 }

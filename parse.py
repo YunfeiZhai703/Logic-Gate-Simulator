@@ -17,6 +17,8 @@ from devices import Device, Devices
 from network import Network
 from monitors import Monitors
 import re
+from i18n import Translate
+t = Translate("parse")
 
 
 class Parser:
@@ -128,7 +130,7 @@ class Parser:
                         ErrorCodes.INVALID_HEADER, "Expected ']'")
 
             else:
-                self.add_error(ErrorCodes.INVALID_HEADER, "Expected 'devices'")
+                self.add_error(ErrorCodes.INVALID_HEADER, t("expected", ["devices"]))
 
         else:
             self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
