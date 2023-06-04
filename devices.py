@@ -291,7 +291,7 @@ class Devices:
         device = self.get_device(device_id)
         device.SIGGEN_SIGNAL = SIGGEN_SIGNAL
         self.add_output(device_id, output_id=None, signal=int(
-            SIGGEN_SIGNAL[0]))  # Start with the SIGGEN First Signal
+            str(SIGGEN_SIGNAL)[0]))  # Start with the SIGGEN First Signal
 
     def cold_startup(self):
         """Simulate cold start-up of D-types and clocks.
@@ -379,17 +379,17 @@ class Devices:
                 error_type = self.NO_ERROR
 
         elif device_kind == self.RC:
-            if device_property is not None:
-                error_type = self.QUALIFIER_PRESENT
+            if device_property is None:
+                error_type = self.NO_QUALIFIER
             else:
                 self.make_RC(device_id, device_property, name)
                 error_type = self.NO_ERROR
 
         elif device_kind == self.SIGGEN:
-            if device_property is not None:
-                error_type = self.QUALIFIER_PRESENT
+            if device_property is None:
+                error_type = self.NO_QUALIFIER
             # check if all characters in SIGGEN_SIGNAL are 0 or 1
-            elif not all(char in [self.LOW, self.HIGH] for char in device_property):
+            elif not all(char in ["0", "1"] for char in str(device_property)):
                 error_type = self.INVALID_QUALIFIER
             else:
                 self.make_SIGGEN(device_id, device_property, name)

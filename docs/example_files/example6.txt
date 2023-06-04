@@ -3,7 +3,7 @@
 	G3 = AND(3);
     SW1, SW2 = SWITCH; 
     RC1 = RC(5);
-    BCLK = SIGGEN(1010111001);
+    BCL1 = SIGGEN(1010111001);
 
 [conns]
 	SW1 = G1.I1;
@@ -12,7 +12,7 @@
 	G2 = G1.I2;
     G2 = G3.I1;
     RC = G3.I2;
-    BCLK = G3.I3;
+    BCL1 = G3.I3;
 
 [monit]         
 	G1, G2;

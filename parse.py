@@ -310,6 +310,7 @@ class Parser:
         )
         for i, device_id in enumerate(device_ids):
             name = device_type + ":" + device_list[i]
+
             error = self.devices.make_device(
                 device_id,
                 device_kind,
@@ -322,7 +323,11 @@ class Parser:
                     "Error in making device " +
                     name +
                     " Error code:" +
-                    str(error))
+                    str(error),
+                    prev_line=True,
+                    end_of_line_char=True
+
+                )
 
     def parse_conns_block(self):
         """Parses the conns header then calls parse_conns."""
