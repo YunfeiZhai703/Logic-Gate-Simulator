@@ -43,6 +43,7 @@ class Device:
         self.SIGGEN_signal = None
         self.clock_counter = None
         self.RC_counter = None
+        self.SIGGEN_counter = None
         self.switch_state = None
         self.dtype_memory = None
         self.name = name

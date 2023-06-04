@@ -8,6 +8,9 @@ Network - builds and executes the network.
 """
 
 
+from devices import Device
+
+
 class Network:
 
     """Build and execute the network.
@@ -65,6 +68,7 @@ class Network:
         """Initialise network errors and the steady_state variable."""
         self.names = names
         self.devices = devices
+        self.cycles_completed = 0
 
         [self.NO_ERROR, self.INPUT_TO_INPUT, self.OUTPUT_TO_OUTPUT,
          self.INPUT_CONNECTED, self.PORT_ABSENT,
@@ -347,11 +351,38 @@ class Network:
                     device.outputs[None] = self.devices.RISING
             device.clock_counter += 1
 
+    def execute_siggen(self, device_id):
+        """Simulate a signal generator and update its output signal value.
+        """
+        device = self.devices.get_device(device_id)
+        output_signal = device.outputs[None]
+        signal = str(device.SIGGEN_signal)
+        index = device.SIGGEN_counter % len(signal)
+        new_signal = int(signal[index])
+        new_signal = self.update_signal(output_signal, new_signal)
+
+        if new_signal is None:  # if the update is unsuccessful
+            return False
+        device.outputs[None] = new_signal
+        return True
+
+    # def update_siggen(self):
+
+    #     siggen_devices = self.devices.find_devices(self.devices.SIGGEN)
+    #     for device_id in siggen_devices:
+    #         device: Device = self.devices.get_device(device_id)
+    #         siggen_signal = str(device.SIGGEN_signal)
+    #         signal_length = len(siggen_signal)
+    #         index = self.cycles_completed % signal_length
+    #         output_signal = int(siggen_signal[index])
+    #         device.outputs[None] = output_signal
+
     def execute_network(self):
         """Execute all the devices in the network for one simulation cycle.
 
         Return True if successful and the network does not oscillate.
         """
+        self.cycles_completed += 1
         clock_devices = self.devices.find_devices(self.devices.CLOCK)
         switch_devices = self.devices.find_devices(self.devices.SWITCH)
         d_type_devices = self.devices.find_devices(self.devices.D_TYPE)
@@ -360,6 +391,8 @@ class Network:
         nand_devices = self.devices.find_devices(self.devices.NAND)
         nor_devices = self.devices.find_devices(self.devices.NOR)
         xor_devices = self.devices.find_devices(self.devices.XOR)
+        rc_devices = self.devices.find_devices(self.devices.RC)
+        siggen_devices = self.devices.find_devices(self.devices.SIGGEN)
 
         # This sets clock signals to RISING or FALLING, where necessary
         self.update_clocks()
@@ -403,6 +436,14 @@ class Network:
             for device_id in xor_devices:  # execute XOR devices
                 if not self.execute_gate(device_id, None, None):
                     return False
+
+            # for device_id in rc_devices:  # execute RC devices
+            #     if not self.execute_rc(device_id):
+            #         return False
+            for device_id in siggen_devices:  # execute signal generator devices
+                if not self.execute_siggen(device_id):
+                    return False
+
             if self.steady_state:
                 break
         return self.steady_state
