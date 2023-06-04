@@ -293,6 +293,7 @@ class Network:
         for input_id in device.inputs:
             input_signal = self.get_input_signal(device_id, input_id)
             if input_signal is None:  # if the input is unconnected
+                print("Unconnected input")
                 return False
             if input_id == self.devices.CLK_ID:
                 clock_signal = input_signal
@@ -376,43 +377,69 @@ class Network:
                     device.outputs[None] = self.devices.RISING
             device.clock_counter += 1
 
-    def execute_siggen(self, device_id):
-        """Simulate a signal generator and update its output signal value.
+    def update_rc(self):
+        """Update RC devices."""
+        rc_devices = self.devices.find_devices(self.devices.RC)
+        for device_id in rc_devices:
+            device = self.devices.get_device(device_id)
+            rc_period = device.RC_switch_period
+            if self.cycles_completed > rc_period:
+                if device.outputs[None] == self.devices.HIGH:
+                    device.outputs[None] = self.devices.FALLING
+
+            else:
+                device.outputs[None] = self.devices.HIGH
+
+    def update_siggen(self):
+        """Update signal generator devices."""
+        siggen_devices = self.devices.find_devices(self.devices.SIGGEN)
+        for device_id in siggen_devices:
+            device: Device = self.devices.get_device(device_id)
+            old_signal = device.outputs[None]
+            signal = str(device.SIGGEN_signal)
+            signal_length = len(signal)
+
+            # index is the remainder of the division of the number of cycles by
+            # the length of the signal
+            index = self.cycles_completed % signal_length
+
+            new_signal = int(signal[index])
+
+            if old_signal == self.devices.HIGH and new_signal == self.devices.HIGH:
+                device.outputs[None] = self.devices.HIGH
+                # print(old_signal, new_signal, "HIGH")
+            elif old_signal == self.devices.LOW and new_signal == self.devices.LOW:
+                device.outputs[None] = self.devices.LOW
+                # print(old_signal, new_signal, "LOW")
+            elif old_signal == self.devices.HIGH and new_signal == self.devices.LOW:
+                device.outputs[None] = self.devices.FALLING
+                # print(old_signal, new_signal, "FALLING")
+            elif old_signal == self.devices.LOW and new_signal == self.devices.HIGH:
+                device.outputs[None] = self.devices.RISING
+                # print(old_signal, new_signal, "RISING")
+
+    def reset_network(self):
         """
-        device = self.devices.get_device(device_id)
-        curr_signal = device.outputs[None]
-
-        signal = str(device.SIGGEN_signal)
-        index = self.cycles_completed % len(signal)
-
-        new_signal = int(signal[index])
-        # new_signal = self.update_signal(curr_signal, new_signal)
-        # print(curr_signal, new_signal, self.cycles_completed)
-        # print(new_signal, self.cycles_completed)
-
-        if new_signal is None:  # if the update is unsuccessful
-            return False
-        device.outputs[None] = new_signal
-        return True
-
-    def execute_rc(self, device_id):
-
-        device: Device = self.devices.get_device(device_id)
-        output_signal = device.outputs[None]
-        rc_time = device.RC_switch_period
-        if self.cycles_completed > rc_time:
-            # new_signal = self.update_signal(output_signal, self.devices.LOW)
-            device.outputs[None] = self.devices.LOW
-        else:
-            # new_signal = self.update_signal(output_signal, self.devices.HIGH)
+        Resets all the RC back to high and
+        resets SIGGEN back to first signal value
+        """
+        rc_devices = self.devices.find_devices(self.devices.RC)
+        for device_id in rc_devices:
+            device = self.devices.get_device(device_id)
             device.outputs[None] = self.devices.HIGH
+
+        siggen_devices = self.devices.find_devices(self.devices.SIGGEN)
+        for device_id in siggen_devices:
+            device = self.devices.get_device(device_id)
+            signal = str(device.SIGGEN_signal)
+            device.outputs[None] = int(signal[0])
+        self.cycles_completed = 0
 
     def execute_network(self):
         """Execute all the devices in the network for one simulation cycle.
 
         Return True if successful and the network does not oscillate.
         """
-        self.cycles_completed += 1
         clock_devices = self.devices.find_devices(self.devices.CLOCK)
         switch_devices = self.devices.find_devices(self.devices.SWITCH)
         d_type_devices = self.devices.find_devices(self.devices.D_TYPE)
@@ -426,12 +453,8 @@ class Network:
 
         # This sets clock signals to RISING or FALLING, where necessary
         self.update_clocks()
-        for device_id in siggen_devices:  # execute signal generator devices
-            if not self.execute_siggen(device_id):
-                return False
-        for device_id in rc_devices:  # execute RC devices
-            if not self.execute_rc(device_id):
-                return False
+        self.update_rc()
+        self.update_siggen()
 
         # Number of iterations to wait for the signals to settle before
         # declaring the network unstable
@@ -441,7 +464,6 @@ class Network:
         while iterations < iteration_limit:
             iterations += 1
             self.steady_state = True
-
             for device_id in switch_devices:  # execute switch devices
                 if not self.execute_switch(device_id):
                     return False
@@ -451,6 +473,12 @@ class Network:
                 if not self.execute_d_type(device_id):
                     return False
             for device_id in clock_devices:  # complete clock executions
+                if not self.execute_clock(device_id):
+                    return False
+            for device_id in rc_devices:  # complete clock executions
+                if not self.execute_clock(device_id):
+                    return False
+            for device_id in siggen_devices:  # complete clock executions
                 if not self.execute_clock(device_id):
                     return False
 
@@ -476,4 +504,5 @@ class Network:
 
             if self.steady_state:
                 break
+        self.cycles_completed += 1
         return self.steady_state

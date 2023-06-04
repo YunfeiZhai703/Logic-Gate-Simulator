@@ -249,6 +249,7 @@ class MainPage(wx.Panel):
         self.canvas2.Refresh()
 
         self.cycles_completed = 0
+        self.network.reset_network()
 
     def on_number_input(self, event):
         """Handle the event when the user changes the spin control value."""

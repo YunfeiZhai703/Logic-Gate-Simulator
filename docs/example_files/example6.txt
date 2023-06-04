@@ -5,6 +5,8 @@
     RC1 = RC(5);
     BCL1 = SIGGEN(1010111001);
 	G4 = DTYPE;
+	C1 = CLOCK(1);
+	
 
 [conns]
 	SW1 = G1.I1;
@@ -15,6 +17,10 @@
     G2 = G3.I1;
 	RC1 = G4.SET;
     BCL1 = G3.I3;
+	BCL1 = G4.DATA;
+	C1 = G4.CLK;
+	SW3 = G4.CLEAR;
+
 	
 
 [monit]         

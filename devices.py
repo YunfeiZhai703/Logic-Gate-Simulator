@@ -309,16 +309,8 @@ class Devices:
                 self.add_output(device.device_id, output_id=None,
                                 signal=clock_signal)
                 # Initialise it to a random point in its cycle.
-                device.clock_half_period = \
+                device.clock_counter = \
                     random.randrange(device.clock_half_period)
-
-            # elif device.device_kind == self.RC:
-            #     RC_signal = self.HIGH
-            #     self.add_output(device.device_id, output_id=None,
-            #                     signal=RC_signal)
-            #     # Initialise it to a random point in its cycle.
-            #     device.clo_counter = \
-            #         random.randrange(device.clock_half_period)
 
     def make_device(
             self,
