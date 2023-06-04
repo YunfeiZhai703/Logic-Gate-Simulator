@@ -40,6 +40,7 @@ class Device:
         self.device_kind = None
         self.clock_half_period = None
         self.RC_switch_period = None
+        self.SIGGEN_signal = None
         self.clock_counter = None
         self.switch_state = None
         self.dtype_memory = None
@@ -271,24 +272,25 @@ class Devices:
             self.add_output(device_id, output_id)
         self.cold_startup()  # D-type initialised to a random state
 
-    # TODO: finish this
     def make_RC(self, device_id, RC_switch_period, name=None):
         """Make an RC device, with the switch_period as an integer > 0, i.e. the
         number of simulation cycles before the RC switches state.
         """
         self.add_device(device_id, self.RC, name)
         device = self.get_device(device_id)
-        device.RC_switch_period = RC_switch_period  # type: ignore
-        # self.cold_startup()  # clock initialised to a random point in its
-        # cycle
+        device.RC_switch_period = RC_switch_period
+        # Start with the RC output high
+        self.add_output(device_id, output_id=None, signal=self.HIGH)
 
-    # TODO: finish this
-    def make_SIGGEN(self, device_id, name=None):
+    def make_SIGGEN(self, device_id, SIGGEN_SIGNAL, name=None):
         """Make a SIGGEN device, with an arbitrary binary waveform
         which is specificed by the user in the definition file.
         """
         self.add_device(device_id, self.SIGGEN, name)
         device = self.get_device(device_id)
+        device.SIGGEN_SIGNAL = SIGGEN_SIGNAL
+        self.add_output(device_id, output_id=None, signal=int(
+            SIGGEN_SIGNAL[0]))  # Start with the SIGGEN First Signal
 
     def cold_startup(self):
         """Simulate cold start-up of D-types and clocks.
@@ -367,20 +369,21 @@ class Devices:
                 self.make_d_type(device_id, name)
                 error_type = self.NO_ERROR
 
-        # TODO: Finish
         elif device_kind == self.RC:
             if device_property is not None:
                 error_type = self.QUALIFIER_PRESENT
             else:
-                self.make_RC(device_id, name)
+                self.make_RC(device_id, device_property, name)
                 error_type = self.NO_ERROR
 
-        # TODO: Finish
         elif device_kind == self.SIGGEN:
             if device_property is not None:
                 error_type = self.QUALIFIER_PRESENT
+            # check if all characters in SIGGEN_SIGNAL are 0 or 1
+            elif not all(char in [self.LOW, self.HIGH] for char in device_property):
+                error_type = self.INVALID_QUALIFIER
             else:
-                self.make_SIGGEN(device_id, name)
+                self.make_SIGGEN(device_id, device_property, name)
                 error_type = self.NO_ERROR
 
         else:
