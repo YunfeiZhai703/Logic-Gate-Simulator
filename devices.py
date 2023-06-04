@@ -41,6 +41,7 @@ class Device:
         self.clock_half_period = None
         self.RC_switch_period = None
         self.clock_counter = None
+        self.RC_counter = None
         self.switch_state = None
         self.dtype_memory = None
         self.name = name
@@ -305,7 +306,15 @@ class Devices:
                 self.add_output(device.device_id, output_id=None,
                                 signal=clock_signal)
                 # Initialise it to a random point in its cycle.
-                device.clock_counter = \
+                device.RC_counter = \
+                    random.randrange(device.RC_switch_period)
+
+            elif device.device_kind == self.RC:
+                RC_signal = self.HIGH
+                self.add_output(device.device_id, output_id=None,
+                                signal=RC_signal)
+                # Initialise it to a random point in its cycle.
+                device.clo_counter = \
                     random.randrange(device.clock_half_period)
 
     def make_device(

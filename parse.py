@@ -251,6 +251,8 @@ class Parser:
             "SWITCH": 0,
             "CLOCK": None,
             "DTYPE": None,
+            "RC": None,
+            "SIGGEN": None,
         }[device_type]
 
         ending_bracket = None
@@ -278,6 +280,18 @@ class Parser:
                 "Expected parameter for CLOCK")
             return
 
+        if (device_type == "RC" and not param):
+            self.add_error(
+                ErrorCodes.MISSING_REQUIRED_PARAMETER,
+                "Expected parameter for RC")
+            return
+
+        if (device_type == "SIGGEN" and not param):
+            self.add_error(
+                ErrorCodes.MISSING_REQUIRED_PARAMETER,
+                "Expected parameter for SIGGEN")
+            return
+
         device_kind = {
             "AND": self.devices.AND,
             "OR": self.devices.OR,
@@ -287,6 +301,8 @@ class Parser:
             "SWITCH": self.devices.SWITCH,
             "CLOCK": self.devices.CLOCK,
             "DTYPE": self.devices.D_TYPE,
+            "RC": self.devices.RC,
+            "SIGGEN": self.devices.SIGGEN,
         }[device_type]
 
         device_ids = self.names.lookup(
