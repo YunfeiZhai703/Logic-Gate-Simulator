@@ -177,7 +177,7 @@ class Parser:
 
             if (self.symbol.type == self.scanner.EOF):
                 self.add_error(
-                    ErrorCodes.SYNTAX_ERROR,
+                    ErrorCodes.MISSING_HEADER,
                     t("expected", ["[conns]"]))
                 break
 
@@ -367,7 +367,7 @@ class Parser:
                 break
             if (self.symbol.type == self.scanner.EOF):
                 self.add_error(
-                    ErrorCodes.SYNTAX_ERROR,
+                    ErrorCodes.MISSING_HEADER,
                     t("expected", ["[conns]"]))
                 break
 
