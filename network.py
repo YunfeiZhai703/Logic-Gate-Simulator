@@ -70,9 +70,13 @@ class Network:
         self.devices = devices
         self.cycles_completed = 0
 
-        [self.NO_ERROR, self.INPUT_TO_INPUT, self.OUTPUT_TO_OUTPUT,
-         self.INPUT_CONNECTED, self.PORT_ABSENT,
-         self.DEVICE_ABSENT] = self.names.unique_error_codes(6)
+        [self.NO_ERROR,
+         self.INPUT_TO_INPUT,
+         self.OUTPUT_TO_OUTPUT,
+         self.INPUT_CONNECTED,
+         self.PORT_ABSENT,
+         self.DEVICE_ABSENT,
+         self.INVALID_RC_CONNECTION] = self.names.unique_error_codes(7)
         self.steady_state = True  # for checking if signals have settled
 
     def get_connected_output(self, device_id, input_id):
@@ -131,6 +135,7 @@ class Network:
             elif second_port_id in second_device.inputs:
                 # Both ports are inputs
                 error_type = self.INPUT_TO_INPUT
+
             elif second_port_id in second_device.outputs:
                 # Make connection
                 first_device.inputs[first_port_id] = (second_device_id,
@@ -147,6 +152,20 @@ class Network:
                 if second_device.inputs[second_port_id] is not None:
                     # Input is already in a connection
                     error_type = self.INPUT_CONNECTED
+                # Check if using RC device, that the input for the second device is set or
+                # clear only
+                elif first_device.type == "RC":
+                    if second_device.inputs == "SET":
+                        second_device.inputs[second_port_id] = (
+                            first_device_id, first_port_id)
+                        error_type = self.NO_ERROR
+                    elif second_device.inputs == "CLEAR":
+                        second_device.inputs[second_port_id] = (
+                            first_device_id, first_port_id)
+                        error_type = self.NO_ERROR
+                    else:
+                        error_type = self.INVALID_RC_CONNECTION
+
                 else:
                     second_device.inputs[second_port_id] = (first_device_id,
                                                             first_port_id)
