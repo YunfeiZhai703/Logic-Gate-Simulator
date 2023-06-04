@@ -308,6 +308,7 @@ class Parser:
         device_ids = self.names.lookup(
             device_list
         )
+
         for i, device_id in enumerate(device_ids):
             name = device_type + ":" + device_list[i]
 
@@ -633,7 +634,7 @@ class Parser:
                     output_device_id, output_device_pin_id)
                 if error != self.monitors.NO_ERROR:
                     print(
-                        "----------ERROR in make_connection----------Code: ",
+                        "----------ERROR in make_moniotr----------Code: ",
                         error,
                         self.monitors.MONITOR_PRESENT)
 

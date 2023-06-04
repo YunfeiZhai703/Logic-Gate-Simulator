@@ -380,28 +380,32 @@ class Network:
         """Simulate a signal generator and update its output signal value.
         """
         device = self.devices.get_device(device_id)
-        output_signal = device.outputs[None]
-        signal = str(device.SIGGEN_signal)
-        index = device.SIGGEN_counter % len(signal)
-        print("index: ", index)
-        # new_signal = int(signal[index])
-        # new_signal = self.update_signal(output_signal, new_signal)
+        curr_signal = device.outputs[None]
 
-        # if new_signal is None:  # if the update is unsuccessful
-        #     return False
-        # device.outputs[None] = new_signal
+        signal = str(device.SIGGEN_signal)
+        index = self.cycles_completed % len(signal)
+
+        new_signal = int(signal[index])
+        # new_signal = self.update_signal(curr_signal, new_signal)
+        # print(curr_signal, new_signal, self.cycles_completed)
+        # print(new_signal, self.cycles_completed)
+
+        if new_signal is None:  # if the update is unsuccessful
+            return False
+        device.outputs[None] = new_signal
         return True
 
-    # def update_siggen(self):
+    def execute_rc(self, device_id):
 
-    #     siggen_devices = self.devices.find_devices(self.devices.SIGGEN)
-    #     for device_id in siggen_devices:
-    #         device: Device = self.devices.get_device(device_id)
-    #         siggen_signal = str(device.SIGGEN_signal)
-    #         signal_length = len(siggen_signal)
-    #         index = self.cycles_completed % signal_length
-    #         output_signal = int(siggen_signal[index])
-    #         device.outputs[None] = output_signal
+        device: Device = self.devices.get_device(device_id)
+        output_signal = device.outputs[None]
+        rc_time = device.RC_switch_period
+        if self.cycles_completed > rc_time:
+            # new_signal = self.update_signal(output_signal, self.devices.LOW)
+            device.outputs[None] = self.devices.LOW
+        else:
+            # new_signal = self.update_signal(output_signal, self.devices.HIGH)
+            device.outputs[None] = self.devices.HIGH
 
     def execute_network(self):
         """Execute all the devices in the network for one simulation cycle.
@@ -417,11 +421,17 @@ class Network:
         nand_devices = self.devices.find_devices(self.devices.NAND)
         nor_devices = self.devices.find_devices(self.devices.NOR)
         xor_devices = self.devices.find_devices(self.devices.XOR)
-        # rc_devices = self.devices.find_devices(self.devices.RC)
-        # siggen_devices = self.devices.find_devices(self.devices.SIGGEN)
+        rc_devices = self.devices.find_devices(self.devices.RC)
+        siggen_devices = self.devices.find_devices(self.devices.SIGGEN)
 
         # This sets clock signals to RISING or FALLING, where necessary
         self.update_clocks()
+        for device_id in siggen_devices:  # execute signal generator devices
+            if not self.execute_siggen(device_id):
+                return False
+        for device_id in rc_devices:  # execute RC devices
+            if not self.execute_rc(device_id):
+                return False
 
         # Number of iterations to wait for the signals to settle before
         # declaring the network unstable
@@ -443,6 +453,7 @@ class Network:
             for device_id in clock_devices:  # complete clock executions
                 if not self.execute_clock(device_id):
                     return False
+
             for device_id in and_devices:  # execute AND gate devices
                 if not self.execute_gate(device_id, self.devices.HIGH,
                                          self.devices.HIGH):
@@ -462,13 +473,6 @@ class Network:
             for device_id in xor_devices:  # execute XOR devices
                 if not self.execute_gate(device_id, None, None):
                     return False
-
-            # for device_id in rc_devices:  # execute RC devices
-            #     if not self.execute_rc(device_id):
-            #         return False
-            # for device_id in siggen_devices:  # execute signal generator devices
-            #     if not self.execute_siggen(device_id):
-            #         return False
 
             if self.steady_state:
                 break

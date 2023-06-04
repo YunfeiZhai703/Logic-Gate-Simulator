@@ -290,7 +290,7 @@ class Devices:
         """
         self.add_device(device_id, self.SIGGEN, name)
         device = self.get_device(device_id)
-        device.SIGGEN_SIGNAL = SIGGEN_SIGNAL
+        device.SIGGEN_signal = SIGGEN_SIGNAL
         self.add_output(device_id, output_id=None, signal=int(
             str(SIGGEN_SIGNAL)[0]))  # Start with the SIGGEN First Signal
 

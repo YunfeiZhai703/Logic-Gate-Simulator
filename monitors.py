@@ -59,8 +59,12 @@ class Monitors:
         # {(device_id, output_id): [signal_list]}
         self.monitors_dictionary = collections.OrderedDict()
 
-        [self.NO_ERROR, self.NOT_OUTPUT,
-         self.MONITOR_PRESENT] = self.names.unique_error_codes(3)
+        # [self.NO_ERROR, self.NOT_OUTPUT,
+        #  self.MONITOR_PRESENT] = self.names.unique_error_codes(3)
+
+        self.NO_ERROR = "NO_ERROR"
+        self.NOT_OUTPUT = "NOT_OUTPUT"
+        self.MONITOR_PRESENT = "MONITOR_PRESENT"
 
     def make_monitor(self, device_id, output_id, cycles_completed=0):
         """Add the specified signal to the monitors dictionary.
