@@ -383,7 +383,7 @@ class Network:
         for device_id in rc_devices:
             device = self.devices.get_device(device_id)
             rc_period = device.RC_switch_period
-            if self.cycles_completed > rc_period:
+            if self.cycles_completed >= rc_period:
                 if device.outputs[None] == self.devices.HIGH:
                     device.outputs[None] = self.devices.FALLING
 
