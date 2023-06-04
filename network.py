@@ -8,7 +8,7 @@ Network - builds and executes the network.
 """
 
 
-from devices import Device
+from devices import Device, Devices
 
 
 class Network:
@@ -67,16 +67,25 @@ class Network:
     def __init__(self, names, devices):
         """Initialise network errors and the steady_state variable."""
         self.names = names
-        self.devices = devices
+        self.devices: Devices = devices
         self.cycles_completed = 0
 
-        [self.NO_ERROR,
-         self.INPUT_TO_INPUT,
-         self.OUTPUT_TO_OUTPUT,
-         self.INPUT_CONNECTED,
-         self.PORT_ABSENT,
-         self.DEVICE_ABSENT,
-         self.INVALID_RC_CONNECTION] = self.names.unique_error_codes(7)
+        # [self.NO_ERROR,
+        #  self.INPUT_TO_INPUT,
+        #  self.OUTPUT_TO_OUTPUT,
+        #  self.INPUT_CONNECTED,
+        #  self.PORT_ABSENT,
+        #  self.DEVICE_ABSENT,
+        #  self.INVALID_RC_CONNECTION] = self.names.unique_error_codes(7)
+
+        self.NO_ERROR = "NO_ERROR"
+        self.INPUT_TO_INPUT = "INPUT_TO_INPUT"
+        self.OUTPUT_TO_OUTPUT = "OUTPUT_TO_OUTPUT"
+        self.INPUT_CONNECTED = "INPUT_CONNECTED"
+        self.PORT_ABSENT = "PORT_ABSENT"
+        self.DEVICE_ABSENT = "DEVICE_ABSENT"
+        self.INVALID_RC_CONNECTION = "INVALID_RC_CONNECTION"
+
         self.steady_state = True  # for checking if signals have settled
 
     def get_connected_output(self, device_id, input_id):
@@ -122,8 +131,8 @@ class Network:
 
         Return self.NO_ERROR if successful, or the corresponding error if not.
         """
-        first_device = self.devices.get_device(first_device_id)
-        second_device = self.devices.get_device(second_device_id)
+        first_device: Device = self.devices.get_device(first_device_id)
+        second_device: Device = self.devices.get_device(second_device_id)
 
         if first_device is None or second_device is None:
             error_type = self.DEVICE_ABSENT
@@ -154,12 +163,9 @@ class Network:
                     error_type = self.INPUT_CONNECTED
                 # Check if using RC device, that the input for the second device is set or
                 # clear only
-                elif first_device.type == "RC":
-                    if second_device.inputs == "SET":
-                        second_device.inputs[second_port_id] = (
-                            first_device_id, first_port_id)
-                        error_type = self.NO_ERROR
-                    elif second_device.inputs == "CLEAR":
+                elif first_device.device_kind == self.devices.RC:
+                    if second_port_id in [
+                            self.devices.SET_ID, self.devices.CLEAR_ID]:
                         second_device.inputs[second_port_id] = (
                             first_device_id, first_port_id)
                         error_type = self.NO_ERROR
@@ -377,12 +383,13 @@ class Network:
         output_signal = device.outputs[None]
         signal = str(device.SIGGEN_signal)
         index = device.SIGGEN_counter % len(signal)
-        new_signal = int(signal[index])
-        new_signal = self.update_signal(output_signal, new_signal)
+        print("index: ", index)
+        # new_signal = int(signal[index])
+        # new_signal = self.update_signal(output_signal, new_signal)
 
-        if new_signal is None:  # if the update is unsuccessful
-            return False
-        device.outputs[None] = new_signal
+        # if new_signal is None:  # if the update is unsuccessful
+        #     return False
+        # device.outputs[None] = new_signal
         return True
 
     # def update_siggen(self):
@@ -410,8 +417,8 @@ class Network:
         nand_devices = self.devices.find_devices(self.devices.NAND)
         nor_devices = self.devices.find_devices(self.devices.NOR)
         xor_devices = self.devices.find_devices(self.devices.XOR)
-        rc_devices = self.devices.find_devices(self.devices.RC)
-        siggen_devices = self.devices.find_devices(self.devices.SIGGEN)
+        # rc_devices = self.devices.find_devices(self.devices.RC)
+        # siggen_devices = self.devices.find_devices(self.devices.SIGGEN)
 
         # This sets clock signals to RISING or FALLING, where necessary
         self.update_clocks()
@@ -459,9 +466,9 @@ class Network:
             # for device_id in rc_devices:  # execute RC devices
             #     if not self.execute_rc(device_id):
             #         return False
-            for device_id in siggen_devices:  # execute signal generator devices
-                if not self.execute_siggen(device_id):
-                    return False
+            # for device_id in siggen_devices:  # execute signal generator devices
+            #     if not self.execute_siggen(device_id):
+            #         return False
 
             if self.steady_state:
                 break

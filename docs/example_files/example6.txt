@@ -18,5 +18,5 @@
 	
 
 [monit]         
-	G1, G2;
+	BLC1; RC1;
 
