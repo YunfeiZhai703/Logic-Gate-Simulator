@@ -1,4 +1,4 @@
-[devices
+[devices]
 	G1, G2 = NAND; 
 	G3 = AND(3);
     SW1, SW2, SW3 = SWITCH; 
