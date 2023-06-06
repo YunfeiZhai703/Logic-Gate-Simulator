@@ -1,5 +1,5 @@
-[devices] 
-	G1 = NOR; 
+[devices]
+    G1 = NOR; 
     G2 = AND;
 	G3 = DTYPE;
     G4 = NAND;
@@ -25,5 +25,5 @@
 
 [monit]         
 	G5;
-    BCL1; 
+    BCL1;
     RC1;
