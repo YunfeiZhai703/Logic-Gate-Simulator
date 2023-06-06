@@ -273,7 +273,9 @@ class Parser:
                     ending_bracket = False
                     self.add_error(
                         ErrorCodes.SYNTAX_ERROR,
-                        "Expected ')'")
+                        "Expected ')'", prev_line=True,
+                        end_of_line_char=True,
+                    )
 
         if (ending_bracket is False):
             return
@@ -561,6 +563,7 @@ class Parser:
             self.add_error(
                 ErrorCodes.INVALID_DEVICE,
                 "Device name not defined in 'devices'")
+            self.advance()
 
     def parse_monit_block(self):
         """Parses the monit block header and calls parse_monit()"""
