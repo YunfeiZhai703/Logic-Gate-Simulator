@@ -153,7 +153,6 @@ class Parser:
                     prev_line=True,
                     end_of_line_char=True)
             else:
-
                 self.add_error(
                     ErrorCodes.SYNTAX_ERROR,
                     "Invalid symbol: " +
@@ -222,11 +221,11 @@ class Parser:
                         self.advance()
                         self.parse_logic_gate(gate, device_list)
                         self.advance()
-                    elif (self.symbol.type == self.symbol.name):
-                        self.add_error(
-                            ErrorCodes.INVALID_LOGIC_GATE,
-                            "Expected logic gate")
-                        self.advance()
+                    # elif (self.symbol.type == self.symbol.name):
+                    #     self.add_error(
+                    #         ErrorCodes.INVALID_LOGIC_GATE,
+                    #         "Expected logic gate")
+                    #     self.advance()
                     else:
                         self.add_error(
                             ErrorCodes.SYNTAX_ERROR,
@@ -341,7 +340,7 @@ class Parser:
             if (self.symbol.type ==
                     self.scanner.HEADING and self.symbol.name == "conns"):
                 self.check_heading_list.append(self.symbol.name)
-                print(self.check_heading_list)
+
                 self.advance()
                 if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
                     self.advance()
@@ -637,6 +636,13 @@ class Parser:
                     if self.validate_device_name_for_conns():
                         devices_list.append(self.symbol.name)
                         self.advance()
+                elif self.symbol.type == self.scanner.NAME:
+                    self.add_error(
+                        ErrorCodes.SYNTAX_ERROR,
+                        "Expected ';' or ','",
+                        prev_line=True,
+                        end_of_line_char=True)
+                    self.advance()
             # get output devices
             output_device_ids = [self.names.query(dev) for dev in devices_list]
 

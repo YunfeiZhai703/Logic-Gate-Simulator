@@ -1,4 +1,4 @@
-[devices] 
+[devices]
 	G1, G2 = NAND; 
 	G3 = AND(3);
     SW1, SW2, SW3 = SWITCH; 
@@ -6,7 +6,7 @@
     BCL1 = SIGGEN(1010111001);
 	G4 = DTYPE;
 	C1 = CLOCK(1);
-[devices]
+
 [conns]
 	SW1 = G1.I1;
 	SW2 = G2.I2;
