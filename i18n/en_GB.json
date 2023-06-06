@@ -23,7 +23,7 @@
     "errors.description.INVALID_NUMBER": "Invalid number",
     "errors.description.INVALID_HEADER": "Missing bracket in the header definition",
     "errors.description.MISSING_HEADER": "Missing or incorrect header definition within the square brackets",
-    "errors.description.DUPlICATED_HEADER": "Duplicated header definition within the square brackets",
+    "errors.description.DUPLICATED_HEADER": "Duplicated header definition within the square brackets",
     "errors.description.INVALID_PIN": "Not a valid pin",
     "errors.description.MISSING_DOT": "Missing dot to show connections or output of dtype",
     "errors.description.MISSING_I": "Missing I before the input port number",
