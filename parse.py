@@ -222,10 +222,16 @@ class Parser:
                         self.advance()
                         self.parse_logic_gate(gate, device_list)
                         self.advance()
-                    else:
+                    elif (self.symbol.type == self.symbol.name):
                         self.add_error(
                             ErrorCodes.INVALID_LOGIC_GATE,
                             "Expected logic gate")
+                        self.advance()
+                    else:
+                        self.add_error(
+                            ErrorCodes.SYNTAX_ERROR,
+                            "Unexpected symbol")
+                        self.advance()
 
                 else:
                     self.add_error(

@@ -10,7 +10,7 @@
 	
 
 [conns]
-	SW1 = G1.I1;
+	SW1 == G1.I1;
 	SW2 = G1.I2;
     SW3 = G2.I1;
 	SW4 = G2.I2;
