@@ -536,8 +536,9 @@ class Parser:
                             output_device_id, output_device_pin_id, input_device_ids[i], input_id)
 
                         if error != self.network.NO_ERROR:
-                            print(
-                                "----------ERROR in make_connection----------Code: ", error)
+                            self.add_error(
+                                ErrorCodes.CONNECTION_ERROR,
+                                "Error " + str(error) + " while making connection")
 
         else:
             self.add_error(
@@ -633,10 +634,9 @@ class Parser:
                 error = self.monitors.make_monitor(
                     output_device_id, output_device_pin_id)
                 if error != self.monitors.NO_ERROR:
-                    print(
-                        "----------ERROR in make_moniotr----------Code: ",
-                        error,
-                        self.monitors.MONITOR_PRESENT)
+                    self.add_error(
+                        ErrorCodes.MONITOR_ERROR,
+                        "Monitor error Error code: " + str(error))
 
             self.advance()
 
