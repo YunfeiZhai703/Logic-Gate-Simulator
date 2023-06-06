@@ -1,0 +1,29 @@
+[devices] 
+	G1 = NOR; 
+    G2 = AND;
+	G3 = DTYPE;
+    G4 = NAND;
+    G5 = OR;
+    SW1, SW2, SW3, SW4 = SWITCH; 
+    RC1 = RC(20);
+    BCL1 = SIGGEN(101011100001100101000100111110010);
+	
+
+[conns]
+	SW1 = G1.I1;
+	SW2 = G1.I2;
+    SW3 = G2.I1;
+	SW4 = G2.I2;
+	G1 = G3.DATA;       
+	G2 = G3.CLEAR, G4.I2;
+    RC1 = G3.SET;
+    BCL1 = G3.CLK;
+    G3.Q = G5.I1;
+    G3.QBAR = G4.I1;
+    G4 = G5.I2;
+	
+
+[monit]         
+	G5;
+    BCL1; 
+    RC1;

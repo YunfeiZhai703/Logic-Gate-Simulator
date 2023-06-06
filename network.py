@@ -481,7 +481,6 @@ class Network:
             for device_id in siggen_devices:  # complete clock executions
                 if not self.execute_clock(device_id):
                     return False
-
             for device_id in and_devices:  # execute AND gate devices
                 if not self.execute_gate(device_id, self.devices.HIGH,
                                          self.devices.HIGH):
