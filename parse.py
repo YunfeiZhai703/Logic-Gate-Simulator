@@ -578,7 +578,10 @@ class Parser:
                         "expected", ["monit"])
                 )
             else:
-                self.add_error(ErrorCodes.INVALID_HEADER, "Expected 'monit'")
+                self.add_error(
+                    ErrorCodes.INVALID_HEADER,
+                    "expected",
+                    ["monit"])
 
         else:
             self.add_error(ErrorCodes.INVALID_HEADER, "Expected '['")
