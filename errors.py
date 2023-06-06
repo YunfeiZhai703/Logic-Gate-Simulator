@@ -21,6 +21,9 @@ class ErrorCodes:
     OVERFLOW_ERROR = "OverflowError"
     DEVICE_ERROR = "DeviceError"
     INVALID_INPUTS = "InputsError"
+    MONITOR_ERROR = "MonitorError"
+    NETWORK_ERROR = "NetworkError"
+    CONNECTION_ERROR = "ConnectionError"
 
     description = {
         INVALID_CHARACTER: t("description.INVALID_CHARACTER"),
