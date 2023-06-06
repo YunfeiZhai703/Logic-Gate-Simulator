@@ -219,10 +219,16 @@ class MainPage(wx.Panel):
         Executes the network for the specified number of cycles.
         and records the signals.
         """
+        success = True
 
         for _ in range(self.number_of_cycles):
-            self.network.execute_network()
+            success = self.network.execute_network()
             self.monitors.record_signals()
+
+        if not success:
+            ErrorsGui([
+                "Error in network execution"
+            ])
 
         monitors_dict = self.monitors.monitors_dictionary
         signal_names = self.monitors.get_signal_names()[0]
