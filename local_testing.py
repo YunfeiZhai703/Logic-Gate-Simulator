@@ -20,8 +20,3 @@ devices = parser.devices.devices_list
 
 for device in devices:
     print(device)
-
-
-devs = parser.monitors.monitors_dictionary
-
-print(devs)

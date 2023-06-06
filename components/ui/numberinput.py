@@ -26,10 +26,7 @@ class NumberInput(wx.SpinCtrl):
         self.SetRange(min, max)
         # self.SetIncrement(step) TODO: check if this is works on Linux
         self.SetValue(value)
-
-        self.SetForegroundColour(COLORS.BLACK)
-        self.SetBackgroundColour(COLORS.GRAY_400)
-        self.SetOwnBackgroundColour(COLORS.GRAY_400)
+        self.SetForegroundColour(COLORS.GREEN_600)
 
         if onChange:
             self.Bind(wx.EVT_SPINCTRL, onChange)
