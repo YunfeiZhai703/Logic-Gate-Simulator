@@ -682,6 +682,7 @@ class Parser:
             self.advance()
 
         else:
+            self.advance()
             self.add_error(
                 ErrorCodes.INVALID_DEVICE,
                 "Device name not defined in 'devices'")
