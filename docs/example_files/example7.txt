@@ -27,4 +27,3 @@
 	G5;
     BCL1;
     RC1;
-[monit]
