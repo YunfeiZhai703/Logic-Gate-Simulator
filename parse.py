@@ -229,10 +229,16 @@ class Parser:
                                 prev_line=True,
                                 end_of_line_char=True)
 
-                    else:
+                    elif (self.symbol.type == self.scanner.NAME):
                         self.add_error(
                             ErrorCodes.INVALID_LOGIC_GATE,
                             "Expected logic gate")
+                        self.advance()
+                    else:
+                        self.add_error(
+                            ErrorCodes.SYNTAX_ERROR,
+                            "Invalid symbol")
+                        self.advance()
 
                 else:
                     self.add_error(
@@ -434,7 +440,7 @@ class Parser:
         """Parses a single line of the conns block"""
         device_list = []
         ports_list = []
-
+        semicolon_count = 0
         if self.validate_device_name_for_conns():
             device_list.append(self.symbol.name)
 
@@ -474,6 +480,7 @@ class Parser:
 
                                 if self.symbol.type == self.scanner.SEMICOLON:
                                     # Reached end of line
+                                    semicolon_count = 1
                                     self.advance()
                                     # print(
                                     #     "------- Dev: ", device_list, "Ports: ", ports_list)

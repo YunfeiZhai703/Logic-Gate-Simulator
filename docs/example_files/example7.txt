@@ -1,5 +1,5 @@
 [devices]
-    G1 = NOR; 
+    G1 = NOR;
     G2 = AND;
 	G3 = DTYPE;
     G4 = NAND;
