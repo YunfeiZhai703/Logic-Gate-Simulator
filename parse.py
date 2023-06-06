@@ -630,6 +630,13 @@ class Parser:
                     if self.validate_device_name_for_conns():
                         devices_list.append(self.symbol.name)
                         self.advance()
+                elif self.symbol.type == self.scanner.NAME:
+                    self.add_error(
+                        ErrorCodes.SYNTAX_ERROR,
+                        "Expected ';' or ','",
+                        prev_line=True,
+                        end_of_line_char=True)
+                    self.advance()
             # get output devices
             output_device_ids = [self.names.query(dev) for dev in devices_list]
 
