@@ -153,7 +153,6 @@ class Parser:
                     prev_line=True,
                     end_of_line_char=True)
             else:
-
                 self.add_error(
                     ErrorCodes.SYNTAX_ERROR,
                     "Invalid symbol: " +
@@ -222,6 +221,14 @@ class Parser:
                         self.advance()
                         self.parse_logic_gate(gate, device_list)
                         self.advance()
+
+                        if (self.symbol.type == self.scanner.EQUAL):
+                            self.add_error(
+                                ErrorCodes.SYNTAX_ERROR,
+                                "You may have missed a end of line on the previous line",
+                                prev_line=True,
+                                end_of_line_char=True)
+
                     else:
                         self.add_error(
                             ErrorCodes.INVALID_LOGIC_GATE,
