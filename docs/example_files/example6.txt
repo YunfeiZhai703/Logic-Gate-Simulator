@@ -19,6 +19,6 @@
 	BCL1 = G4.DATA;
 	C1 = G4.CLK;
 	SW3 = G4.CLEAR;
-[conns]         
+[monit]         
 	BCL1; RC1;
 
