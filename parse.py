@@ -54,6 +54,7 @@ class Parser:
         self.symbol = self.scanner.get_symbol()
         self.errors: List[Error] = []
         self.stored_device_list: List[str] = []
+        self.check_heading_list: List[str] = []
 
     def add_error(
             self,
@@ -337,17 +338,23 @@ class Parser:
 
             if (self.symbol.type ==
                     self.scanner.HEADING and self.symbol.name == "conns"):
-                self.advance()
-
-                if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
+                if self.symbol.name not in self.check_heading_list:
                     self.advance()
+                    self.check_heading_list.append(self.symbol.name)
 
-                    self.parse_conns()
+                    if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
+                        self.advance()
 
+                        self.parse_conns()
+
+                    else:
+                        self.add_error(
+                            ErrorCodes.INVALID_HEADER, t("expected", ["]"]))
                 else:
                     self.add_error(
-                        ErrorCodes.INVALID_HEADER, t("expected", ["]"]))
-
+                        ErrorCodes.INVALID_HEADER, t(
+                        "duplicated heading expected [monit]")
+                    )
             else:
                 self.add_error(
                     ErrorCodes.INVALID_HEADER, t(
