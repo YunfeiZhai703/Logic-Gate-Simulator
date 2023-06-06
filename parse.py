@@ -132,7 +132,7 @@ class Parser:
 
             else:
                 self.add_error(
-                    ErrorCodes.INVALID_HEADER, t(
+                    ErrorCodes.MISSING_HEADER, t(
                         "expected", ["devices"]))
 
         else:
