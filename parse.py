@@ -353,7 +353,7 @@ class Parser:
                 else:
                     self.add_error(
                         ErrorCodes.INVALID_HEADER, t(
-                        "duplicated heading expected [monit]")
+                            "duplicated heading expected [monit]")
                     )
             else:
                 self.add_error(
@@ -492,6 +492,15 @@ class Parser:
                 input_device_ids = self.names.lookup(device_list[1:])
                 input_devices = [self.devices.get_device(
                     device_id) for device_id in input_device_ids]
+
+                for dev in input_devices:
+                    if dev.inputs == {}:
+                        self.add_error(
+                            ErrorCodes.INVALID_INPUTS,
+                            "Device has no inputs",
+                            prev_line=True,
+                            end_of_line_char=True
+                        )
 
                 # If len of ports list is same as len of device list, then we
                 # have a DTYPE
