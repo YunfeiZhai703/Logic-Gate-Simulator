@@ -116,20 +116,16 @@ class Parser:
         """Parses the header of the devices block, and then calls parse_devices."""
         if (self.symbol.type == self.scanner.OPEN_SQUARE_BRACKET):
             self.advance()
-
             if (self.symbol.type ==
                     self.scanner.HEADING and self.symbol.name == "devices"):
+                self.check_heading_list.append(self.symbol.name)
                 self.advance()
-
                 if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
                     self.advance()
-
                     self.parse_devices()
-
                 else:
                     self.add_error(
                         ErrorCodes.INVALID_HEADER, t("expected", ["]"]))
-
             else:
                 self.add_error(
                     ErrorCodes.INVALID_HEADER, t(
@@ -338,23 +334,23 @@ class Parser:
 
             if (self.symbol.type ==
                     self.scanner.HEADING and self.symbol.name == "conns"):
-                if self.symbol.name not in self.check_heading_list:
+                self.check_heading_list.append(self.symbol.name)
+                print(self.check_heading_list)
+                self.advance()
+                if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
                     self.advance()
-                    self.check_heading_list.append(self.symbol.name)
 
-                    if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
-                        self.advance()
+                    self.parse_conns()
 
-                        self.parse_conns()
-
-                    else:
-                        self.add_error(
-                            ErrorCodes.INVALID_HEADER, t("expected", ["]"]))
                 else:
                     self.add_error(
-                        ErrorCodes.INVALID_HEADER, t(
-                        "duplicated heading expected [monit]")
-                    )
+                        ErrorCodes.INVALID_HEADER, t("expected", ["]"]))
+            elif (self.symbol.type == self.scanner.HEADING and self.symbol.name in self.check_heading_list):
+                print(self.check_heading_list)
+                self.add_error(
+                    ErrorCodes.DUPLICATED_HEADER, t(
+                        "expected", ["conns"])
+                )
             else:
                 self.add_error(
                     ErrorCodes.INVALID_HEADER, t(
@@ -559,8 +555,8 @@ class Parser:
 
             if (self.symbol.type ==
                     self.scanner.HEADING and self.symbol.name == "monit"):
+                self.check_heading_list.append(self.symbol.name)
                 self.advance()
-
                 if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
                     self.advance()
 
@@ -569,7 +565,11 @@ class Parser:
                 else:
                     self.add_error(
                         ErrorCodes.INVALID_HEADER, "Expected ']'")
-
+            elif self.symbol.name in self.check_heading_list:
+                self.add_error(
+                    ErrorCodes.DUPLICATED_HEADER, t(
+                        "expected", ["monit"])
+                )
             else:
                 self.add_error(ErrorCodes.INVALID_HEADER, "Expected 'monit'")
 

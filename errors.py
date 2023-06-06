@@ -8,6 +8,7 @@ class ErrorCodes:
     INVALID_NAME = "InvalidName"
     INVALID_NUMBER = "InvalidNumber"
     INVALID_HEADER = "InvalidHeader"
+    DUPLICATED_HEADER = "DuplicatedHeader"
     MISSING_HEADER = "MissingHeader"
     INVALID_PIN = "InvalidPin"
     MISSING_DOT = "MissingDot"
@@ -30,6 +31,7 @@ class ErrorCodes:
         INVALID_NAME: t("description.INVALID_NAME"),
         INVALID_NUMBER: t("description.INVALID_NUMBER"),
         INVALID_HEADER: t("description.INVALID_HEADER"),
+        DUPLICATED_HEADER: t("description.DUPLICATED_HEADER"),
         MISSING_HEADER: t("description.MISSING_HEADER"),
         INVALID_PIN: t("description.INVALID_PIN"),
         MISSING_DOT: t("description.MISSING_DOT"),

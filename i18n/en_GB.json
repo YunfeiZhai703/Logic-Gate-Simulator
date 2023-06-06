@@ -22,6 +22,7 @@
     "errors.description.INVALID_NAME": "The name used is either a reserved word or is not a valid name for a device.\nNames must start with a letter and can only contain letters, numbers. Logic gates symbols must be in upper case.",
     "errors.description.INVALID_NUMBER": "Invalid number",
     "errors.description.INVALID_HEADER": "Missing bracket in the header definition",
+    "errors.description.DUPLICATED_HEADER": "Duplicated heading in the header definition",
     "errors.description.MISSING_HEADER": "Missing header definition within the square brackets",
     "errors.description.INVALID_PIN": "Not a valid pin",
     "errors.description.MISSING_DOT": "Missing dot to show connections or output of dtype",
