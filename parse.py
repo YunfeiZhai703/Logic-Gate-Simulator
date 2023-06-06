@@ -342,18 +342,17 @@ class Parser:
 
                     self.parse_conns()
 
-                    else:
-                        self.add_error(
-                            ErrorCodes.INVALID_HEADER, t("expected", ["]"]))
                 else:
                     self.add_error(
-                        ErrorCodes.INVALID_HEADER, t(
-                        "duplicated heading expected [monit]")
-                    )
+                        ErrorCodes.INVALID_HEADER, t("expected", ["]"]))
+            elif (self.symbol.type == self.scanner.HEADING and self.symbol.name in self.check_heading_list):
+                self.add_error(
+                    ErrorCodes.DUPLICATED_HEADER, t("expected", ["conns"]))
             else:
                 self.add_error(
                     ErrorCodes.INVALID_HEADER, t(
-                        "expected", ["conns"]))
+                        "expected", ["conns"])
+                )
 
         else:
             self.add_error(ErrorCodes.INVALID_HEADER, t("expected", ["["]))
