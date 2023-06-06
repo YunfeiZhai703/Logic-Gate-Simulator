@@ -221,15 +221,23 @@ class Parser:
                         self.advance()
                         self.parse_logic_gate(gate, device_list)
                         self.advance()
-                    # elif (self.symbol.type == self.symbol.name):
-                    #     self.add_error(
-                    #         ErrorCodes.INVALID_LOGIC_GATE,
-                    #         "Expected logic gate")
-                    #     self.advance()
+
+                        if (self.symbol.type == self.scanner.EQUAL):
+                            self.add_error(
+                                ErrorCodes.SYNTAX_ERROR,
+                                "You may have missed a end of line on the previous line",
+                                prev_line=True,
+                                end_of_line_char=True)
+
+                    elif (self.symbol.type == self.scanner.NAME):
+                        self.add_error(
+                            ErrorCodes.INVALID_LOGIC_GATE,
+                            "Expected logic gate")
+                        self.advance()
                     else:
                         self.add_error(
                             ErrorCodes.SYNTAX_ERROR,
-                            "Unexpected symbol")
+                            "Invalid symbol")
                         self.advance()
 
                 else:

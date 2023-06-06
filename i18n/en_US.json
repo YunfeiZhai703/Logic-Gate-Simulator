@@ -19,7 +19,7 @@
   },
   "errors": {
     "errors.description.INVALID_CHARACTER": "This character is not allowed in the definition file.",
-    "errors.description.INVALID_NAME": "The name used is either a reserved word or is not a valid name for a device.\nNames must start with a letter and can only contain letters, numbers. Logic gates symbols must be in upper case.",
+    "errors.description.INVALID_NAME": "The name used is either a reserved word, not a valid name for a device or invalid logic gate name.\nNames must start with a letter and can only contain letters, numbers. Logic gates symbols must be in upper case.",
     "errors.description.INVALID_NUMBER": "Invalid number",
     "errors.description.INVALID_HEADER": "Missing bracket in the header definition",
     "errors.description.MISSING_HEADER": "Missing or incorrect header definition within the square brackets",
