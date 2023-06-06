@@ -335,7 +335,7 @@ class Parser:
             if (self.symbol.type ==
                     self.scanner.HEADING and self.symbol.name == "conns"):
                 self.check_heading_list.append(self.symbol.name)
-                print(self.check_heading_list)
+
                 self.advance()
                 if (self.symbol.type == self.scanner.CLOSE_SQUARE_BRACKET):
                     self.advance()
