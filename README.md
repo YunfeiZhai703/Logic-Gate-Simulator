@@ -9,7 +9,22 @@ To run the program, simply run the following command in the terminal:
 python logisim.py <path-to-circuit-file>
 ```
 
-Example files can be found in the `docs/ebnf` directory.
+To run with a specific language (on Linux), specify the LANG environment variable:
+
+```
+LANG=<lang>.utf8 python logisim.py <path-to-circuit-file>
+```
+
+Where `<lang>` is one of the following:
+
+- `en_US`, `en_GB` for English
+- `fr_FR` for French
+- `es_ES` for Spanish
+- `ru_RU` for Russian
+
+By default, the program will run in English.
+
+Example files can be found in the `example_files` directory.
 
 ## Deviations from PEP8
 
