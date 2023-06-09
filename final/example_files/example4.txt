@@ -1,0 +1,29 @@
+# JK BISTABLE
+
+[devices]
+Qa, Qb = NAND;
+G1, G2 = NAND(3);
+CLK1 = CLOCK(1);
+
+J = SWITCH;
+K = SWITCH;
+
+[conns]
+
+CLK1 = G1.I1, G2.I1;
+J = G1.I2;
+K = G2.I2;
+
+Qa = G2.I3, Qb.I2;
+Qb = G1.I3, Qa.I2;
+
+G1 = Qa.I1;
+G2 = Qb.I1;
+
+[monit]
+
+CLK1, Qa, Qb;
+
+
+
+

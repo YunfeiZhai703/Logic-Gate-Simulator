@@ -1,0 +1,17 @@
+[devices] 
+	G1, G2 = NAND;     # defaults to 2 inputs
+	SW1, SW2 = SWITCH; # defaults to 0 i.Ie "False"
+	C1 = CLOCK(1);
+
+[conns]
+	SW1 = G1.I17;
+	SW2 = G2.I23;
+	G1=G2.I1;           # Whitespace not required
+	G2.q = G1.I2;
+
+# new blank lines are ignored
+
+[monit]                # need a newline after a block
+	G1, G2;
+	C1;
+	SW1;

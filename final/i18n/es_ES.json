@@ -1,0 +1,46 @@
+{
+  "gui": {
+    "gui.logic-simulator": "Simulador Lógico",
+    "gui.tabs.code": "Código",
+    "gui.tabs.main": "Principal",
+    "gui.tabs.graphs": "Gráficos",
+    "gui.devices": "Dispositivos",
+    "gui.monitors": "Monitores",
+    "gui.switches": "Interruptores",
+    "gui.configurations": "Configuraciones",
+    "gui.num-of-cycles": "Número de ciclos",
+    "gui.run": "Ejecutar",
+    "gui.reset": "Reiniciar",
+    "gui.close": "Cerrar",
+    "gui.dialog.content": "Simulador Lógico\nEquipo 19 - Lakee, Dhillon, Yunfei\n2023",
+    "gui.dialog.title": "Acerca de",
+    "gui.menu.file": "Archivo",
+    "gui.menu.exit": "Salir"
+  },
+  "errors": {
+    "errors.description.INVALID_CHARACTER": "Este carácter no está permitido en el archivo de definición.",
+    "errors.description.INVALID_NAME": "El nombre utilizado es una palabra reservada o no es válido para un dispositivo.\nLos nombres deben comenzar con una letra y solo pueden contener letras y números. Los símbolos de las compuertas lógicas deben estar en mayúsculas.",
+    "errors.description.INVALID_NUMBER": "Número no válido",
+    "errors.description.INVALID_HEADER": "Falta el corchete en la definición del encabezado",
+    "errors.description.MISSING_HEADER": "Falta la definición del encabezado entre corchetes",
+    "errors.description.INVALID_PIN": "Pin no válido",
+    "errors.description.MISSING_DOT": "Falta el punto para mostrar las conexiones o la salida de un dtype",
+    "errors.description.MISSING_I": "Falta la I antes del número de puerto de entrada",
+    "errors.description.MISSING_PORT": "Falta el puerto de entrada o salida",
+    "errors.description.MISSING_REQUIRED_PARAMETER": "Falta un parámetro que debe definirse",
+    "errors.description.NAME_DEFINED": "El nombre ya está asignado a otro dispositivo",
+    "errors.description.SYNTAX_ERROR": "Error de sintaxis general, verifique si faltan corchetes, puntos y comas, etc.",
+    "errors.description.INVALID_LOGIC_GATE": "La compuerta lógica no es válida",
+    "errors.description.INVALID_DEVICE": "El dispositivo no ha sido definido en el bloque [devices]",
+    "errors.description.OVERFLOW_ERROR": "Demasiadas iteraciones",
+    "errors.description.DEVICE_ERROR": "Error al crear el dispositivo",
+    "errors.description.INVALID_INPUTS": "Las entradas deben estar en el rango de 1 a 16 y las entradas dtype deben ser CLK, DATA, Q, QBAR, SET, CLEAR",
+    "errors.error": "Error",
+    "errors.line": "Línea",
+    "errors.character": "Carácter",
+    "errors.description": "Descripción"
+  },
+  "parse": {
+    "parse.expected": "Se esperaba '{0}'"
+  }
+}

@@ -31,4 +31,4 @@ jobs:
         run: flake8 --statistics --ignore=E501,F401,F841,W504
 
       - name: Run unit tests using pytest
-        run: pytest -v --ignore=final
+        run: pytest -v

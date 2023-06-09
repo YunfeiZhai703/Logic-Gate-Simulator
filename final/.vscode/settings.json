@@ -1,0 +1,13 @@
+{
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8",
+    "editor.formatOnSave": true
+  },
+  "autopep8.args": ["--aggressive", "--aggressive"],
+  "files.exclude": {
+    "**/.pytest_cache": true,
+    "**/__pycache__": true
+  },
+  "python.formatting.provider": "none",
+  "python.linting.flake8Args": ["--ignore=E501,F401,F841,W504"]
+}

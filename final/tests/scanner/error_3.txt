@@ -1,0 +1,15 @@
+[devices ] 
+G1 = AND(2)
+G2 = NAND;
+G3 G4 = OR;
+CLK1 = CLOCK10); ## Comment
+
+conns]
+
+G1 = G2I1;
+
+[monit
+
+G2;
+# This comment means it can't identify the EOF
+

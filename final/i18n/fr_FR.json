@@ -1,0 +1,46 @@
+{
+  "gui": {
+    "gui.logic-simulator": "Simulateur Logique",
+    "gui.tabs.code": "Code",
+    "gui.tabs.main": "Principal",
+    "gui.tabs.graphs": "Graphiques",
+    "gui.devices": "Dispositifs",
+    "gui.monitors": "Moniteurs",
+    "gui.switches": "Interrupteurs",
+    "gui.configurations": "Configurations",
+    "gui.num-of-cycles": "Nombre de cycles",
+    "gui.run": "Exécuter",
+    "gui.reset": "Réinitialiser",
+    "gui.close": "Fermer",
+    "gui.dialog.content": "Simulateur Logique\nÉquipe 19 - Lakee, Dhillon, Yunfei\n2023",
+    "gui.dialog.title": "À propos",
+    "gui.menu.file": "Fichier",
+    "gui.menu.exit": "Quitter"
+  },
+  "errors": {
+    "errors.description.INVALID_CHARACTER": "Ce caractère n'est pas autorisé dans le fichier de définition.",
+    "errors.description.INVALID_NAME": "Le nom utilisé est soit un mot réservé, soit un nom non valide pour un dispositif.\nLes noms doivent commencer par une lettre et ne peuvent contenir que des lettres et des chiffres. Les symboles des portes logiques doivent être en majuscules.",
+    "errors.description.INVALID_NUMBER": "Nombre non valide",
+    "errors.description.INVALID_HEADER": "Crochet manquant dans la définition de l'en-tête",
+    "errors.description.MISSING_HEADER": "Définition d'en-tête manquante entre crochets",
+    "errors.description.INVALID_PIN": "Broche non valide",
+    "errors.description.MISSING_DOT": "Point manquant pour afficher les connexions ou la sortie d'un dtype",
+    "errors.description.MISSING_I": "I manquant avant le numéro de port d'entrée",
+    "errors.description.MISSING_PORT": "Port manquant pour l'entrée ou la sortie",
+    "errors.description.MISSING_REQUIRED_PARAMETER": "Paramètre manquant qui doit être défini",
+    "errors.description.NAME_DEFINED": "Le nom est déjà attribué à un autre composant",
+    "errors.description.SYNTAX_ERROR": "Erreur de syntaxe générale, vérifiez les crochets manquants, les points-virgules, etc.",
+    "errors.description.INVALID_LOGIC_GATE": "La porte logique n'est pas valide",
+    "errors.description.INVALID_DEVICE": "Le dispositif n'a pas été défini dans le bloc [devices]",
+    "errors.description.OVERFLOW_ERROR": "Trop d'itérations",
+    "errors.description.DEVICE_ERROR": "Erreur lors de la création du dispositif",
+    "errors.description.INVALID_INPUTS": "Les entrées doivent être comprises entre 1 et 16, et les entrées dtype doivent être CLK, DATA, Q, QBAR, SET, CLEAR",
+    "errors.error": "Erreur",
+    "errors.line": "Ligne",
+    "errors.character": "Caractère",
+    "errors.description": "Description"
+  },
+  "parse": {
+    "parse.expected": "Attendu '{0}'"
+  }
+}

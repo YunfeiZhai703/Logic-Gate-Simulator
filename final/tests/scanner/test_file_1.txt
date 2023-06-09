@@ -1,0 +1,1 @@
+[devices  ]G1, G8, G9 = AND;    
