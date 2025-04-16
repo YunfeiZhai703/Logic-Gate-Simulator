@@ -1,5 +1,9 @@
 # Logic Simulator
 
+## User guide
+<img width="608" alt="Screenshot 2025-04-16 at 19 16 35" src="https://github.com/user-attachments/assets/bac10606-66b1-420b-bac0-0a8b8d0232b1" />
+
+
 ## Running the program
 
 On the DPO ensure you have `anaconda` running.
