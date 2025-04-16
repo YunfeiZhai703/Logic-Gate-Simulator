@@ -1,4 +1,4 @@
-# Logic Simulator Team 19
+# Logic Simulator
 
 ## Running the program
 
